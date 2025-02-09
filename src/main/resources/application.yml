@@ -1,0 +1,26 @@
+server:
+  servlet.context-path: /gs
+  port: ${SERVER_PORT:8080}
+
+
+spring:
+  datasource:
+    driverClassName: org.postgersql.Driver
+    url: jdbc:postgresql://db:5432/gs
+    username: gs
+    password: ${PWD}
+
+  jpa:
+    hibernate.ddl-auto: validate
+  database-platform: org.hibernate.dialect.PostgreSQL16Dialect
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+
+
+logging:
+  level:
+    org.hibernate:
+      SQL: DEBUG
+      type: INFO
+      orm.jdbc.bind: TRACE

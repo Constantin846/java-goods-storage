@@ -1,0 +1,18 @@
+server.port: 9090
+
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:gs;LOCK_TIMEOUT=60000
+    username: gs
+    password: ${PWD}
+
+  jpa:
+    hibernate.ddl-auto: create
+  database-platform: org.hibernate.dialect.H2Dialect
+  h2.console.enabled: true #http://localhost:9090/gs/h2-console
+
+  liquibase:
+    change-log: classpath:db/changelog/changelog.xml
+    enabled: false
