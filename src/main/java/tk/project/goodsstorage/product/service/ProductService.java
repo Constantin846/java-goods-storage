@@ -1,5 +1,6 @@
 package tk.project.goodsstorage.product.service;
 
+import org.springframework.data.domain.PageRequest;
 import tk.project.goodsstorage.product.dto.CreateProductDto;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.UpdateProductDto;
@@ -14,7 +15,7 @@ public interface ProductService {
 
     ProductDto findById(UUID id);
 
-    List<ProductDto> findAll(Pageable pageable);
+    List<ProductDto> findAll(PageRequest pageRequest);
 
     UpdateProductDto update(UpdateProductDto productDto);
 

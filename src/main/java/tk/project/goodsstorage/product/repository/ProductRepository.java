@@ -6,4 +6,6 @@ import tk.project.goodsstorage.product.Product;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+
+    Product findByArticle(String article);
 }

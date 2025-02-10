@@ -16,6 +16,12 @@ public class ErrorHandler {
     private static final String ERROR = "error";
     private static final String INTERNAL_SERVER_ERROR = "Internal server error";
 
+    @ExceptionHandler(ArticleExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handlerArticleExistsException(final ArticleExistsException e) {
+        return Map.of(ERROR, e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handlerValidException(final MethodArgumentNotValidException e) {
@@ -23,6 +29,12 @@ public class ErrorHandler {
         String message = fieldError != null ? fieldError.getDefaultMessage() : INTERNAL_SERVER_ERROR;
         message = message != null ? message : INTERNAL_SERVER_ERROR;
         return Map.of(ERROR, message);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handlerProductNotFoundException(final ProductNotFoundException e) {
+        return Map.of(ERROR, e.getMessage());
     }
 
     @ExceptionHandler

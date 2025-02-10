@@ -3,6 +3,7 @@ package tk.project.goodsstorage.product;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,9 +53,9 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> findAll(Pageable pageable) {
-        log.info("Find all products with page={}", pageable);
-        List<ProductDto> products = productService.findAll(pageable);
+    public List<ProductResponse> findAll(PageRequest pageRequest) {
+        log.info("Find all products with page={}", pageRequest);
+        List<ProductDto> products = productService.findAll(pageRequest);
         return mapper.toProductResponse(products);
     }
 
