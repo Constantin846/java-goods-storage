@@ -1,4 +1,4 @@
-server.port: 9090
+server.port: 8080
 
 
 spring:
@@ -11,7 +11,7 @@ spring:
   jpa:
     hibernate.ddl-auto: validate #'update', 'none' and 'validate'
   database-platform: org.hibernate.dialect.H2Dialect
-  h2.console.enabled: true #http://localhost:9090/gs/h2-console
+  h2.console.enabled: true #http://localhost:8080/gs/h2-console
 
   liquibase:
     change-log: classpath:db/changelog/changelog-main.xml

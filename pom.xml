@@ -53,8 +53,6 @@
 <!--            4.24.0             4.27.0-->
         </dependency>
 
-<!--        todo add liquibase , swagger-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -86,6 +84,7 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
+            <!-- http://localhost:9090/gs/swagger-ui/index.html -->
         </dependency>
 
         <dependency>

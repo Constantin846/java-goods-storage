@@ -9,6 +9,7 @@ import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
 import tk.project.goodsstorage.product.Product;
 import tk.project.goodsstorage.product.dto.CreateProductDto;
+import tk.project.goodsstorage.product.dto.PageFindRequest;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
@@ -45,8 +46,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findAll(PageRequest page) {
-        List<Product> products = productRepository.findAll(page).stream().toList();
+    public List<ProductDto> findAll(PageFindRequest page) {
+        List<Product> products =
+                productRepository.findAll(PageRequest.of(page.getFrom(), page.getSize())).stream().toList();
         return mapper.toProductDto(products);
     }
 
