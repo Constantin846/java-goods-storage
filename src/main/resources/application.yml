@@ -18,9 +18,17 @@ spring:
     change-log: classpath:db/changelog/changelog-main.xml
 
 
+app:
+  scheduling:
+    enable: true
+    period: 60000 #ms
+    priceIncreasePercentage: 10.1
+    optimization: true
+  dbInit: false
+
 logging:
   level:
     org.hibernate:
-      SQL: DEBUG
+      SQL: INFO
       type: INFO
-      orm.jdbc.bind: TRACE
+      orm.jdbc.bind: INFO

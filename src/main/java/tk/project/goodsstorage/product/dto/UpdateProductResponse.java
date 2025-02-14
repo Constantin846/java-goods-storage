@@ -20,7 +20,7 @@ public class UpdateProductResponse {
 
     String category;
 
-    Integer price;
+    Double price;
 
     Long count;
 

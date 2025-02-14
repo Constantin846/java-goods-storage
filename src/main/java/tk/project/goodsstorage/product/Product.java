@@ -38,7 +38,7 @@ public class Product {
     String category;
 
     @Column(name = "price", nullable = false)
-    Integer price;
+    Double price;
 
     @Column(name = "count", nullable = false)
     Long count;

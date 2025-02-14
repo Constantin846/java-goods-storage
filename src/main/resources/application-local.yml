@@ -9,10 +9,10 @@ spring:
     password: ${PWD}
 
   jpa:
-    hibernate.ddl-auto: validate #'update', 'none' and 'validate'
+    hibernate.ddl-auto: validate #create, update, none and validate
   database-platform: org.hibernate.dialect.H2Dialect
   h2.console.enabled: true #http://localhost:8080/gs/h2-console
 
   liquibase:
-    change-log: classpath:db/changelog/changelog-main.xml
+    change-log: classpath:db/changelog/h2-changelog-main.xml
     enabled: true

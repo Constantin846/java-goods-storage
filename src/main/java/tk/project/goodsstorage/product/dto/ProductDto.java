@@ -24,7 +24,7 @@ public class ProductDto {
 
     String category;
 
-    Integer price;
+    Double price;
 
     Long count;
 

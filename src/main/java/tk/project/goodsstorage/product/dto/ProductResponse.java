@@ -22,7 +22,7 @@ public class ProductResponse {
 
     String category;
 
-    Integer price;
+    Double price;
 
     Long count;
 

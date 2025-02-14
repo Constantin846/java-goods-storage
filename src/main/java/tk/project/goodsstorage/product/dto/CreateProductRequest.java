@@ -29,7 +29,7 @@ public class CreateProductRequest {
 
     @NotNull(message = "Product price must be set")
     @PositiveOrZero(message = "Product price must be positive or zero")
-    Integer price;
+    Double price;
 
     @NotNull(message = "Product count must be set")
     Long count;

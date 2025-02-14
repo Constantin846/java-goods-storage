@@ -28,7 +28,7 @@
             <column name="category" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="int">
+            <column name="price" type="double precision">
                 <constraints nullable="false"/>
             </column>
             <column name="count" type="bigint">
@@ -43,11 +43,12 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="v1-2" author="Author">
-        <preConditions onFail="MARK_RAN">
+    <!--<changeSet id="v1-2" author="Author">
+        <preConditions onFail="MARK_RAN"> &lt;!&ndash;todo delete &ndash;&gt;
             <tableIsEmpty tableName="products"/>
         </preConditions>
 
         <loadData tableName="products" file="db/data/products-data1.csv"/>
-    </changeSet>
+        <loadData tableName="products" file="db/data/products-data2.csv"/>
+    </changeSet>-->
 </databaseChangeLog>

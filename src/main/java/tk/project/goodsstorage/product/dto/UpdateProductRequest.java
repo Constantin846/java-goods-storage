@@ -27,7 +27,7 @@ public class UpdateProductRequest {
     String category;
 
     @PositiveOrZero(message = "Product price must be positive or zero")
-    Integer price;
+    Double price;
 
     Long count;
 }

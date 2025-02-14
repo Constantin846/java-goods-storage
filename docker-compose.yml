@@ -8,7 +8,6 @@ services:
     depends_on:
       - gs-db
     environment:
-      - SPRING_PROFILES_ACTIVE=main
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
       - SPRING_DATASOURCE_USERNAME=gs
       - SPRING_DATASOURCE_PASSWORD=gs
