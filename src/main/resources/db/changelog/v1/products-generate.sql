@@ -12,3 +12,4 @@ select
     '2025-02-12 18:17:01',
     '2025-02-12'
 from generate_series(1, 1000000);
+-- todo set 1M

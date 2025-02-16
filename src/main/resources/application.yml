@@ -25,6 +25,7 @@ app:
     priceIncreasePercentage: 10.1
     optimization: true
   dbInit: false
+  optimized-product-price-scheduling.file-result: optimized-product-price-scheduling/result.txt #todo delete
 
 logging:
   level:
