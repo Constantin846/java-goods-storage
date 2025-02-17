@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import tk.project.goodsstorage.validation.NullOrNotBlank;
 
+import java.math.BigDecimal;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateProductRequest {
@@ -27,7 +29,7 @@ public class UpdateProductRequest {
     String category;
 
     @PositiveOrZero(message = "Product price must be positive or zero")
-    Double price;
+    BigDecimal price;
 
     Long count;
 }

@@ -8,40 +8,59 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Map;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestControllerAdvice(basePackages = "tk.project.goodsstorage")
 public class ErrorHandler {
     private static final String ERROR = "error";
     private static final String INTERNAL_SERVER_ERROR = "Internal server error";
+    private static final String DELIMITER = "; ";
 
     @ExceptionHandler(ArticleExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handlerArticleExistsException(final ArticleExistsException e) {
-        return Map.of(ERROR, e.getMessage());
+    public ApiError handlerArticleExistsException(final ArticleExistsException e) {
+        return createApiError(e.getClass().getSimpleName(), e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handlerValidException(final MethodArgumentNotValidException e) {
-        FieldError fieldError = e.getFieldError();
-        String message = fieldError != null ? fieldError.getDefaultMessage() : INTERNAL_SERVER_ERROR;
-        message = message != null ? message : INTERNAL_SERVER_ERROR;
-        return Map.of(ERROR, message);
+    public ApiError handlerValidException(final MethodArgumentNotValidException e) {
+        List<FieldError> fieldErrors = e.getFieldErrors();
+        Set<String> messages = new HashSet<>();
+
+        for (FieldError fieldError : fieldErrors) {
+            String message = fieldError != null ? fieldError.getDefaultMessage() : INTERNAL_SERVER_ERROR;
+            message = message != null ? message : INTERNAL_SERVER_ERROR;
+            messages.add(message);
+        }
+        String message = String.join(DELIMITER, messages);
+
+        return createApiError(e.getClass().getSimpleName(), message);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handlerProductNotFoundException(final ProductNotFoundException e) {
-        return Map.of(ERROR, e.getMessage());
+    public ApiError handlerProductNotFoundException(final ProductNotFoundException e) {
+        return createApiError(e.getClass().getSimpleName(), e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handlerThrowable(final Throwable e) {
+    public ApiError handlerThrowable(final Throwable e) {
         String message = INTERNAL_SERVER_ERROR;
         log.warn(message, e);
-        return Map.of(ERROR, message);
+        return createApiError(e.getClass().getSimpleName(), message);
+    }
+    
+    private ApiError createApiError(String classSimpleName, String message) {
+        ApiError apiError = new ApiError();
+        apiError.setExceptionName(classSimpleName);
+        apiError.setMessage(message);
+        apiError.setTime(Instant.now());
+        return apiError;
     }
 }

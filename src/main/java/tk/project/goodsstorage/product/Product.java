@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class Product {
     String category;
 
     @Column(name = "price", nullable = false)
-    Double price;
+    BigDecimal price;
 
     @Column(name = "count", nullable = false)
     Long count;

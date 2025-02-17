@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.product.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
@@ -30,7 +31,7 @@ public class DbInit {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "des";
     private static final String CATEGORY = "cat";
-    private static final Double PRICE = 100.0;
+    private static final BigDecimal PRICE = BigDecimal.valueOf(100.0);
     private static final Long COUNT = 10L;
     private static final Instant LAST_COUNT_UPDATE_TIME = Instant.now();
     private static final LocalDate CREATE_DATE = LocalDate.now();

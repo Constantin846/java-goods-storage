@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateProductRequest {
@@ -29,7 +31,7 @@ public class CreateProductRequest {
 
     @NotNull(message = "Product price must be set")
     @PositiveOrZero(message = "Product price must be positive or zero")
-    Double price;
+    BigDecimal price;
 
     @NotNull(message = "Product count must be set")
     Long count;

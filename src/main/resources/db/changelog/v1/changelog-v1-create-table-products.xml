@@ -28,7 +28,7 @@
             <column name="category" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="double precision">
+            <column name="price" type="numeric(18,9)">
                 <constraints nullable="false"/>
             </column>
             <column name="count" type="bigint">

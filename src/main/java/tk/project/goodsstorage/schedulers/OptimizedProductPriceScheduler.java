@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,9 @@ import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,24 +32,19 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 //@Profile("!local")
-@ConditionalOnExpression("${app.scheduling.enable:false} && ${app.scheduling.optimization:false}")
+@ConditionalOnExpression("${app.scheduling.enable:false} && ${app.scheduling.optimization.enable:false}")
 public class OptimizedProductPriceScheduler {
     private final String filePath = this.getClass().getClassLoader()
             .getResource("optimized-product-price-scheduling/result.txt").getPath();
-/*    File file = new File(this.getClass().getClassLoader()
-            .getResource("optimized-product-price-scheduling/result.txt").getFile()); todo delete*/
     private static final String DELIMITER = "\n";
     private static final Boolean IS_REWRITING = false;
-    private static final Integer COUNT_ITERATION_PRODUCT = 100_00;
-    private static final Integer HUNDRED = 100;
-    private static final Integer ONE = 1;
+    private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
+    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    private static final BigDecimal ONE = BigDecimal.ONE;
     private static final String UPDATE_PRODUCTS_PRICE = """
             UPDATE products p
-            SET price = price * ?
-            WHERE p.id IN (SELECT id
-                      FROM products
-                      LIMIT ?
-                      OFFSET ?)
+            SET price = ?
+            WHERE p.id = ?
             """;
     private static final String SELECT_PRODUCTS_LIMIT_OFFSET = """
             SELECT *
@@ -65,7 +62,7 @@ public class OptimizedProductPriceScheduler {
             product.setArticle(rs.getString("article"));
             product.setDescription(rs.getString("description"));
             product.setCategory(rs.getString("category"));
-            product.setPrice(rs.getDouble("price"));
+            product.setPrice(rs.getBigDecimal("price"));
             product.setCount(rs.getLong("count"));
             product.setLastCountUpdateTime(
                     Instant.ofEpochMilli(rs.getTimestamp("last_count_update_time").getTime()));
@@ -74,7 +71,14 @@ public class OptimizedProductPriceScheduler {
         }
     };
     @Value("${app.scheduling.priceIncreasePercentage}")
-    private Double priceIncreasePercentage;
+    private BigDecimal priceIncreasePercentage;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+
 
     @PostConstruct
     private void postConstruct() {
@@ -88,45 +92,54 @@ public class OptimizedProductPriceScheduler {
     public void increaseProductPrice() {
         log.info("OPTIMIZED PRODUCT PRICE SCHEDULER is running");
 
-        double priceIncreaseRate = ONE + this.priceIncreasePercentage / HUNDRED;
+        BigDecimal priceIncreaseRate = calculatePriceIncreaseRate();
 
-        writeResultToFile(priceIncreaseRate);
+        try (FileWriter fileWriter = new FileWriter(filePath, !IS_REWRITING)) {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                conn.setAutoCommit(false);
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_PRODUCTS_PRICE);
+
+                for (int pageNumber = 0; ; pageNumber++) {
+                    int offset = pageNumber * COUNT_ITERATION_PRODUCT;
+                    List<Product> products = jdbcTemplate.query(SELECT_PRODUCTS_LIMIT_OFFSET, productRowMapper,
+                            COUNT_ITERATION_PRODUCT, offset);
+                    if (products.isEmpty()) break;
+
+                    products = products.stream().map(product -> {
+                        product.setPrice(product.getPrice().multiply(priceIncreaseRate));
+                        return product;
+                    }).toList();
+
+                    for (Product product : products) {
+                        preparedStatement.setBigDecimal(1, product.getPrice());
+                        preparedStatement.setObject(2, product.getId());
+                        preparedStatement.executeUpdate();
+                    }
+
+                    List<String> productStrings = products.stream().map(this::productToString).toList();
+                    String toWrite = String.join(DELIMITER, productStrings);
+
+                    fileWriter.append(toWrite);
+                    fileWriter.append(DELIMITER);
+
+                    log.info("Updated products: " + (offset + COUNT_ITERATION_PRODUCT));
+                }
+                conn.commit();
+            } catch (SQLException e) {
+                throw new RuntimeException(e); // todo
+            }
+        } catch (IOException e) {
+            throw new OptimizedProductPriceSchedulingResultWriteFileException(e.getMessage());
+        }
 
         log.info("OPTIMIZED PRODUCT PRICE SCHEDULER finished");
     }
 
-    private void writeResultToFile(double priceIncreaseRate) {
-        try (FileWriter fileWriter = new FileWriter(filePath, !IS_REWRITING)) {
-            for (int pageNumber = 0;; pageNumber++) {
-                int offset = pageNumber * COUNT_ITERATION_PRODUCT;
-                jdbcTemplate.update(UPDATE_PRODUCTS_PRICE, new PreparedStatementSetter() {
-                    @Override
-                    public void setValues(PreparedStatement ps) throws SQLException {
-                        ps.setDouble(1, priceIncreaseRate);
-                        ps.setInt(2, COUNT_ITERATION_PRODUCT);
-                        ps.setInt(3, offset);
-                    }
-                });
-
-                List<Product> products = jdbcTemplate.query(SELECT_PRODUCTS_LIMIT_OFFSET, productRowMapper,
-                        COUNT_ITERATION_PRODUCT, offset);
-                if (products.isEmpty()) break;
-
-                List<String> productStrings = products.stream().map(this::productToString).toList();
-                String toWrite = String.join(DELIMITER, productStrings);
-
-                fileWriter.append(toWrite);
-                fileWriter.append(DELIMITER);
-
-                log.info("Updated products: " + (offset + COUNT_ITERATION_PRODUCT));
-            }
-        } catch (IOException e) {
-            log.warn(e.getMessage()); // todo
-            throw new OptimizedProductPriceSchedulingResultWriteFileException(e.getMessage());
-        }
-    }
-
     private String productToString(Product product) {
         return product.toString(); // todo
+    }
+
+    private BigDecimal calculatePriceIncreaseRate() {
+        return this.priceIncreasePercentage.divide(HUNDRED).add(ONE);
     }
 }

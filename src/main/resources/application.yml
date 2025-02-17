@@ -8,7 +8,7 @@ spring:
     driverClassName: org.postgersql.Driver
     url: jdbc:postgresql://db:5432/gs
     username: gs
-    password: ${PWD}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate.ddl-auto: validate
@@ -23,9 +23,10 @@ app:
     enable: true
     period: 60000 #ms
     priceIncreasePercentage: 10.1
-    optimization: true
+    optimization:
+      enable: true
+      exclusive-lock: false # todo
   dbInit: false
-  optimized-product-price-scheduling.file-result: optimized-product-price-scheduling/result.txt #todo delete
 
 logging:
   level:
