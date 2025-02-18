@@ -6,12 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.exceptions.OptimizedProductPriceSchedulingResultWriteFileException;
-import tk.project.goodsstorage.product.Product;
+import tk.project.goodsstorage.exceptions.OptimizedProductPriceSchedulingSQLException;
 import tk.project.goodsstorage.timer.TaskExecutionTime;
 import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
 
@@ -23,9 +21,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -35,8 +30,9 @@ import java.util.UUID;
 @ConditionalOnExpression("${app.scheduling.enable:false} && ${app.scheduling.optimization.enable:false}")
 public class OptimizedProductPriceScheduler {
     private final String filePath = this.getClass().getClassLoader()
-            .getResource("optimized-product-price-scheduling/result.txt").getPath();
+            .getResource("optimized-product-price-scheduling/result.csv").getPath();
     private static final String DELIMITER = "\n";
+    private static final String COMMA = ",";
     private static final Boolean IS_REWRITING = false;
     private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
@@ -52,24 +48,6 @@ public class OptimizedProductPriceScheduler {
             LIMIT ?
             OFFSET ?
             """;
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Product> productRowMapper = new RowMapper<Product>() {
-        @Override
-        public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Product product = new Product();
-            product.setId(UUID.fromString(rs.getString("id")));
-            product.setName(rs.getString("name"));
-            product.setArticle(rs.getString("article"));
-            product.setDescription(rs.getString("description"));
-            product.setCategory(rs.getString("category"));
-            product.setPrice(rs.getBigDecimal("price"));
-            product.setCount(rs.getLong("count"));
-            product.setLastCountUpdateTime(
-                    Instant.ofEpochMilli(rs.getTimestamp("last_count_update_time").getTime()));
-            product.setCreateDate(LocalDate.parse(rs.getString("create_date")));
-            return product;
-        }
-    };
     @Value("${app.scheduling.priceIncreasePercentage}")
     private BigDecimal priceIncreasePercentage;
     @Value("${spring.datasource.url}")
@@ -78,7 +56,6 @@ public class OptimizedProductPriceScheduler {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
-
 
     @PostConstruct
     private void postConstruct() {
@@ -98,45 +75,45 @@ public class OptimizedProductPriceScheduler {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 conn.setAutoCommit(false);
                 PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_PRODUCTS_PRICE);
+                PreparedStatement psSelect = conn.prepareStatement(SELECT_PRODUCTS_LIMIT_OFFSET);
+                psSelect.setInt(1, COUNT_ITERATION_PRODUCT);
 
                 for (int pageNumber = 0; ; pageNumber++) {
                     int offset = pageNumber * COUNT_ITERATION_PRODUCT;
-                    List<Product> products = jdbcTemplate.query(SELECT_PRODUCTS_LIMIT_OFFSET, productRowMapper,
-                            COUNT_ITERATION_PRODUCT, offset);
-                    if (products.isEmpty()) break;
+                    psSelect.setInt(2, offset);
+                    ResultSet resultSet = psSelect.executeQuery();
+                    if (!resultSet.isBeforeFirst()) break;
 
-                    products = products.stream().map(product -> {
-                        product.setPrice(product.getPrice().multiply(priceIncreaseRate));
-                        return product;
-                    }).toList();
+                    while (resultSet.next()) {
+                        UUID productId = UUID.fromString(resultSet.getString("id"));
+                        BigDecimal productPrice = resultSet.getBigDecimal("price");
+                        productPrice = productPrice.multiply(priceIncreaseRate);
 
-                    for (Product product : products) {
-                        preparedStatement.setBigDecimal(1, product.getPrice());
-                        preparedStatement.setObject(2, product.getId());
+                        preparedStatement.setBigDecimal(1, productPrice);
+                        preparedStatement.setObject(2, productId);
                         preparedStatement.executeUpdate();
+
+                        fileWriter.append(productId.toString()).append(COMMA)
+                                .append(resultSet.getString("name")).append(COMMA)
+                                .append(resultSet.getString("article")).append(COMMA)
+                                .append(resultSet.getString("description")).append(COMMA)
+                                .append(resultSet.getString("category")).append(COMMA)
+                                .append(productPrice.toString()).append(COMMA)
+                                .append(resultSet.getString("count")).append(COMMA)
+                                .append(resultSet.getString("last_count_update_time")).append(COMMA)
+                                .append(resultSet.getString("create_date")).append(DELIMITER);
                     }
-
-                    List<String> productStrings = products.stream().map(this::productToString).toList();
-                    String toWrite = String.join(DELIMITER, productStrings);
-
-                    fileWriter.append(toWrite);
-                    fileWriter.append(DELIMITER);
-
                     log.info("Updated products: " + (offset + COUNT_ITERATION_PRODUCT));
                 }
                 conn.commit();
             } catch (SQLException e) {
-                throw new RuntimeException(e); // todo
+                throw new OptimizedProductPriceSchedulingSQLException(e.getMessage());
             }
         } catch (IOException e) {
             throw new OptimizedProductPriceSchedulingResultWriteFileException(e.getMessage());
         }
 
         log.info("OPTIMIZED PRODUCT PRICE SCHEDULER finished");
-    }
-
-    private String productToString(Product product) {
-        return product.toString(); // todo
     }
 
     private BigDecimal calculatePriceIncreaseRate() {
