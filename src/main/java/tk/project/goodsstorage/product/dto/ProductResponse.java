@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class ProductResponse {
 
     String category;
 
-    Integer price;
+    BigDecimal price;
 
     Long count;
 

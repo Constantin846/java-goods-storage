@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class UpdateProductDto {
 
     String category;
 
-    Integer price;
+    BigDecimal price;
 
     Long count;
 

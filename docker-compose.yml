@@ -1,0 +1,30 @@
+services:
+  gs-service:
+    build: .
+    image: gs-service
+    container_name: gs-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - gs-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
+      - SPRING_DATASOURCE_USERNAME=gs
+      - SPRING_DATASOURCE_PASSWORD=gs
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+
+  gs-db:
+    image: postgres:16.1
+    container_name: postgres-gs-db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_PASSWORD=gs
+      - POSTGRES_USER=gs
+      - POSTGRES_DB=gs
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+

@@ -1,11 +1,10 @@
 package tk.project.goodsstorage.product.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -22,7 +21,7 @@ public class UpdateProductResponse {
 
     String category;
 
-    Integer price;
+    BigDecimal price;
 
     Long count;
 
