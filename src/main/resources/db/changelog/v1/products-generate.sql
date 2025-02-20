@@ -1,12 +1,12 @@
 --liquibase formatted sql
---changeset Author:1
-insert into products(id, name, article, description, category, price, count, last_count_update_time, create_date)
+--changeset Author:2
+insert into product(id, name, article, description, category, price, count, last_count_update_time, create_date)
 select
     gen_random_uuid(),
     md5(random()::text),
     gen_random_uuid(),
     md5(random()::text),
-    md5(random()::text),
+    'UNDEFINED',
     100,
     10,
     '2025-02-12 18:17:01',

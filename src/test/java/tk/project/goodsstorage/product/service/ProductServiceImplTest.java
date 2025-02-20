@@ -82,8 +82,9 @@ class ProductServiceImplTest {
 
         when(mapper.toProduct(updateProductDto)).thenReturn(product);
         when(mapper.toUpdateProductDto(product)).thenReturn(updateProductDto);
-        when(productRepository.findById(updateProductDto.getId())).thenReturn(Optional.of(product));
+        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(product));
         when(productRepository.save(product)).thenReturn(product);
+        when(productRepository.findById(updateProductDto.getId())).thenReturn(Optional.of(product));
 
         UpdateProductDto updateProductDtoActual = productService.update(updateProductDto);
 
@@ -103,8 +104,8 @@ class ProductServiceImplTest {
         product.setArticle(article);
 
         when(mapper.toProduct(updateProductDto)).thenReturn(product);
-        when(productRepository.findById(updateProductDto.getId())).thenReturn(Optional.of(oldProduct));
-        when(productRepository.findByArticle(product.getArticle())).thenReturn(new Product());
+        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(oldProduct));
+        when(productRepository.findByArticle(product.getArticle())).thenReturn(Optional.of(new Product()));
 
         assertThrows(ArticleExistsException.class, () -> productService.update(updateProductDto));
     }
@@ -114,7 +115,7 @@ class ProductServiceImplTest {
         UpdateProductDto updateProductDto = new UpdateProductDto();
         updateProductDto.setId(UUID.randomUUID());
 
-        when(productRepository.findById(updateProductDto.getId())).thenReturn(Optional.empty());
+        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.empty());
 
         assertThrows(ProductNotFoundException.class, () -> productService.update(updateProductDto));
     }

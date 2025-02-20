@@ -5,7 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="changelog-v1-create-table-products.xml" relativeToChangelogFile="true"/>
+    <include file="changelog-v1-create-table-product.xml" relativeToChangelogFile="true"/>
+    <include file="changelog-create-index.sql" relativeToChangelogFile="true"/>
     <include file="h2-create-function.sql" relativeToChangelogFile="true"/>
     <include file="h2-products-generate.sql" relativeToChangelogFile="true"/>
 

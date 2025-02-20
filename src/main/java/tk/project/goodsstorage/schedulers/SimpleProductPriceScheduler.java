@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.product.Product;
@@ -15,12 +16,13 @@ import tk.project.goodsstorage.timer.TaskExecutionTime;
 import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-//@Profile("!local")
+@Profile("!local")
 @ConditionalOnMissingBean(OptimizedProductPriceScheduler.class)
 @ConditionalOnExpression("${app.scheduling.enable:false}")
 //@ConditionalOnExpression("${app.scheduling.enable:false} && !${app.scheduling.optimization.enable:false}")
@@ -56,6 +58,6 @@ public class SimpleProductPriceScheduler {
     }
 
     private BigDecimal calculatePriceIncreaseRate() {
-        return this.priceIncreasePercentage.divide(HUNDRED).add(ONE);
+        return this.priceIncreasePercentage.divide(HUNDRED, RoundingMode.HALF_EVEN).add(ONE);
     }
 }

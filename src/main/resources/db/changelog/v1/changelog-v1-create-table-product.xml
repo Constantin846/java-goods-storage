@@ -8,11 +8,11 @@
     <changeSet id="v1-1" author="Author">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="products"/>
+                <tableExists tableName="product"/>
             </not>
         </preConditions>
 
-        <createTable tableName="products">
+        <createTable tableName="product">
             <column name="id" type="uuid"> <!--defaultValue="gen_random_uuid()"-->
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -28,7 +28,7 @@
             <column name="category" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="numeric(18,9)">
+            <column name="price" type="numeric(10,4)">
                 <constraints nullable="false"/>
             </column>
             <column name="count" type="bigint">
@@ -45,10 +45,10 @@
 
     <!--<changeSet id="v1-2" author="Author">
         <preConditions onFail="MARK_RAN"> &lt;!&ndash;todo delete &ndash;&gt;
-            <tableIsEmpty tableName="products"/>
+            <tableIsEmpty tableName="product"/>
         </preConditions>
 
-        <loadData tableName="products" file="db/data/products-data1.csv"/>
-        <loadData tableName="products" file="db/data/products-data2.csv"/>
+        <loadData tableName="product" file="db/data/products-data1.csv"/>
+        <loadData tableName="product" file="db/data/products-data2.csv"/>
     </changeSet>-->
 </databaseChangeLog>

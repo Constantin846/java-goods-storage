@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.exceptions.OptimizedProductPriceSchedulingResultWriteFileException;
@@ -16,6 +17,7 @@ import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +28,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-//@Profile("!local")
+@Profile("!local")
 @ConditionalOnExpression("${app.scheduling.enable:false} && ${app.scheduling.optimization.enable:false}")
 public class OptimizedProductPriceScheduler {
     private final String filePath = this.getClass().getClassLoader()
@@ -37,17 +39,25 @@ public class OptimizedProductPriceScheduler {
     private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
     private static final BigDecimal ONE = BigDecimal.ONE;
-    private static final String UPDATE_PRODUCTS_PRICE = """
-            UPDATE products p
+    private static final String UPDATE_PRODUCT_PRICE = """
+            UPDATE product p
             SET price = ?
             WHERE p.id = ?
             """;
     private static final String SELECT_PRODUCTS_LIMIT_OFFSET = """
             SELECT *
-            FROM products
+            FROM product
             LIMIT ?
             OFFSET ?
             """;
+    private static final String SELECT_PRODUCTS_LIMIT_OFFSET_FOR_UPDATE = """
+            SELECT *
+            FROM product
+            LIMIT ?
+            OFFSET ?
+            FOR UPDATE
+            """;
+    private String selectQuery;
     @Value("${app.scheduling.priceIncreasePercentage}")
     private BigDecimal priceIncreasePercentage;
     @Value("${spring.datasource.url}")
@@ -56,6 +66,15 @@ public class OptimizedProductPriceScheduler {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
+
+    @Value("${app.scheduling.optimization.exclusive-lock:true}")
+    private void setSelectQuery(Boolean isSelectForUpdate) {
+        if (isSelectForUpdate) {
+            selectQuery = SELECT_PRODUCTS_LIMIT_OFFSET_FOR_UPDATE;
+        } else {
+            selectQuery = SELECT_PRODUCTS_LIMIT_OFFSET;
+        }
+    }
 
     @PostConstruct
     private void postConstruct() {
@@ -74,8 +93,8 @@ public class OptimizedProductPriceScheduler {
         try (FileWriter fileWriter = new FileWriter(filePath, !IS_REWRITING)) {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 conn.setAutoCommit(false);
-                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_PRODUCTS_PRICE);
-                PreparedStatement psSelect = conn.prepareStatement(SELECT_PRODUCTS_LIMIT_OFFSET);
+                PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_PRODUCT_PRICE);
+                PreparedStatement psSelect = conn.prepareStatement(selectQuery);
                 psSelect.setInt(1, COUNT_ITERATION_PRODUCT);
 
                 for (int pageNumber = 0; ; pageNumber++) {
@@ -117,6 +136,6 @@ public class OptimizedProductPriceScheduler {
     }
 
     private BigDecimal calculatePriceIncreaseRate() {
-        return this.priceIncreasePercentage.divide(HUNDRED).add(ONE);
+        return this.priceIncreasePercentage.divide(HUNDRED, RoundingMode.HALF_EVEN).add(ONE);
     }
 }

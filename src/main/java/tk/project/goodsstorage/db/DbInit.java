@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.product.Product;
+import tk.project.goodsstorage.product.model.CategoryType;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
 import java.math.BigDecimal;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 public class DbInit {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "des";
-    private static final String CATEGORY = "cat";
     private static final BigDecimal PRICE = BigDecimal.valueOf(100.0);
     private static final Long COUNT = 10L;
     private static final Instant LAST_COUNT_UPDATE_TIME = Instant.now();
@@ -59,7 +59,7 @@ public class DbInit {
                 product.setName(NAME);
                 product.setArticle(articles.pop());
                 product.setDescription(DESCRIPTION);
-                product.setCategory(CATEGORY);
+                product.setCategory(CategoryType.UNDEFINED);
                 product.setPrice(PRICE);
                 product.setCount(COUNT);
                 product.setLastCountUpdateTime(LAST_COUNT_UPDATE_TIME);

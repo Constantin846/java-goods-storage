@@ -16,15 +16,16 @@ import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    private static final String PRODUCT_WAS_NOT_FOUND_BY_ID = "Product was not found by id: %s";
     private final ProductDtoMapper mapper;
     private final ProductRepository productRepository;
 
@@ -33,8 +34,6 @@ public class ProductServiceImpl implements ProductService {
     public UUID create(CreateProductDto createProductDto) {
         throwExceptionIfArticleExists(createProductDto.getArticle());
         Product product = mapper.toProduct(createProductDto);
-        product.setCreateDate(LocalDate.now());
-        product.setLastCountUpdateTime(Instant.now());
         product = productRepository.save(product);
         return product.getId();
     }
@@ -55,11 +54,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public UpdateProductDto update(UpdateProductDto productDto) {
-        Product oldProduct = getById(productDto.getId());
+        Product oldProduct = getByIdForUpdate(productDto.getId());
         Product product = mapper.toProduct(productDto);
         oldProduct = updateFields(oldProduct, product);
         oldProduct = productRepository.save(oldProduct);
-        return mapper.toUpdateProductDto(oldProduct);
+        return mapper.toUpdateProductDto(getById(oldProduct.getId()));
     }
 
     @Transactional
@@ -71,20 +70,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void throwExceptionIfArticleExists(String article) {
-        if (Objects.nonNull(findByArticle(article))) {
+        Optional<Product> productOp = productRepository.findByArticle(article);
+        if (productOp.isPresent()) {
             String message = String.format("Article has already existed: %s", article);
             log.warn(message);
-            throw new ArticleExistsException(message);
+            throw new ArticleExistsException(message, productOp.get().getId());
         }
-    }
-
-    private Product findByArticle(String article) {
-        return productRepository.findByArticle(article);
     }
 
     private Product getById(UUID id) {
         return productRepository.findById(id).orElseThrow(() -> {
-            String message = String.format("Product was not found by id: %s", id);
+            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
+            log.warn(message);
+            return new ProductNotFoundException(message);
+        });
+    }
+
+    private Product getByIdForUpdate(UUID id) {
+        return productRepository.findByIdLocked(id).orElseThrow(() -> {
+            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
             log.warn(message);
             return new ProductNotFoundException(message);
         });
