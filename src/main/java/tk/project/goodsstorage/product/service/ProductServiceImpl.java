@@ -4,16 +4,20 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
-import tk.project.goodsstorage.product.Product;
-import tk.project.goodsstorage.product.dto.CreateProductDto;
-import tk.project.goodsstorage.product.dto.PageFindRequest;
 import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.dto.UpdateProductDto;
+import tk.project.goodsstorage.product.dto.create.CreateProductDto;
+import tk.project.goodsstorage.product.dto.find.PageFindRequest;
+import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
+import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
+import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
+import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private static final String PRODUCT_WAS_NOT_FOUND_BY_ID = "Product was not found by id: %s";
     private final ProductDtoMapper mapper;
     private final ProductRepository productRepository;
+    private final SearchCriteriaManager searchCriteriaManager;
 
     @Transactional
     @Override
@@ -36,6 +41,13 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.toProduct(createProductDto);
         product = productRepository.save(product);
         return product.getId();
+    }
+
+    @Override
+    public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria<?>> criteria) {
+        Specification<Product> specification = searchCriteriaManager.getSpecification(criteria);
+        List<Product> products = productRepository.findAll(specification, pageable).stream().toList();
+        return mapper.toProductDto(products);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.create;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

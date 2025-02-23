@@ -7,11 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
-import tk.project.goodsstorage.product.Product;
-import tk.project.goodsstorage.product.dto.CreateProductDto;
 import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.dto.UpdateProductDto;
+import tk.project.goodsstorage.product.dto.create.CreateProductDto;
+import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
+import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
 import java.util.Optional;

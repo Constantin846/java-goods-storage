@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.update;
 
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;

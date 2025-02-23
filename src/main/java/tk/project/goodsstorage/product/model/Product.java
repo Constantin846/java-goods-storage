@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product;
+package tk.project.goodsstorage.product.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
-import tk.project.goodsstorage.product.model.CategoryType;
 
 import java.math.BigDecimal;
 import java.time.Instant;

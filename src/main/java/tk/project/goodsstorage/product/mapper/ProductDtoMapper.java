@@ -2,14 +2,14 @@ package tk.project.goodsstorage.product.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import tk.project.goodsstorage.product.Product;
-import tk.project.goodsstorage.product.dto.CreateProductDto;
-import tk.project.goodsstorage.product.dto.CreateProductRequest;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.ProductResponse;
-import tk.project.goodsstorage.product.dto.UpdateProductDto;
-import tk.project.goodsstorage.product.dto.UpdateProductRequest;
-import tk.project.goodsstorage.product.dto.UpdateProductResponse;
+import tk.project.goodsstorage.product.dto.create.CreateProductDto;
+import tk.project.goodsstorage.product.dto.create.CreateProductRequest;
+import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
+import tk.project.goodsstorage.product.dto.update.UpdateProductRequest;
+import tk.project.goodsstorage.product.dto.update.UpdateProductResponse;
+import tk.project.goodsstorage.product.model.Product;
 
 import java.util.List;
 

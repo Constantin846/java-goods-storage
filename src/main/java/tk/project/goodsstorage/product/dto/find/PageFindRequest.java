@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.find;
 
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;

@@ -1,19 +1,14 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.create;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateProductDto {
-
-    UUID id;
+public class CreateProductDto {
 
     String name;
 
@@ -26,8 +21,4 @@ public class UpdateProductDto {
     BigDecimal price;
 
     Long count;
-
-    Instant lastCountUpdateTime;
-
-    LocalDate createDate;
 }
