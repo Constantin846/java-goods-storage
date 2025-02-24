@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class PriceCriteriaManager implements ItemCriteriaManager<BigDecimal> {
+public class PriceCriteriaManager implements ProductFieldCriteriaManager<BigDecimal> {
     private static final BigDecimal INCREASE_PERCENTAGE = BigDecimal.valueOf(1.2);
     private static final BigDecimal DECREASE_PERCENTAGE = BigDecimal.valueOf(0.8);
     private final Map<Operation, Function<SearchCriteria<BigDecimal>, Specification<Product>>> functions;

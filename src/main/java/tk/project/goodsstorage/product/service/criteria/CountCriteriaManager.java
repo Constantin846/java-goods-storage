@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class CountCriteriaManager implements ItemCriteriaManager<Long> {
+public class CountCriteriaManager implements ProductFieldCriteriaManager<Long> {
     private static final Long INEQUALITY = 2L;
     private final Map<Operation, Function<SearchCriteria<Long>, Specification<Product>>> functions;
 

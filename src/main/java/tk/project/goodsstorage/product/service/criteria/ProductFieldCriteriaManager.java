@@ -4,7 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.model.Product;
 
-public interface ItemCriteriaManager<T> {
+public interface ProductFieldCriteriaManager<T> {
 
     Specification<Product> getSpecification(SearchCriteria<T> criteria);
 }

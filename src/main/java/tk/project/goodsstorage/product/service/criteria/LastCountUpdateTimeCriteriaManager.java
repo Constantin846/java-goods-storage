@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class LastCountUpdateTimeCriteriaManager implements ItemCriteriaManager<Instant> {
+public class LastCountUpdateTimeCriteriaManager implements ProductFieldCriteriaManager<Instant> {
     private static final Long DELTA_SECONDS_FOR_LIKE = 2 * 24 * 60 * 60L;
     private static final Long DELTA_SECONDS_FOR_EQUALS = 5 * 60 * 60L;
     private final Map<Operation, Function<SearchCriteria<Instant>, Specification<Product>>> functions;

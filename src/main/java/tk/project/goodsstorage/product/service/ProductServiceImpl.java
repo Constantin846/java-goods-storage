@@ -45,6 +45,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria<?>> criteria) {
+        if (criteria.isEmpty()) {
+            List<Product> products = productRepository.findAll(pageable).stream().toList();
+            return mapper.toProductDto(products);
+        }
         Specification<Product> specification = searchCriteriaManager.getSpecification(criteria);
         List<Product> products = productRepository.findAll(specification, pageable).stream().toList();
         return mapper.toProductDto(products);

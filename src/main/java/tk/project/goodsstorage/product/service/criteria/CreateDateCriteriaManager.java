@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class CreateDateCriteriaManager implements ItemCriteriaManager<LocalDate> {
+public class CreateDateCriteriaManager implements ProductFieldCriteriaManager<LocalDate> {
     private static final Long DELTA_DAYS_FOR_LIKE = 3L;
     private final Map<Operation, Function<SearchCriteria<LocalDate>, Specification<Product>>> functions;
 

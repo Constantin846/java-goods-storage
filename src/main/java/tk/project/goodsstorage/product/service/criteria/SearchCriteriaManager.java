@@ -23,7 +23,7 @@ public class SearchCriteriaManager {
     private static final String COUNT = "count";
     private static final String LAST_COUNT_UPDATE_TIME = "lastCountUpdateTime";
     private static final String CREATE_DATE = "createDate";
-    private final Map<String, ItemCriteriaManager> criteriaManagers;
+    private final Map<String, ProductFieldCriteriaManager> criteriaManagers;
 
     public SearchCriteriaManager() {
         criteriaManagers = new HashMap<>();
