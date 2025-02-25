@@ -38,7 +38,7 @@ class ProductServiceImplDataJpaTest {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductServiceImpl productServiceUnderTest;
     private Product product;
     private final String name = "product";
     private final String article = "article";
@@ -67,7 +67,7 @@ class ProductServiceImplDataJpaTest {
     void findByCriteria() {
         List<SearchCriteria<?>> searchCriteria = createCriteria();
 
-        List<ProductDto> result = productService
+        List<ProductDto> result = productServiceUnderTest
                 .findByCriteria(PageRequest.of(0, 10), searchCriteria);
         ProductDto actualProduct = result.get(0);
 

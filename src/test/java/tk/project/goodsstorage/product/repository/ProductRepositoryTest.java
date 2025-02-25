@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 })
 class ProductRepositoryTest {
     @Autowired
-    private ProductRepository productRepository;
+    private ProductRepository productRepositoryUnderTest;
     private Product product;
     private final String name = "product";
     private final String article = "article";
@@ -43,7 +43,7 @@ class ProductRepositoryTest {
                 .lastCountUpdateTime(lastCountUpdateTime)
                 .createDate(createDate)
                 .build();
-        product = productRepository.save(product);
+        product = productRepositoryUnderTest.save(product);
     }
 
     @Test
@@ -51,7 +51,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductStringFieldEquals("name", List.of(name));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getName(), actualProduct.getName());
@@ -62,7 +62,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductStringFieldStartWith("name", name.substring(0, 3));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getName(), actualProduct.getName());
@@ -73,7 +73,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductStringFieldEndWith("name", name.substring(3));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getName(), actualProduct.getName());
@@ -84,7 +84,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductStringFieldLike("name", name.substring(2, 5));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getName(), actualProduct.getName());
@@ -95,7 +95,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductNumberFieldEquals("price", List.of(price));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getPrice(), actualProduct.getPrice());
@@ -106,7 +106,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductPriceMoreOrEquals(price.subtract(BigDecimal.ONE));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getPrice(), actualProduct.getPrice());
@@ -117,7 +117,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductPriceLessOrEquals(price.add(BigDecimal.ONE));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getPrice(), actualProduct.getPrice());
@@ -128,7 +128,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductCountMoreOrEquals(count - 1);
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getCount(), actualProduct.getCount());
@@ -139,7 +139,7 @@ class ProductRepositoryTest {
         Specification<Product> specification =
                 ProductSpecifications.hasProductCountLessOrEquals(count + 1);
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getCount(), actualProduct.getCount());
@@ -150,7 +150,7 @@ class ProductRepositoryTest {
         Specification<Product> specification = ProductSpecifications
                 .hasProductLastCountUpdateTimeBefore(lastCountUpdateTime.plusSeconds(10L));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getLastCountUpdateTime(), actualProduct.getLastCountUpdateTime());
@@ -161,7 +161,7 @@ class ProductRepositoryTest {
         Specification<Product> specification = ProductSpecifications
                 .hasProductLastCountUpdateTimeAfter(lastCountUpdateTime.minusSeconds(10L));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getLastCountUpdateTime(), actualProduct.getLastCountUpdateTime());
@@ -172,7 +172,7 @@ class ProductRepositoryTest {
         Specification<Product> specification = ProductSpecifications
                 .hasProductCreateDateEquals(createDate);
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getCreateDate(), actualProduct.getCreateDate());
@@ -183,7 +183,7 @@ class ProductRepositoryTest {
         Specification<Product> specification = ProductSpecifications
                 .hasProductCreateDateBefore(createDate.plusDays(10L));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getCreateDate(), actualProduct.getCreateDate());
@@ -194,7 +194,7 @@ class ProductRepositoryTest {
         Specification<Product> specification = ProductSpecifications
                 .hasProductCreateDateAfter(createDate.minusDays(10L));
 
-        Product actualProduct = productRepository.findAll(specification).get(0);
+        Product actualProduct = productRepositoryUnderTest.findAll(specification).get(0);
 
         assertEquals(product, actualProduct);
         assertEquals(product.getCreateDate(), actualProduct.getCreateDate());
@@ -202,14 +202,14 @@ class ProductRepositoryTest {
 
     @Test
     void findByArticle() {
-        Product actualProduct = productRepository.findByArticle(article).get();
+        Product actualProduct = productRepositoryUnderTest.findByArticle(article).get();
 
         assertEquals(product, actualProduct);
     }
 
     @Test
     void findByIdLocked() {
-        Product actualProduct = productRepository.findByIdLocked(product.getId()).get();
+        Product actualProduct = productRepositoryUnderTest.findByIdLocked(product.getId()).get();
 
         assertEquals(product, actualProduct);
     }
@@ -218,7 +218,7 @@ class ProductRepositoryTest {
     void findAll() {
         int expectedSize = 1;
 
-        List<Product> productList = productRepository.findAll();
+        List<Product> productList = productRepositoryUnderTest.findAll();
         Product actualProduct = productList.get(0);
 
         assertEquals(expectedSize, productList.size());
