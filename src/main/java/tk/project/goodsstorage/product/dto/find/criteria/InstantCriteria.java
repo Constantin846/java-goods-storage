@@ -15,6 +15,6 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InstantCriteria extends SearchCriteria<Instant> {
 
-    @NotNull(message = "Value of search criteria must be set")
+    @NotNull(message = "Value of search criteria must be set") // format "2025-02-22T14:32:00Z"
     Instant value;
 }
