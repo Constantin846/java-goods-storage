@@ -25,7 +25,7 @@ app:
     priceIncreasePercentage: 10.1
     optimization:
       enable: true
-      exclusive-lock: true #default true
+      exclusive-lock: false # doesn't work with h2
   dbInit: false
 
 logging:
