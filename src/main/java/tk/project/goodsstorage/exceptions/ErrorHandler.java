@@ -52,6 +52,22 @@ public class ErrorHandler {
         return ResponseEntity.ofNullable(apiError);
     }
 
+    @ExceptionHandler(OperationNotDefinedByStringException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiError> handlerOperationNotDefinedBySymbolException(final OperationNotDefinedByStringException e) {
+        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
+                Instant.now(), e.getStackTrace()[ZERO].getFileName());
+        return ResponseEntity.ofNullable(apiError);
+    }
+
+    @ExceptionHandler(ProductSpecificationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiError> handlerProductSpecificationException(final ProductSpecificationException e) {
+        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
+                Instant.now(), e.getStackTrace()[ZERO].getFileName());
+        return ResponseEntity.ofNullable(apiError);
+    }
+
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerProductNotFoundException(final ProductNotFoundException e) {

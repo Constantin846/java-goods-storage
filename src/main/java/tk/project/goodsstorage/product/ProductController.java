@@ -3,6 +3,7 @@ package tk.project.goodsstorage.product;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import tk.project.goodsstorage.product.dto.CreateProductDto;
-import tk.project.goodsstorage.product.dto.CreateProductRequest;
-import tk.project.goodsstorage.product.dto.PageFindRequest;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.ProductResponse;
-import tk.project.goodsstorage.product.dto.UpdateProductDto;
-import tk.project.goodsstorage.product.dto.UpdateProductRequest;
-import tk.project.goodsstorage.product.dto.UpdateProductResponse;
+import tk.project.goodsstorage.product.dto.create.CreateProductDto;
+import tk.project.goodsstorage.product.dto.create.CreateProductRequest;
+import tk.project.goodsstorage.product.dto.find.PageFindRequest;
+import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
+import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
+import tk.project.goodsstorage.product.dto.update.UpdateProductRequest;
+import tk.project.goodsstorage.product.dto.update.UpdateProductResponse;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
 import tk.project.goodsstorage.product.service.ProductService;
 
@@ -44,6 +46,15 @@ public class ProductController {
         log.info("Create product: {}", productRequest);
         CreateProductDto productDto = mapper.toCreateProductDto(productRequest);
         return Map.of(ID, productService.create(productDto));
+    }
+
+    @PostMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> findByCriteria(Pageable pageable,
+                                                @Valid @RequestBody List<SearchCriteria<?>> criteria) {
+        log.info("Find product by criteria: {}", criteria);
+        List<ProductDto> products = productService.findByCriteria(pageable, criteria);
+        return mapper.toProductResponse(products);
     }
 
     @GetMapping(ID_PATH)

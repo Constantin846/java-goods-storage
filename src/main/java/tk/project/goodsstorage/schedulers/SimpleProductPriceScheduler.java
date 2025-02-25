@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import tk.project.goodsstorage.product.Product;
+import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 import tk.project.goodsstorage.timer.TaskExecutionTime;
 import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;

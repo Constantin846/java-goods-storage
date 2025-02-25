@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.update;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,11 +11,13 @@ import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateProductResponse {
+public class UpdateProductDto {
 
     UUID id;
 
     String name;
+
+    String article;
 
     String description;
 

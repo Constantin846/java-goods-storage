@@ -7,11 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
-import tk.project.goodsstorage.product.Product;
-import tk.project.goodsstorage.product.dto.CreateProductDto;
 import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.dto.UpdateProductDto;
+import tk.project.goodsstorage.product.dto.create.CreateProductDto;
+import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
+import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
 import java.util.Optional;
@@ -25,11 +25,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
     @Mock
-    private ProductDtoMapper mapper;
+    private ProductDtoMapper mapperMock;
     @Mock
-    private ProductRepository productRepository;
+    private ProductRepository productRepositoryMock;
     @InjectMocks
-    private ProductServiceImpl productService;
+    private ProductServiceImpl productServiceUnderTest;
 
     @Test
     void create() {
@@ -40,10 +40,10 @@ class ProductServiceImplTest {
         product.setId(idExpected);
         product.setName(createProductDto.getName());
 
-        when(mapper.toProduct(createProductDto)).thenReturn(product);
-        when(productRepository.save(product)).thenReturn(product);
+        when(mapperMock.toProduct(createProductDto)).thenReturn(product);
+        when(productRepositoryMock.save(product)).thenReturn(product);
 
-        UUID idActual = productService.create(createProductDto);
+        UUID idActual = productServiceUnderTest.create(createProductDto);
 
         assertEquals(idExpected, idActual);
     }
@@ -56,10 +56,10 @@ class ProductServiceImplTest {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
 
-        when(mapper.toProductDto(product)).thenReturn(productDto);
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+        when(mapperMock.toProductDto(product)).thenReturn(productDto);
+        when(productRepositoryMock.findById(id)).thenReturn(Optional.of(product));
 
-        ProductDto actualProductDto = productService.findById(id);
+        ProductDto actualProductDto = productServiceUnderTest.findById(id);
 
         assertEquals(productDto.getId(), actualProductDto.getId());
     }
@@ -68,9 +68,9 @@ class ProductServiceImplTest {
     void findById_productNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        when(productRepository.findById(id)).thenReturn(Optional.empty());
+        when(productRepositoryMock.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productService.findById(id));
+        assertThrows(ProductNotFoundException.class, () -> productServiceUnderTest.findById(id));
     }
 
     @Test
@@ -80,13 +80,13 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setId(updateProductDto.getId());
 
-        when(mapper.toProduct(updateProductDto)).thenReturn(product);
-        when(mapper.toUpdateProductDto(product)).thenReturn(updateProductDto);
-        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(product));
-        when(productRepository.save(product)).thenReturn(product);
-        when(productRepository.findById(updateProductDto.getId())).thenReturn(Optional.of(product));
+        when(mapperMock.toProduct(updateProductDto)).thenReturn(product);
+        when(mapperMock.toUpdateProductDto(product)).thenReturn(updateProductDto);
+        when(productRepositoryMock.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(product));
+        when(productRepositoryMock.save(product)).thenReturn(product);
+        when(productRepositoryMock.findById(updateProductDto.getId())).thenReturn(Optional.of(product));
 
-        UpdateProductDto updateProductDtoActual = productService.update(updateProductDto);
+        UpdateProductDto updateProductDtoActual = productServiceUnderTest.update(updateProductDto);
 
         assertEquals(updateProductDto.getId(), updateProductDtoActual.getId());
     }
@@ -103,11 +103,11 @@ class ProductServiceImplTest {
         updateProductDto.setArticle(article);
         product.setArticle(article);
 
-        when(mapper.toProduct(updateProductDto)).thenReturn(product);
-        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(oldProduct));
-        when(productRepository.findByArticle(product.getArticle())).thenReturn(Optional.of(new Product()));
+        when(mapperMock.toProduct(updateProductDto)).thenReturn(product);
+        when(productRepositoryMock.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(oldProduct));
+        when(productRepositoryMock.findByArticle(product.getArticle())).thenReturn(Optional.of(new Product()));
 
-        assertThrows(ArticleExistsException.class, () -> productService.update(updateProductDto));
+        assertThrows(ArticleExistsException.class, () -> productServiceUnderTest.update(updateProductDto));
     }
 
     @Test
@@ -115,9 +115,9 @@ class ProductServiceImplTest {
         UpdateProductDto updateProductDto = new UpdateProductDto();
         updateProductDto.setId(UUID.randomUUID());
 
-        when(productRepository.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.empty());
+        when(productRepositoryMock.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productService.update(updateProductDto));
+        assertThrows(ProductNotFoundException.class, () -> productServiceUnderTest.update(updateProductDto));
     }
 
     @Test
@@ -126,19 +126,19 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setId(id);
 
-        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+        when(productRepositoryMock.findById(id)).thenReturn(Optional.of(product));
 
-        productService.deleteById(id);
+        productServiceUnderTest.deleteById(id);
 
-        verify(productRepository).deleteById(id);
+        verify(productRepositoryMock).deleteById(id);
     }
 
     @Test
     void deleteById_productNotFoundException() {
         UUID id = UUID.randomUUID();
 
-        when(productRepository.findById(id)).thenReturn(Optional.empty());
+        when(productRepositoryMock.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productService.deleteById(id));
+        assertThrows(ProductNotFoundException.class, () -> productServiceUnderTest.deleteById(id));
     }
 }
