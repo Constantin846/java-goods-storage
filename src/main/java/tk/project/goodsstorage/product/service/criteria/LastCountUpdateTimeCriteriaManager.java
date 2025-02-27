@@ -1,7 +1,6 @@
 package tk.project.goodsstorage.product.service.criteria;
 
 import org.springframework.data.jpa.domain.Specification;
-import tk.project.goodsstorage.product.dto.find.criteria.Operation;
 import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductSpecifications;

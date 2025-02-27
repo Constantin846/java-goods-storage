@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto.find.criteria;
+package tk.project.goodsstorage.product.service.criteria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

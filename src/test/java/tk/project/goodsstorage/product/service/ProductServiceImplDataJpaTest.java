@@ -11,18 +11,15 @@ import tk.project.goodsstorage.product.dto.find.criteria.BigDecimalCriteria;
 import tk.project.goodsstorage.product.dto.find.criteria.InstantCriteria;
 import tk.project.goodsstorage.product.dto.find.criteria.LocalDateCriteria;
 import tk.project.goodsstorage.product.dto.find.criteria.LongCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.Operation;
 import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.dto.find.criteria.StringCriteria;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapperImpl;
-import tk.project.goodsstorage.product.model.CategoryType;
 import tk.project.goodsstorage.product.model.Product;
+import tk.project.goodsstorage.product.model.objectmother.ProductMother;
 import tk.project.goodsstorage.product.repository.ProductRepository;
+import tk.project.goodsstorage.product.service.criteria.Operation;
 import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,26 +37,10 @@ class ProductServiceImplDataJpaTest {
     @Autowired
     private ProductServiceImpl productServiceUnderTest;
     private Product product;
-    private final String name = "product";
-    private final String article = "article";
-    private final String description = "description text";
-    private final BigDecimal price = BigDecimal.valueOf(1000);
-    private final Long count = 100L;
-    private final Instant lastCountUpdateTime = Instant.now();
-    private final LocalDate createDate = LocalDate.now();
 
     @BeforeEach
     void saveProduct() {
-        product = Product.builder()
-                .name(name)
-                .article(article)
-                .description(description)
-                .category(CategoryType.FRUIT)
-                .price(price)
-                .count(count)
-                .lastCountUpdateTime(lastCountUpdateTime)
-                .createDate(createDate)
-                .build();
+        product = ProductMother.createDefaultProduct().build();
         product = productRepository.save(product);
     }
 
@@ -86,43 +67,43 @@ class ProductServiceImplDataJpaTest {
         List<SearchCriteria<?>> criteria = new ArrayList<>();
         StringCriteria nameCriteria = new StringCriteria();
         nameCriteria.setField("name");
-        nameCriteria.setValue(name);
+        nameCriteria.setValue(product.getName());
         nameCriteria.setOperation(Operation.EQUALS);
         criteria.add(nameCriteria);
 
         StringCriteria articleCriteria = new StringCriteria();
         articleCriteria.setField("article");
-        articleCriteria.setValue(article);
+        articleCriteria.setValue(product.getArticle());
         articleCriteria.setOperation(Operation.MORE_OR_EQUALS);
         criteria.add(articleCriteria);
 
         StringCriteria descriptionCriteria = new StringCriteria();
         descriptionCriteria.setField("description");
-        descriptionCriteria.setValue("text");
+        descriptionCriteria.setValue(product.getDescription().substring(4));
         descriptionCriteria.setOperation(Operation.LESS_OR_EQUALS);
         criteria.add(descriptionCriteria);
 
         BigDecimalCriteria priceCriteria = new BigDecimalCriteria();
         priceCriteria.setField("price");
-        priceCriteria.setValue(price);
+        priceCriteria.setValue(product.getPrice());
         priceCriteria.setOperation(Operation.LIKE);
         criteria.add(priceCriteria);
 
         LongCriteria countCriteria = new LongCriteria();
         countCriteria.setField("count");
-        countCriteria.setValue(count);
+        countCriteria.setValue(product.getCount());
         countCriteria.setOperation(Operation.LIKE);
         criteria.add(countCriteria);
 
         InstantCriteria lastCountUpdateTimeCriteria = new InstantCriteria();
         lastCountUpdateTimeCriteria.setField("lastCountUpdateTime");
-        lastCountUpdateTimeCriteria.setValue(lastCountUpdateTime);
+        lastCountUpdateTimeCriteria.setValue(product.getLastCountUpdateTime());
         lastCountUpdateTimeCriteria.setOperation(Operation.EQUALS);
         criteria.add(lastCountUpdateTimeCriteria);
 
         LocalDateCriteria createDateCriteria = new LocalDateCriteria();
         createDateCriteria.setField("createDate");
-        createDateCriteria.setValue(createDate);
+        createDateCriteria.setValue(product.getCreateDate());
         createDateCriteria.setOperation(Operation.EQUALS);
         criteria.add(createDateCriteria);
 
