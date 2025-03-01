@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
-import tk.project.goodsstorage.currency.dto.CurrenciesDto;
+import tk.project.goodsstorage.currency.CurrenciesDto;
 import tk.project.goodsstorage.exceptions.RequestGetCurrenciesException;
 
 import java.time.Duration;
@@ -45,7 +45,7 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .doOnError(error -> {
                     String message = "Something went wrong while executing request of currencies";
                     log.warn(message);
-                    throw new RequestGetCurrenciesException(message);
+                    throw new RequestGetCurrenciesException(message, error);
                 })
                 .block();
     }

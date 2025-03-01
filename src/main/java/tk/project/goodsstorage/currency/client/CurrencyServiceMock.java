@@ -3,7 +3,7 @@ package tk.project.goodsstorage.currency.client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
-import tk.project.goodsstorage.currency.dto.CurrenciesDto;
+import tk.project.goodsstorage.currency.CurrenciesDto;
 import tk.project.goodsstorage.exceptions.RequestGetCurrenciesException;
 
 import java.math.BigDecimal;
@@ -33,9 +33,9 @@ public class CurrencyServiceMock implements CurrencyService {
             throw new RequestGetCurrenciesException("Currency service mock threw exception");
         }
         CurrenciesDto currenciesDto = new CurrenciesDto();
-        currenciesDto.setCNY(generateBigDecimal(maxCNY));
-        currenciesDto.setEUR(generateBigDecimal(maxEUR));
-        currenciesDto.setUSD(generateBigDecimal(maxUSD));
+        currenciesDto.setCny(generateBigDecimal(maxCNY));
+        currenciesDto.setEur(generateBigDecimal(maxEUR));
+        currenciesDto.setUsd(generateBigDecimal(maxUSD));
         return currenciesDto;
     }
 

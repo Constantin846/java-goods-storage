@@ -3,8 +3,8 @@ package tk.project.goodsstorage.currency.converter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tk.project.goodsstorage.currency.CurrenciesDto;
 import tk.project.goodsstorage.currency.Currency;
-import tk.project.goodsstorage.currency.dto.CurrenciesDto;
 import tk.project.goodsstorage.currency.provider.CurrenciesProvider;
 import tk.project.goodsstorage.product.dto.ProductDto;
 
@@ -44,10 +44,10 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 
     private BigDecimal getCurrencyRate(CurrenciesDto currencies, Currency currency) {
         return switch (currency) {
-            case CNY -> currencies.getCNY();
-            case EUR -> currencies.getEUR();
+            case CNY -> currencies.getCny();
+            case EUR -> currencies.getEur();
             case RUS -> BigDecimal.ONE;
-            case USD -> currencies.getUSD();
+            case USD -> currencies.getUsd();
         };
     }
 }
