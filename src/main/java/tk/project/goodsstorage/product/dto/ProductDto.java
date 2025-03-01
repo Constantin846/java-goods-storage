@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
+import tk.project.goodsstorage.currency.Currency;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -32,4 +33,6 @@ public class ProductDto {
     Instant lastCountUpdateTime;
 
     LocalDate createDate;
+
+    Currency currency = Currency.RUS;
 }

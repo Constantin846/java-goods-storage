@@ -2,10 +2,18 @@ package tk.project.goodsstorage.product.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import tk.project.goodsstorage.currency.Currency;
+import tk.project.goodsstorage.currency.SessionCurrencyWrapper;
+import tk.project.goodsstorage.currency.converter.CurrencyConverterImpl;
+import tk.project.goodsstorage.currency.dto.CurrenciesDto;
+import tk.project.goodsstorage.currency.provider.CurrenciesProvider;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.find.criteria.BigDecimalCriteria;
 import tk.project.goodsstorage.product.dto.find.criteria.InstantCriteria;
@@ -24,14 +32,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 @DataJpaTest(properties = {
         "spring.datasource.url=jdbc:h2:mem:gs;LOCK_TIMEOUT=60000",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.liquibase.enabled=false"
 })
-@Import(value = {ProductDtoMapperImpl.class, ProductServiceImpl.class, SearchCriteriaManager.class})
+@Import(value = {CurrencyConverterImpl.class, ProductDtoMapperImpl.class,
+        ProductServiceImpl.class, SearchCriteriaManager.class})
 class ProductServiceImplDataJpaTest {
+    @MockBean
+    private CurrenciesProvider currenciesProvider;
+    @MockBean
+    private SessionCurrencyWrapper sessionCurrencyWrapper;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -46,6 +61,9 @@ class ProductServiceImplDataJpaTest {
 
     @Test
     void findByCriteria() {
+        when(sessionCurrencyWrapper.getCurrency()).thenReturn(Currency.RUS);
+        when(currenciesProvider.getCurrencies()).thenReturn(CurrenciesDto.ofDoubles(1.1, 1.2, 1.3));
+
         List<SearchCriteria<?>> searchCriteria = createCriteria();
 
         List<ProductDto> result = productServiceUnderTest

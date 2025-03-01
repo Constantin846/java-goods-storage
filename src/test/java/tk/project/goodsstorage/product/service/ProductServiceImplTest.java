@@ -5,6 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tk.project.goodsstorage.currency.Currency;
+import tk.project.goodsstorage.currency.SessionCurrencyWrapper;
+import tk.project.goodsstorage.currency.converter.CurrencyConverter;
 import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
 import tk.project.goodsstorage.product.dto.ProductDto;
@@ -25,9 +28,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
     @Mock
+    private CurrencyConverter currencyConverterMock;
+    @Mock
     private ProductDtoMapper mapperMock;
     @Mock
     private ProductRepository productRepositoryMock;
+    @Mock
+    private SessionCurrencyWrapper sessionCurrencyWrapperMock;
     @InjectMocks
     private ProductServiceImpl productServiceUnderTest;
 
@@ -55,9 +62,12 @@ class ProductServiceImplTest {
         product.setId(id);
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
+        Currency currency = Currency.RUS;
 
         when(mapperMock.toProductDto(product)).thenReturn(productDto);
         when(productRepositoryMock.findById(id)).thenReturn(Optional.of(product));
+        when(sessionCurrencyWrapperMock.getCurrency()).thenReturn(currency);
+        when(currencyConverterMock.changeCurrency(productDto, currency)).thenReturn(productDto);
 
         ProductDto actualProductDto = productServiceUnderTest.findById(id);
 

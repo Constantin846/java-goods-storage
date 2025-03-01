@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import tk.project.goodsstorage.currency.SessionCurrencyWrapper;
+import tk.project.goodsstorage.currency.converter.CurrencyConverter;
 import tk.project.goodsstorage.exceptions.ArticleExistsException;
 import tk.project.goodsstorage.exceptions.ProductNotFoundException;
 import tk.project.goodsstorage.product.dto.ProductDto;
@@ -30,9 +32,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private static final String PRODUCT_WAS_NOT_FOUND_BY_ID = "Product was not found by id: %s";
+    private final CurrencyConverter currencyConverter;
     private final ProductDtoMapper mapper;
     private final ProductRepository productRepository;
     private final SearchCriteriaManager searchCriteriaManager;
+    private final SessionCurrencyWrapper sessionCurrencyWrapper;
 
     @Transactional
     @Override
@@ -45,26 +49,35 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria<?>> criteria) {
+        List<Product> products;
+
         if (criteria.isEmpty()) {
-            List<Product> products = productRepository.findAll(pageable).stream().toList();
-            return mapper.toProductDto(products);
+            products = productRepository.findAll(pageable).stream().toList();
+
+        } else {
+            Specification<Product> specification = searchCriteriaManager.getSpecification(criteria);
+            products = productRepository.findAll(specification, pageable).stream().toList();
         }
-        Specification<Product> specification = searchCriteriaManager.getSpecification(criteria);
-        List<Product> products = productRepository.findAll(specification, pageable).stream().toList();
-        return mapper.toProductDto(products);
+        return products.stream()
+                .map(mapper::toProductDto)
+                .map(it -> currencyConverter.changeCurrency(it, sessionCurrencyWrapper.getCurrency()))
+                .toList();
     }
 
     @Override
     public ProductDto findById(UUID id) {
         Product product = getById(id);
-        return mapper.toProductDto(product);
+        return currencyConverter.changeCurrency(mapper.toProductDto(product), sessionCurrencyWrapper.getCurrency());
     }
 
     @Override
     public List<ProductDto> findAll(PageFindRequest page) {
         List<Product> products =
                 productRepository.findAll(PageRequest.of(page.getFrom(), page.getSize())).stream().toList();
-        return mapper.toProductDto(products);
+        return products.stream()
+                .map(mapper::toProductDto)
+                .map(it -> currencyConverter.changeCurrency(it, sessionCurrencyWrapper.getCurrency()))
+                .toList();
     }
 
     @Transactional
