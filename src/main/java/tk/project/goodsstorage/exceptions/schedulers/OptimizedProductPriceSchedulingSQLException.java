@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.exceptions;
+package tk.project.goodsstorage.exceptions.schedulers;
 
 public class OptimizedProductPriceSchedulingSQLException extends RuntimeException {
     private final static String MESSAGE =

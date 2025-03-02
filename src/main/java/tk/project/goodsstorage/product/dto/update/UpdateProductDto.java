@@ -30,4 +30,6 @@ public class UpdateProductDto {
     Instant lastCountUpdateTime;
 
     LocalDate createDate;
+
+    Boolean isAvailable;
 }

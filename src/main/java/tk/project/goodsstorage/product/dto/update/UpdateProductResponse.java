@@ -28,4 +28,6 @@ public class UpdateProductResponse {
     Instant lastCountUpdateTime;
 
     LocalDate createDate;
+
+    Boolean isAvailable;
 }

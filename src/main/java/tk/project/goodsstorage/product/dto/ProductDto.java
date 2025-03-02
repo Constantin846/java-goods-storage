@@ -34,5 +34,7 @@ public class ProductDto {
 
     LocalDate createDate;
 
+    Boolean isAvailable;
+
     Currency currency = Currency.RUS;
 }

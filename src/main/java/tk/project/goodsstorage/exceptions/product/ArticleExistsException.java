@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.exceptions;
+package tk.project.goodsstorage.exceptions.product;
 
 import lombok.Getter;
 

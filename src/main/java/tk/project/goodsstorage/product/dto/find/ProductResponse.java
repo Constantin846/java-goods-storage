@@ -31,5 +31,7 @@ public class ProductResponse {
 
     LocalDate createDate;
 
+    Boolean isAvailable;
+
     String currency;
 }

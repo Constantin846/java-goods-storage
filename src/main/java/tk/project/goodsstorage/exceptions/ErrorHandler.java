@@ -8,6 +8,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import tk.project.goodsstorage.exceptions.customer.CustomerNotFoundException;
+import tk.project.goodsstorage.exceptions.customer.LoginExistsException;
+import tk.project.goodsstorage.exceptions.product.ArticleExistsException;
+import tk.project.goodsstorage.exceptions.product.ProductNotFoundException;
+import tk.project.goodsstorage.exceptions.product.ProductSpecificationException;
+import tk.project.goodsstorage.exceptions.schedulers.OperationNotDefinedByStringException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -27,6 +33,18 @@ public class ErrorHandler {
     public ResponseEntity<ApiError> handlerArticleExistsException(final ArticleExistsException e) {
         String message = Optional.ofNullable(e.getExistedProductId())
                 .map(id -> e.getMessage() + " And product id: " + id)
+                .orElseGet(e::getMessage);
+
+        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
+                Instant.now(), e.getStackTrace()[ZERO].getFileName());
+        return ResponseEntity.ofNullable(apiError);
+    }
+
+    @ExceptionHandler(LoginExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerLoginExistsException(final LoginExistsException e) {
+        String message = Optional.ofNullable(e.getExistedCustomerId())
+                .map(id -> e.getMessage() + " And customer id: " + id)
                 .orElseGet(e::getMessage);
 
         ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
@@ -55,25 +73,25 @@ public class ErrorHandler {
     @ExceptionHandler(OperationNotDefinedByStringException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerOperationNotDefinedBySymbolException(final OperationNotDefinedByStringException e) {
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e);
     }
 
     @ExceptionHandler(ProductSpecificationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerProductSpecificationException(final ProductSpecificationException e) {
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerProductNotFoundException(final ProductNotFoundException e) {
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerCustomerNotFoundException(final CustomerNotFoundException e) {
+        return createApiError(e);
     }
 
     @ExceptionHandler
@@ -82,6 +100,12 @@ public class ErrorHandler {
         String message = INTERNAL_SERVER_ERROR;
         log.warn(message, e);
         ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
+                Instant.now(), e.getStackTrace()[ZERO].getFileName());
+        return ResponseEntity.ofNullable(apiError);
+    }
+
+    private ResponseEntity<ApiError> createApiError(final Throwable e) {
+        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
                 Instant.now(), e.getStackTrace()[ZERO].getFileName());
         return ResponseEntity.ofNullable(apiError);
     }

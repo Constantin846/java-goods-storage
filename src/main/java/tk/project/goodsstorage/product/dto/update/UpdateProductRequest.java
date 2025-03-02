@@ -32,4 +32,6 @@ public class UpdateProductRequest {
     BigDecimal price;
 
     Long count;
+
+    Boolean isAvailable;
 }
