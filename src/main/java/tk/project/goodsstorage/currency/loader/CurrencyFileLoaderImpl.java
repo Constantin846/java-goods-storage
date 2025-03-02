@@ -26,7 +26,7 @@ public class CurrencyFileLoaderImpl implements CurrencyFileLoader {
     public CurrenciesDto loadCurrencies() {
         try {
             String content = Files.readString(Path.of(filePath));
-            return objectMapper.readValue(content, CurrenciesDto.class);
+            return objectMapper.readValue(content.toLowerCase(), CurrenciesDto.class);
 
         } catch (JsonProcessingException e) {
             String message = "Exception during deserializing content of currency file";
