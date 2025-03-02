@@ -5,40 +5,36 @@ import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductSpecifications;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public class StringCriteriaManager implements ProductFieldCriteriaManager<String> {
-    private final Map<Operation, Function<SearchCriteria<String>, Specification<Product>>> functions;
-
-    public StringCriteriaManager() {
-        functions = new HashMap<>();
-        functions.put(Operation.EQUALS, this::searchStringEquals);
-        functions.put(Operation.MORE_OR_EQUALS, this::searchStringStartWith);
-        functions.put(Operation.LESS_OR_EQUALS, this::searchStringEndWith);
-        functions.put(Operation.LIKE, this::searchStringLike);
-    }
+    private static final Map<Operation, Function<SearchCriteria<String>, Specification<Product>>> FUNCTIONS = Map.of(
+            Operation.EQUALS, StringCriteriaManager::searchEquals,
+            Operation.MORE_OR_EQUALS, StringCriteriaManager::searchStartWith,
+            Operation.LESS_OR_EQUALS, StringCriteriaManager::searchEndWith,
+            Operation.LIKE, StringCriteriaManager::searchLike
+    );
 
     @Override
     public Specification<Product> getSpecification(SearchCriteria<String> criteria) {
-        return functions.get(criteria.getOperation()).apply(criteria);
+        return FUNCTIONS.get(criteria.getOperation()).apply(criteria);
     }
 
-    private Specification<Product> searchStringEquals(SearchCriteria<String> criteria) {
+    private static Specification<Product> searchEquals(SearchCriteria<String> criteria) {
         return ProductSpecifications.hasProductStringFieldEquals(criteria.getField(), List.of(criteria.getValue()));
     }
 
-    private Specification<Product> searchStringStartWith(SearchCriteria<String> criteria) {
+    private static Specification<Product> searchStartWith(SearchCriteria<String> criteria) {
         return ProductSpecifications.hasProductStringFieldStartWith(criteria.getField(), criteria.getValue());
     }
 
-    private Specification<Product> searchStringEndWith(SearchCriteria<String> criteria) {
+    private static Specification<Product> searchEndWith(SearchCriteria<String> criteria) {
         return ProductSpecifications.hasProductStringFieldEndWith(criteria.getField(), criteria.getValue());
     }
 
-    private Specification<Product> searchStringLike(SearchCriteria<String> criteria) {
+    private static Specification<Product> searchLike(SearchCriteria<String> criteria) {
         return ProductSpecifications.hasProductStringFieldLike(criteria.getField(), criteria.getValue());
     }
 }
