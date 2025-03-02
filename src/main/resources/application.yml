@@ -27,6 +27,13 @@ app:
       enable: true
       exclusive-lock: false # doesn't work with h2
   dbInit: false
+  currency-service.type: real # real # mock
+
+currency-service:
+  host: http://localhost:8088
+  method:
+    get-currencies: /app-currency/v1/currencies
+  timeout: 2000 #ms
 
 logging:
   level:

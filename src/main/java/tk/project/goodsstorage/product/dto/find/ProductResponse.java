@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.dto;
+package tk.project.goodsstorage.product.dto.find;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -30,4 +30,6 @@ public class ProductResponse {
     Instant lastCountUpdateTime;
 
     LocalDate createDate;
+
+    String currency;
 }
