@@ -20,50 +20,68 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Component
 @Profile("!local")
-@ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized')")
-public class OptimizedProductPriceScheduler {
+@ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized-my')")
+public class OptimizedProductPriceSchedulerMy {
     private final String filePath;
     private static final String COMMA = ",";
-    private static final String SELECT_PRODUCT = """
+    private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
+    private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    private static final BigDecimal ONE = BigDecimal.ONE;
+    private static final String UPDATE_PRODUCT_PRICE = """
+            UPDATE product p
+            SET price = ?
+            WHERE p.id = ?
+            """;
+    private static final String SELECT_PRODUCTS_LIMIT_OFFSET = """
             SELECT *
             FROM product
+            LIMIT ?
+            OFFSET ?
             """;
-    private static final String UPDATE_PRODUCT_PRICE = """
-            UPDATE product
-            SET price = price * (1 + ?/100)
-            """; // RETURNING * - doesn't work with h2
-    private static final String LOCK_PRODUCT_TABLE = "LOCK TABLE product IN ACCESS EXCLUSIVE MODE"; // doesn't work with h2
-    private final BigDecimal priceIncreasePercentage;
-    private final Boolean isExclusiveLocked;
+    private static final String SELECT_PRODUCTS_LIMIT_OFFSET_FOR_UPDATE = """
+            SELECT *
+            FROM product
+            LIMIT ?
+            OFFSET ?
+            FOR UPDATE
+            """;
+    private final String selectQuery;
+    private final BigDecimal priceIncreaseRate;
     private final EntityManagerFactory entityManagerFactory;
 
-    public OptimizedProductPriceScheduler(
+    public OptimizedProductPriceSchedulerMy(
             @Value("${app.scheduling.priceIncreasePercentage}")
             BigDecimal priceIncreasePercentage,
             @Value("${app.scheduling.optimization.exclusive-lock:true}")
             Boolean isExclusiveLocked,
             EntityManagerFactory entityManagerFactory
     ) {
-        this.priceIncreasePercentage = priceIncreasePercentage;
-        this.isExclusiveLocked = !Objects.isNull(isExclusiveLocked) && isExclusiveLocked;
+        this.priceIncreaseRate = priceIncreasePercentage.divide(HUNDRED, RoundingMode.HALF_EVEN).add(ONE);
         this.entityManagerFactory = entityManagerFactory;
         this.filePath = this.getClass().getClassLoader()
                 .getResource("optimized-product-price-scheduling/result.csv").getPath();
+
+        if (!Objects.isNull(isExclusiveLocked) && isExclusiveLocked) {
+            selectQuery = SELECT_PRODUCTS_LIMIT_OFFSET_FOR_UPDATE;
+        } else {
+            selectQuery = SELECT_PRODUCTS_LIMIT_OFFSET;
+        }
     }
 
     @PostConstruct
     private void postConstruct() {
-        log.info("Initialized OPTIMIZED PRODUCT PRICE SCHEDULER");
+        log.info("Initialized OPTIMIZED PRODUCT PRICE SCHEDULER MY");
     }
 
     @TaskExecutionTime
@@ -84,30 +102,36 @@ public class OptimizedProductPriceScheduler {
                             connection
                     ) {
                         connection.setAutoCommit(false);
-
-                        if (isExclusiveLocked) {
-                            Statement lockStatement = connection.createStatement();
-                            lockStatement.execute(LOCK_PRODUCT_TABLE);
-                        }
-
                         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_PRICE);
-                        preparedStatement.setBigDecimal(1, priceIncreasePercentage);
-                        preparedStatement.executeUpdate();
+                        PreparedStatement psSelect = connection.prepareStatement(selectQuery);
+                        psSelect.setInt(1, COUNT_ITERATION_PRODUCT);
 
-                        PreparedStatement psSelect = connection.prepareStatement(SELECT_PRODUCT);
-                        ResultSet resultSet = psSelect.executeQuery();
+                        for (int pageNumber = 0; ; pageNumber++) {
+                            int offset = pageNumber * COUNT_ITERATION_PRODUCT;
+                            psSelect.setInt(2, offset);
+                            ResultSet resultSet = psSelect.executeQuery();
+                            if (!resultSet.isBeforeFirst()) break;
 
-                        while (resultSet.next()) {
-                            fileWriter.append(resultSet.getString("id")).append(COMMA)
-                                    .append(resultSet.getString("name")).append(COMMA)
-                                    .append(resultSet.getString("article")).append(COMMA)
-                                    .append(resultSet.getString("description")).append(COMMA)
-                                    .append(resultSet.getString("category")).append(COMMA)
-                                    .append(resultSet.getString("price")).append(COMMA)
-                                    .append(resultSet.getString("count")).append(COMMA)
-                                    .append(resultSet.getString("last_count_update_time")).append(COMMA)
-                                    .append(resultSet.getString("create_date"));
-                            fileWriter.newLine();
+                            while (resultSet.next()) {
+                                UUID productId = UUID.fromString(resultSet.getString("id"));
+                                BigDecimal productPrice = resultSet.getBigDecimal("price");
+                                productPrice = productPrice.multiply(priceIncreaseRate);
+
+                                preparedStatement.setBigDecimal(1, productPrice);
+                                preparedStatement.setObject(2, productId);
+                                preparedStatement.executeUpdate();
+
+                                fileWriter.append(productId.toString()).append(COMMA)
+                                        .append(resultSet.getString("name")).append(COMMA)
+                                        .append(resultSet.getString("article")).append(COMMA)
+                                        .append(resultSet.getString("description")).append(COMMA)
+                                        .append(resultSet.getString("category")).append(COMMA)
+                                        .append(productPrice.toString()).append(COMMA)
+                                        .append(resultSet.getString("count")).append(COMMA)
+                                        .append(resultSet.getString("last_count_update_time")).append(COMMA)
+                                        .append(resultSet.getString("create_date"));
+                                fileWriter.newLine();
+                            }
                         }
                         connection.commit();
 

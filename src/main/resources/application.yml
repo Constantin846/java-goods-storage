@@ -12,6 +12,8 @@ spring:
 
   jpa:
     hibernate.ddl-auto: validate
+    # show-sql: true
+    properties.hibernate.format_sql: true
   database-platform: org.hibernate.dialect.PostgreSQL16Dialect
 
   liquibase:
@@ -24,7 +26,7 @@ app:
     period: 60000 #ms
     priceIncreasePercentage: 10.1
     optimization:
-      enable: true
+      type: optimized-my # optimized # optimized-my
       exclusive-lock: false # doesn't work with h2
   dbInit: false
   currency-service.type: real # real # mock
@@ -38,6 +40,6 @@ currency-service:
 logging:
   level:
     org.hibernate:
-      SQL: INFO
+      SQL: TRACE
       type: INFO
       orm.jdbc.bind: INFO

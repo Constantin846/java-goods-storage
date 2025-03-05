@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import tk.project.goodsstorage.product.model.Product;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
@@ -20,4 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Product> findAll();
+
+    @Query(value = "select * from product p where p.id in :ids for update", nativeQuery = true)
+    Set<Product> findAllByIdsForUpdate(Collection<UUID> ids);
 }

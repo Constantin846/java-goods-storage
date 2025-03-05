@@ -58,15 +58,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private Customer getByIdForUpdate(long id) {
-        return customerRepository.findByIdLocked(id).orElseThrow(() -> {
-            return throwCustomerNotFoundException(id);
-        });
+        return customerRepository.findByIdLocked(id).orElseThrow(() -> throwCustomerNotFoundException(id));
     }
 
     private Customer getById(long id) {
-        return customerRepository.findById(id).orElseThrow(() -> {
-            return throwCustomerNotFoundException(id);
-        });
+        return customerRepository.findById(id).orElseThrow(() -> throwCustomerNotFoundException(id));
     }
 
     private CustomerNotFoundException throwCustomerNotFoundException(long id) {

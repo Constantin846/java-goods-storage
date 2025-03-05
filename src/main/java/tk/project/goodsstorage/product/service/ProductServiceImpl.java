@@ -110,19 +110,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Product getById(UUID id) {
-        return productRepository.findById(id).orElseThrow(() -> {
-            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
-            log.warn(message);
-            return new ProductNotFoundException(message);
-        });
+        return productRepository.findById(id).orElseThrow(() -> throwProductNotFoundException(id));
     }
 
     private Product getByIdForUpdate(UUID id) {
-        return productRepository.findByIdLocked(id).orElseThrow(() -> {
-            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
-            log.warn(message);
-            return new ProductNotFoundException(message);
-        });
+        return productRepository.findByIdLocked(id).orElseThrow(() -> throwProductNotFoundException(id));
+    }
+
+    private ProductNotFoundException throwProductNotFoundException(UUID id) {
+        String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
+        log.warn(message);
+        return new ProductNotFoundException(message);
     }
 
     private Product updateFields(Product oldProduct, Product newProduct) {

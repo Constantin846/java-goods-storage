@@ -12,7 +12,7 @@
             </not>
         </preConditions>
 
-        <createTable tableName="order">
+        <createTable tableName="order_app">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

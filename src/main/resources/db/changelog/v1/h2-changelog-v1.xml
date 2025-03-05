@@ -8,6 +8,12 @@
     <include file="changelog-v1-create-table-product.xml" relativeToChangelogFile="true"/>
     <include file="changelog-create-index.sql" relativeToChangelogFile="true"/>
     <include file="h2-create-function.sql" relativeToChangelogFile="true"/>
-    <include file="h2-products-generate.sql" relativeToChangelogFile="true"/>
+
+    <changeSet id="h2-products-generate.sql" author="Author">
+        <preConditions>
+            <tableIsEmpty tableName="product"/>
+        </preConditions>
+        <sqlFile path="h2-products-generate.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 
 </databaseChangeLog>

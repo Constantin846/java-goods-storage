@@ -10,10 +10,18 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tk.project.goodsstorage.exceptions.customer.CustomerNotFoundException;
 import tk.project.goodsstorage.exceptions.customer.LoginExistsException;
+import tk.project.goodsstorage.exceptions.order.OrderNotAccessException;
+import tk.project.goodsstorage.exceptions.order.OrderNotFoundException;
+import tk.project.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
+import tk.project.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
+import tk.project.goodsstorage.exceptions.order.OrderStatusNotCreateException;
 import tk.project.goodsstorage.exceptions.product.ArticleExistsException;
+import tk.project.goodsstorage.exceptions.product.OperationNotDefinedByStringException;
+import tk.project.goodsstorage.exceptions.product.ProductCountNotEnoughException;
+import tk.project.goodsstorage.exceptions.product.ProductNotAvailableException;
 import tk.project.goodsstorage.exceptions.product.ProductNotFoundException;
 import tk.project.goodsstorage.exceptions.product.ProductSpecificationException;
-import tk.project.goodsstorage.exceptions.schedulers.OperationNotDefinedByStringException;
+import tk.project.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -85,6 +93,54 @@ public class ErrorHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerProductNotFoundException(final ProductNotFoundException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(ProductsNotFoundByIdsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerProductsNotFoundByIdsException(final ProductsNotFoundByIdsException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(ProductCountNotEnoughException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerProductNotEnoughException(final ProductCountNotEnoughException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(ProductNotAvailableException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerProductNotAvailableException(final ProductNotAvailableException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerOrderNotFoundException(final OrderNotFoundException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(OrderStatusNotCreateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerOrderStatusNotCreateException(final OrderStatusNotCreateException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(OrderStatusAlreadyCancelledException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerOrderStatusAlreadyCancelledException(final OrderStatusAlreadyCancelledException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(OrderStatusAlreadyRejectedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerOrderStatusAlreadyRejectedException(final OrderStatusAlreadyRejectedException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(OrderNotAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ApiError> handlerOrderNotAccessException(final OrderNotAccessException e) {
         return createApiError(e);
     }
 
