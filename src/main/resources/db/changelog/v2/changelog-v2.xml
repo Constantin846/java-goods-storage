@@ -8,6 +8,5 @@
     <include file="changelog-v2-update-table-product-add-column-is_available.xml" relativeToChangelogFile="true"/>
     <include file="changelog-v2-create-table-customer.xml" relativeToChangelogFile="true"/>
     <include file="changelog-v2-create-table-order.xml" relativeToChangelogFile="true"/>
-    <include file="changelog-v2-create-index.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

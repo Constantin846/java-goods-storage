@@ -7,13 +7,20 @@ import tk.project.goodsstorage.order.dto.update.UpdateOrderProductDtoRes;
 import tk.project.goodsstorage.order.model.OrderProduct;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public interface OrderProductRepository extends JpaRepository<OrderProduct, Long> {
 
     @Query(value = "select * from order_product op where op.order_id = :orderId for update", nativeQuery = true)
     Set<OrderProduct> findAllByOrderIdForUpdate(UUID orderId);
+
+    default Map<UUID, OrderProduct> findProductIdOrderProductMapByOrderIdForUpdate(UUID orderId) {
+        return this.findAllByOrderIdForUpdate(orderId).stream()
+                .collect(Collectors.toMap(OrderProduct::getProductId, orderProduct -> orderProduct));
+    }
 
     @Query(value = """
             select new tk.project.goodsstorage.order.dto.update.UpdateOrderProductDtoRes(op.productId, op.count)

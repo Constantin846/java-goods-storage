@@ -6,7 +6,6 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="changelog-v1-create-table-product.xml" relativeToChangelogFile="true"/>
-    <include file="changelog-create-index.sql" relativeToChangelogFile="true"/>
 
     <changeSet id="products-generate.sql" author="Author">
         <preConditions>

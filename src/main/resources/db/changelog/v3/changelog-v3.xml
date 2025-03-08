@@ -6,5 +6,6 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="changelog-v3-create-table-order_product.xml" relativeToChangelogFile="true"/>
+    <include file="changelog-v3-order_product-create-index.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

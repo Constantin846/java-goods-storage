@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
         findOrderDto.setProducts(orderProductDto);
 
         BigDecimal totalPrice = orderProductDto.stream()
-                .map(FindOrderProductDto::getPrice)
+                .map(it -> it.getPrice().multiply(BigDecimal.valueOf(it.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         findOrderDto.setTotalPrice(totalPrice);
         return findOrderDto;
@@ -135,7 +135,8 @@ public class OrderServiceImpl implements OrderService {
 
     private void saveOrderProducts(Set<? extends SaveOrderProductDto> orderProductsDto, Order order) {
         Map<UUID, Product> productMap = getProductsByIdsForUpdate(orderProductsDto);
-        Map<UUID, OrderProduct> orderProductMap = findOrderProductsByOrderIdForUpdate(order.getId());
+        Map<UUID, OrderProduct> orderProductMap =
+                orderProductRepository.findProductIdOrderProductMapByOrderIdForUpdate(order.getId());
 
         List<OrderProduct> orderProducts = orderProductsDto.stream()
                 .map(orderProductDto -> {
@@ -185,9 +186,7 @@ public class OrderServiceImpl implements OrderService {
                 .map(SaveOrderProductDto::getId)
                 .collect(Collectors.toSet());
 
-        Set<Product> products = productRepository.findAllByIdsForUpdate(productIds);
-        Map<UUID, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, it -> it));
+        Map<UUID, Product> productMap = productRepository.findMapByIdsForUpdate(productIds);
 
         productIds.removeAll(productMap.keySet());
         if (!productIds.isEmpty()) {
@@ -198,17 +197,12 @@ public class OrderServiceImpl implements OrderService {
         return productMap;
     }
 
-    private Map<UUID, OrderProduct> findOrderProductsByOrderIdForUpdate(UUID orderId) {
-        Set<OrderProduct> products = orderProductRepository.findAllByOrderIdForUpdate(orderId);
-        return products.stream().collect(Collectors.toMap(OrderProduct::getProductId, it -> it));
-    }
-
     private Order getOrderByIdForUpdate(UUID orderId) {
         return orderRepository.findByIdLocked(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
     }
 
     private Order getOrderById(UUID orderId) {
-        return orderRepository.findByIdLocked(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
+        return orderRepository.findById(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
     }
 
     private OrderNotFoundException throwOrderNotFoundException(UUID orderId) {
