@@ -20,5 +20,5 @@ public class CreateOrderRequest {
 
     @NotNull(message = "Order products must be set")
     @NotEmpty(message = "Order products must have at least one product")
-    Set<CreateOrderProductRequest> products;
+    Set<CreateOrderedProductRequest> products;
 }

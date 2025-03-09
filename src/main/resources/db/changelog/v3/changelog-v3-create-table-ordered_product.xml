@@ -12,10 +12,7 @@
             </not>
         </preConditions>
 
-        <createTable tableName="order_product">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
+        <createTable tableName="ordered_product">
             <column name="order_id" type="uuid">
                 <constraints nullable="false" foreignKeyName="fk_order_order_product"
                              referencedTableName="order_app" referencedColumnNames="id"/>
@@ -30,6 +27,8 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addPrimaryKey tableName="ordered_product" columnNames="order_id, product_id"
+                       constraintName="pk_ordered_product"/>
     </changeSet>
 
 </databaseChangeLog>

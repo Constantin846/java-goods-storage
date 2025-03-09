@@ -3,7 +3,7 @@ package tk.project.goodsstorage.order.dto.create;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import tk.project.goodsstorage.order.model.Status;
+import tk.project.goodsstorage.order.model.OrderStatus;
 
 import java.util.Set;
 
@@ -13,9 +13,9 @@ public class CreateOrderDto {
 
     Long customerId;
 
-    Status status = Status.CREATED;
+    OrderStatus status = OrderStatus.CREATED;
 
     String deliveryAddress;
 
-    Set<CreateOrderProductDto> products;
+    Set<CreateOrderedProductDto> products;
 }

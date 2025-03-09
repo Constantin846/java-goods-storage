@@ -15,21 +15,20 @@ import tk.project.goodsstorage.exceptions.order.OrderStatusNotCreateException;
 import tk.project.goodsstorage.exceptions.product.ProductCountNotEnoughException;
 import tk.project.goodsstorage.exceptions.product.ProductNotAvailableException;
 import tk.project.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
-import tk.project.goodsstorage.order.dto.OrderProductDto;
-import tk.project.goodsstorage.order.dto.SaveOrderProductDto;
+import tk.project.goodsstorage.order.dto.SaveOrderedProductDto;
 import tk.project.goodsstorage.order.dto.create.CreateOrderDto;
 import tk.project.goodsstorage.order.dto.find.FindOrderDto;
-import tk.project.goodsstorage.order.dto.find.FindOrderProductDto;
+import tk.project.goodsstorage.order.dto.find.FindOrderedProductDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDtoRes;
-import tk.project.goodsstorage.order.dto.update.UpdateOrderProductDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderStatusDto;
+import tk.project.goodsstorage.order.dto.update.UpdateOrderedProductDto;
 import tk.project.goodsstorage.order.mapper.OrderDtoMapper;
 import tk.project.goodsstorage.order.model.Order;
-import tk.project.goodsstorage.order.model.OrderProduct;
-import tk.project.goodsstorage.order.model.Status;
-import tk.project.goodsstorage.order.repository.OrderProductRepository;
+import tk.project.goodsstorage.order.model.OrderStatus;
+import tk.project.goodsstorage.order.model.OrderedProduct;
 import tk.project.goodsstorage.order.repository.OrderRepository;
+import tk.project.goodsstorage.order.repository.OrderedProductRepository;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
@@ -39,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final OrderDtoMapper mapper;
-    private final OrderProductRepository orderProductRepository;
+    private final OrderedProductRepository orderedProductRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
@@ -57,10 +57,10 @@ public class OrderServiceImpl implements OrderService {
         Customer customer = getCustomerById(orderDto.getCustomerId());
         Order order = mapper.toOrder(orderDto);
         order.setCustomer(customer);
-        order.setStatus(Status.CREATED);
-        order = orderRepository.save(order);
+        order.setStatus(OrderStatus.CREATED);
 
-        saveOrderProducts(orderDto.getProducts(), order);
+        addOrderedProducts(orderDto.getProducts(), order);
+        order = orderRepository.save(order);
         return order.getId();
     }
 
@@ -72,16 +72,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public FindOrderDto findById(UUID orderId, long customerId) {
-        Order order = getOrderById(orderId);
+        Order order = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(customerId, order);
 
         FindOrderDto findOrderDto = new FindOrderDto();
         findOrderDto.setOrderId(order.getId());
 
-        List<FindOrderProductDto> orderProductDto = orderProductRepository.findAllWithNameByOrderId(order.getId());
-        findOrderDto.setProducts(orderProductDto);
+        List<FindOrderedProductDto> orderedProductDto = orderedProductRepository.findAllWithNameByOrderId(order.getId());
+        findOrderDto.setProducts(orderedProductDto);
 
-        BigDecimal totalPrice = orderProductDto.stream()
+        BigDecimal totalPrice = orderedProductDto.stream()
                 .map(it -> it.getPrice().multiply(BigDecimal.valueOf(it.getCount())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         findOrderDto.setTotalPrice(totalPrice);
@@ -91,32 +91,31 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public UpdateOrderDtoRes update(UpdateOrderDto updateOrderDto) {
-        Order oldOrder = getOrderByIdForUpdate(updateOrderDto.getId());
-        checkOrderStatusIsCreate(oldOrder);
+        Order oldOrder = getOrderByIdFetch(updateOrderDto.getId());
         checkCustomerAccessToOrder(updateOrderDto.getCustomerId(), oldOrder);
+        checkOrderStatusIsCreate(oldOrder);
 
         if (Objects.nonNull(updateOrderDto.getDeliveryAddress())) {
             oldOrder.setDeliveryAddress(updateOrderDto.getDeliveryAddress());
         }
-        orderRepository.save(oldOrder);
-        UpdateOrderDtoRes orderDtoResponse = mapper.toUpdateOrderDtoRes(oldOrder);
 
-        Set<UpdateOrderProductDto> updateOrderProductsDto = updateOrderDto.getProducts();
-        if (Objects.nonNull(updateOrderProductsDto) && !updateOrderProductsDto.isEmpty()) {
-            saveOrderProducts(updateOrderProductsDto, oldOrder);
-            orderDtoResponse.setProducts(orderProductRepository.findAllWithoutPriceByOrderId(oldOrder.getId()));
+        Set<UpdateOrderedProductDto> updateOrderedProductsDto = updateOrderDto.getProducts();
+        if (Objects.nonNull(updateOrderedProductsDto) && !updateOrderedProductsDto.isEmpty()) {
+            addOrderedProducts(updateOrderedProductsDto, oldOrder);
         }
-        return orderDtoResponse;
+
+        orderRepository.save(oldOrder);
+        return mapper.toUpdateOrderDtoRes(oldOrder);
     }
 
     @Transactional
     @Override
     public UpdateOrderStatusDto setStatusDone(UUID orderId, long customerId) {
-        Order order = getOrderByIdForUpdate(orderId);
+        Order order = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(customerId, order);
         checkOrderStatusIsNotCancelled(order);
         checkOrderStatusIsNotRejected(order);
-        order.setStatus(Status.DONE);
+        order.setStatus(OrderStatus.DONE);
         orderRepository.save(order);
         return new UpdateOrderStatusDto(order.getStatus());
     }
@@ -124,51 +123,51 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void deleteById(UUID orderId, long customerId) {
-        Order order = getOrderByIdForUpdate(orderId);
+        Order order = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(customerId, order);
         checkOrderStatusIsCreate(order);
-        order.setStatus(Status.CANCELLED);
+        order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
 
-        cancelOrderProducts(order.getId());
+        cancelOrderedProducts(order);
     }
 
-    private void saveOrderProducts(Set<? extends SaveOrderProductDto> orderProductsDto, Order order) {
-        Map<UUID, Product> productMap = getProductsByIdsForUpdate(orderProductsDto);
-        Map<UUID, OrderProduct> orderProductMap =
-                orderProductRepository.findProductIdOrderProductMapByOrderIdForUpdate(order.getId());
+    private void addOrderedProducts(Set<? extends SaveOrderedProductDto> orderedProductsDto, Order order) {
+        Map<UUID, Product> productMap = getProductsByIdsForUpdate(orderedProductsDto);
+        Map<UUID, OrderedProduct> orderedProductMap = order.getProducts().stream()
+                .collect(Collectors.toMap(OrderedProduct::getProductId, Function.identity()));
 
-        List<OrderProduct> orderProducts = orderProductsDto.stream()
-                .map(orderProductDto -> {
-                    Product product = productMap.get(orderProductDto.getId());
+        Set<OrderedProduct> orderedProducts = orderedProductsDto.stream()
+                .map(orderedProductDto -> {
+                    Product product = productMap.get(orderedProductDto.getId());
                     checkProductIsAvailable(product);
-                    decreaseProductCount(product, orderProductDto.getCount());
+                    decreaseProductCount(product, orderedProductDto.getCount());
 
-                    if (orderProductMap.containsKey(orderProductDto.getId())) {
-                        return this.updateOrderProduct(
-                                orderProductDto, product, orderProductMap.get(orderProductDto.getId()));
+                    if (orderedProductMap.containsKey(orderedProductDto.getId())) {
+                        return this.updateOrderedProduct(
+                                orderedProductDto, product, orderedProductMap.get(orderedProductDto.getId()));
                     } else {
-                        return this.createOrderProduct(orderProductDto, product, order);
+                        return this.createOrderedProduct(orderedProductDto, product, order);
                     }
-                }).toList();
+                }).collect(Collectors.toSet());
 
-        productRepository.saveAll(productMap.values());
-        orderProductRepository.saveAll(orderProducts);
+        //productRepository.saveAll(productMap.values());
+        order.getProducts().addAll(orderedProducts);
     }
 
-    private OrderProduct createOrderProduct(SaveOrderProductDto orderProductDto, Product product, Order order) {
-        OrderProduct orderProduct = new OrderProduct();
-        orderProduct.setOrder(order);
-        orderProduct.setProductId(product.getId());
-        orderProduct.setPrice(product.getPrice());
-        orderProduct.setCount(orderProductDto.getCount());
-        return orderProduct;
+    private OrderedProduct createOrderedProduct(SaveOrderedProductDto orderedProductDto, Product product, Order order) {
+        OrderedProduct orderedProduct = new OrderedProduct();
+        orderedProduct.setOrder(order);
+        orderedProduct.setProductId(product.getId());
+        orderedProduct.setPrice(product.getPrice());
+        orderedProduct.setCount(orderedProductDto.getCount());
+        return orderedProduct;
     }
 
-    private OrderProduct updateOrderProduct(SaveOrderProductDto orderProductDto, Product product, OrderProduct orderProduct) {
-        orderProduct.setPrice(product.getPrice());
-        orderProduct.setCount(orderProduct.getCount() + orderProductDto.getCount());
-        return orderProduct;
+    private OrderedProduct updateOrderedProduct(SaveOrderedProductDto orderedProductDto, Product product, OrderedProduct orderedProduct) {
+        orderedProduct.setPrice(product.getPrice());
+        orderedProduct.setCount(orderedProduct.getCount() + orderedProductDto.getCount());
+        return orderedProduct;
     }
 
     private void decreaseProductCount(Product product, long subtractCount) {
@@ -181,9 +180,9 @@ public class OrderServiceImpl implements OrderService {
         product.setCount(product.getCount() - subtractCount);
     }
 
-    private Map<UUID, Product> getProductsByIdsForUpdate(Set<? extends SaveOrderProductDto> orderProductsDto) {
-        Set<UUID> productIds = orderProductsDto.stream()
-                .map(SaveOrderProductDto::getId)
+    private Map<UUID, Product> getProductsByIdsForUpdate(Set<? extends SaveOrderedProductDto> orderedProductsDto) {
+        Set<UUID> productIds = orderedProductsDto.stream()
+                .map(SaveOrderedProductDto::getId)
                 .collect(Collectors.toSet());
 
         Map<UUID, Product> productMap = productRepository.findMapByIdsForUpdate(productIds);
@@ -197,12 +196,8 @@ public class OrderServiceImpl implements OrderService {
         return productMap;
     }
 
-    private Order getOrderByIdForUpdate(UUID orderId) {
-        return orderRepository.findByIdLocked(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
-    }
-
-    private Order getOrderById(UUID orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
+    private Order getOrderByIdFetch(UUID orderId) {
+        return orderRepository.findByIdFetch(orderId).orElseThrow(() -> throwOrderNotFoundException(orderId));
     }
 
     private OrderNotFoundException throwOrderNotFoundException(UUID orderId) {
@@ -228,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void checkOrderStatusIsCreate(Order order) {
-        if (order.getStatus() != Status.CREATED) {
+        if (order.getStatus() != OrderStatus.CREATED) {
             String message = String.format("Order status must be CREATE but now status: %s", order.getStatus());
             log.warn(message);
             throw new OrderStatusNotCreateException(message);
@@ -236,16 +231,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void checkOrderStatusIsNotCancelled(Order order) {
-        if (order.getStatus() == Status.CANCELLED) {
-            String message = String.format("Order status has already been %s", Status.CANCELLED);
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            String message = String.format("Order status has already been %s", OrderStatus.CANCELLED);
             log.warn(message);
             throw new OrderStatusAlreadyCancelledException(message);
         }
     }
 
     private void checkOrderStatusIsNotRejected(Order order) {
-        if (order.getStatus() == Status.REJECTED) {
-            String message = String.format("Order status has already been %s", Status.REJECTED);
+        if (order.getStatus() == OrderStatus.REJECTED) {
+            String message = String.format("Order status has already been %s", OrderStatus.REJECTED);
             log.warn(message);
             throw new OrderStatusAlreadyRejectedException(message);
         }
@@ -259,17 +254,17 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private void cancelOrderProducts(UUID orderId) {
-        List<? extends OrderProductDto> orderProductsDto = orderProductRepository.findAllWithoutPriceByOrderId(orderId);
-        Map<UUID, OrderProductDto>  orderProductDtoMap = orderProductsDto.stream()
-                .collect(Collectors.toMap(OrderProductDto::getId, orderProductDto -> orderProductDto));
+    private void cancelOrderedProducts(Order order) {
+        Set<OrderedProduct> orderedProducts = order.getProducts();
+        Map<UUID, OrderedProduct>  orderedProductMap = orderedProducts.stream()
+                .collect(Collectors.toMap(OrderedProduct::getProductId, Function.identity()));
 
-        Set<Product> products = productRepository.findAllByIdsForUpdate(orderProductDtoMap.keySet());
+        Set<Product> products = productRepository.findAllByIdsForUpdate(orderedProductMap.keySet());
 
         products = products.stream()
                 .map(product -> {
-                    OrderProductDto orderProductDto = orderProductDtoMap.get(product.getId());
-                    product.setCount(product.getCount() + orderProductDto.getCount());
+                    OrderedProduct orderedProduct = orderedProductMap.get(product.getId());
+                    product.setCount(product.getCount() + orderedProduct.getCount());
                     return product;
                 }).collect(Collectors.toSet());
         productRepository.saveAll(products);

@@ -10,9 +10,9 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateOrderProductResponse {
+public class UpdateOrderedProductResponse {
 
-    UUID id;
+    UUID productId;
 
     Long count;
 }

@@ -17,5 +17,5 @@ public class UpdateOrderDto {
 
     String deliveryAddress;
 
-    Set<UpdateOrderProductDto> products;
+    Set<UpdateOrderedProductDto> products;
 }

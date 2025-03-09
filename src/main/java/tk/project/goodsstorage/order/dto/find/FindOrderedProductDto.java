@@ -1,20 +1,23 @@
 package tk.project.goodsstorage.order.dto.find;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FindOrderDto {
+public class FindOrderedProductDto {
 
-    UUID orderId;
+    UUID productId;
 
-    List<FindOrderedProductDto> products;
+    String name;
 
-    BigDecimal totalPrice;
+    BigDecimal price;
+
+    Long count;
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateOrderProductRequest {
+public class CreateOrderedProductRequest {
 
     @NotNull(message = "Products' ids must be set")
     UUID id;

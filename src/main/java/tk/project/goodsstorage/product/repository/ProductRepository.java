@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
@@ -30,6 +31,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     default Map<UUID, Product> findMapByIdsForUpdate(Collection<UUID> ids) {
         return this.findAllByIdsForUpdate(ids).stream()
-                .collect(Collectors.toMap(Product::getId, product -> product));
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
     }
 }

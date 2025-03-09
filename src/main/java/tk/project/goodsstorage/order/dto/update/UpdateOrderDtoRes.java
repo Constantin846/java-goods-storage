@@ -18,5 +18,5 @@ public class UpdateOrderDtoRes {
 
     String deliveryAddress;
 
-    Collection<UpdateOrderProductDtoRes> products;
+    Collection<UpdateOrderedProductDtoRes> products;
 }

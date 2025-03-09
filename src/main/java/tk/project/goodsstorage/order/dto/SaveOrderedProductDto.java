@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PROTECTED)
-public abstract class OrderProductDto {
+public abstract class SaveOrderedProductDto {
 
     UUID id;
 

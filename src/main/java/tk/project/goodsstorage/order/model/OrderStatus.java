@@ -1,6 +1,6 @@
 package tk.project.goodsstorage.order.model;
 
-public enum Status {
+public enum OrderStatus {
     CREATED,
     CONFIRMED,
     CANCELLED,

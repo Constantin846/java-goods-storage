@@ -9,6 +9,12 @@ import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
-    @Query(value = "select * from order_app ord where ord.id = :id for update", nativeQuery = true)
-    Optional<Order> findByIdLocked(UUID id);
+    @Query(value = """
+            select o
+            from Order o
+            left join fetch o.customer
+            left join fetch o.products op
+            where o.id = :id
+            """)
+    Optional<Order> findByIdFetch(UUID id);
 }

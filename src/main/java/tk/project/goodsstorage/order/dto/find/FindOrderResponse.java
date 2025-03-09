@@ -14,7 +14,7 @@ public class FindOrderResponse {
 
     UUID orderId;
 
-    List<FindOrderProductResponse> products;
+    List<FindOrderedProductResponse> products;
 
     BigDecimal totalPrice;
 }

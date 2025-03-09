@@ -2,9 +2,8 @@ package tk.project.goodsstorage.order.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,23 +20,22 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "order_product")
+@IdClass(OrderedProductPK.class)
+@Table(name = "ordered_product")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"order", "productId"})
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderProduct {
+public class OrderedProduct {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     Order order;
 
+    @Id
     @Column(name = "product_id", nullable = false)
     UUID productId;
 

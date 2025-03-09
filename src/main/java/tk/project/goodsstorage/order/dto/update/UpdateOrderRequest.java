@@ -16,5 +16,5 @@ public class UpdateOrderRequest {
     @Length(message = "Order delivery address length must be between 1 and 128 characters inclusive", min = 1, max = 128)
     String deliveryAddress;
 
-    Set<UpdateOrderProductRequest> products;
+    Set<UpdateOrderedProductRequest> products;
 }

@@ -15,5 +15,5 @@ public class UpdateOrderResponse {
 
     String deliveryAddress;
 
-    Collection<UpdateOrderProductResponse> products;
+    Collection<UpdateOrderedProductResponse> products;
 }
