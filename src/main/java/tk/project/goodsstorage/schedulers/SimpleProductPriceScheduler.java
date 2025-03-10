@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Profile("!local")
-@ConditionalOnMissingBean(OptimizedProductPriceScheduler.class)
+@ConditionalOnMissingBean(value = {OptimizedProductPriceScheduler.class, OptimizedProductPriceSchedulerMy.class})
 @ConditionalOnExpression("${app.scheduling.enable:false}")
 //@ConditionalOnExpression("${app.scheduling.enable:false} && !${app.scheduling.optimization.enable:false}")
 public class SimpleProductPriceScheduler {

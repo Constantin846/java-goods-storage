@@ -23,6 +23,7 @@ public class ProductBuilder {
     private Long count = COUNT;
     private Instant lastCountUpdateTime = Instant.now();
     private LocalDate createDate = LocalDate.now();
+    private Boolean isAvailable = true;
 
     private ProductBuilder() {
     }
@@ -68,6 +69,11 @@ public class ProductBuilder {
         return this;
     }
 
+    public ProductBuilder withIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
+        return this;
+    }
+
     public Product build() {
         return Product.builder()
                 .id(this.id)
@@ -79,6 +85,7 @@ public class ProductBuilder {
                 .count(this.count)
                 .lastCountUpdateTime(this.lastCountUpdateTime)
                 .createDate(this.createDate)
+                .isAvailable(this.isAvailable)
                 .build();
     }
 }

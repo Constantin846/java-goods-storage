@@ -9,8 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tk.project.goodsstorage.currency.SessionCurrencyWrapper;
 import tk.project.goodsstorage.currency.converter.CurrencyConverter;
-import tk.project.goodsstorage.exceptions.ArticleExistsException;
-import tk.project.goodsstorage.exceptions.ProductNotFoundException;
+import tk.project.goodsstorage.exceptions.product.ArticleExistsException;
+import tk.project.goodsstorage.exceptions.product.ProductNotFoundException;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.create.CreateProductDto;
 import tk.project.goodsstorage.product.dto.find.PageFindRequest;
@@ -59,9 +59,10 @@ public class ProductServiceImpl implements ProductService {
             products = productRepository.findAll(specification, pageable).stream().toList();
         }
         return products.stream()
-                .map(mapper::toProductDto)
-                .map(it -> currencyConverter.changeCurrency(it, sessionCurrencyWrapper.getCurrency()))
-                .toList();
+                .map(product -> {
+                    ProductDto productDto = mapper.toProductDto(product);
+                    return currencyConverter.changeCurrency(productDto, sessionCurrencyWrapper.getCurrency());
+                }).toList();
     }
 
     @Override
@@ -75,9 +76,10 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products =
                 productRepository.findAll(PageRequest.of(page.getFrom(), page.getSize())).stream().toList();
         return products.stream()
-                .map(mapper::toProductDto)
-                .map(it -> currencyConverter.changeCurrency(it, sessionCurrencyWrapper.getCurrency()))
-                .toList();
+                .map(product -> {
+                    ProductDto productDto = mapper.toProductDto(product);
+                    return currencyConverter.changeCurrency(productDto, sessionCurrencyWrapper.getCurrency());
+                }).toList();
     }
 
     @Transactional
@@ -108,19 +110,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Product getById(UUID id) {
-        return productRepository.findById(id).orElseThrow(() -> {
-            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
-            log.warn(message);
-            return new ProductNotFoundException(message);
-        });
+        return productRepository.findById(id).orElseThrow(() -> throwProductNotFoundException(id));
     }
 
     private Product getByIdForUpdate(UUID id) {
-        return productRepository.findByIdLocked(id).orElseThrow(() -> {
-            String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
-            log.warn(message);
-            return new ProductNotFoundException(message);
-        });
+        return productRepository.findByIdLocked(id).orElseThrow(() -> throwProductNotFoundException(id));
+    }
+
+    private ProductNotFoundException throwProductNotFoundException(UUID id) {
+        String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
+        log.warn(message);
+        return new ProductNotFoundException(message);
     }
 
     private Product updateFields(Product oldProduct, Product newProduct) {
@@ -148,6 +148,9 @@ public class ProductServiceImpl implements ProductService {
         }
         if (Objects.nonNull(newProduct.getCreateDate())) {
             oldProduct.setCreateDate(newProduct.getCreateDate());
+        }
+        if (Objects.nonNull(newProduct.getIsAvailable())) {
+            oldProduct.setIsAvailable(newProduct.getIsAvailable());
         }
         return oldProduct;
     }

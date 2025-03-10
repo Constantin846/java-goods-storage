@@ -3,7 +3,7 @@ package tk.project.goodsstorage.product.service.criteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import tk.project.goodsstorage.exceptions.ProductSpecificationException;
+import tk.project.goodsstorage.exceptions.product.ProductSpecificationException;
 import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.model.Product;
 

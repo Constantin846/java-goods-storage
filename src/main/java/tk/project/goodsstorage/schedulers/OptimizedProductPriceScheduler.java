@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import tk.project.goodsstorage.exceptions.OptimizedProductPriceSchedulingResultWriteFileException;
-import tk.project.goodsstorage.exceptions.OptimizedProductPriceSchedulingSQLException;
+import tk.project.goodsstorage.exceptions.schedulers.OptimizedProductPriceSchedulingResultWriteFileException;
+import tk.project.goodsstorage.exceptions.schedulers.OptimizedProductPriceSchedulingSQLException;
 import tk.project.goodsstorage.timer.TaskExecutionTime;
 import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
 
@@ -30,7 +30,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 @Profile("!local")
-@ConditionalOnExpression("${app.scheduling.enable:false} && ${app.scheduling.optimization.enable:false}")
+@ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized')")
 public class OptimizedProductPriceScheduler {
     private final String filePath;
     private static final String COMMA = ",";

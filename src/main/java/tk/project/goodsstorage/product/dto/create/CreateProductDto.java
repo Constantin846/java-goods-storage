@@ -21,4 +21,6 @@ public class CreateProductDto {
     BigDecimal price;
 
     Long count;
+
+    Boolean isAvailable;
 }

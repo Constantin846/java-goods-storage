@@ -42,6 +42,7 @@ class ProductRepositoryTest {
                 .count(count)
                 .lastCountUpdateTime(lastCountUpdateTime)
                 .createDate(createDate)
+                .isAvailable(true)
                 .build();
         product = productRepositoryUnderTest.save(product);
     }

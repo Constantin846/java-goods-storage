@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.currency.CurrenciesDto;
-import tk.project.goodsstorage.exceptions.DeserializeCurrencyFileException;
-import tk.project.goodsstorage.exceptions.LoadCurrencyFileException;
+import tk.project.goodsstorage.exceptions.currency.DeserializeCurrencyFileException;
+import tk.project.goodsstorage.exceptions.currency.LoadCurrencyFileException;
 
 import java.io.IOException;
 import java.nio.file.Files;

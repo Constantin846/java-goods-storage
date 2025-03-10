@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import tk.project.goodsstorage.currency.CurrenciesDto;
 import tk.project.goodsstorage.currency.client.CurrencyService;
 import tk.project.goodsstorage.currency.loader.CurrencyFileLoader;
-import tk.project.goodsstorage.exceptions.RequestGetCurrenciesException;
+import tk.project.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
 
 @Slf4j
 @Service

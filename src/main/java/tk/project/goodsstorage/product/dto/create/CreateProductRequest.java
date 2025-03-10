@@ -35,4 +35,6 @@ public class CreateProductRequest {
 
     @NotNull(message = "Product count must be set")
     Long count;
+
+    Boolean isAvailable = true;
 }

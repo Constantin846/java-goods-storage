@@ -65,4 +65,7 @@ public class Product {
     @CreationTimestamp
     @Column(name = "create_date", nullable = false)
     LocalDate createDate;
+
+    @Column(name = "is_available", nullable = false)
+    Boolean isAvailable;
 }
