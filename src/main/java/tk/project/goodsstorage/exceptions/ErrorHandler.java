@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tk.project.goodsstorage.exceptions.customer.CustomerNotFoundException;
 import tk.project.goodsstorage.exceptions.customer.LoginExistsException;
+import tk.project.goodsstorage.exceptions.customer.RequestFindAccountNumberException;
+import tk.project.goodsstorage.exceptions.customer.RequestFindInnException;
 import tk.project.goodsstorage.exceptions.order.OrderNotAccessException;
 import tk.project.goodsstorage.exceptions.order.OrderNotFoundException;
 import tk.project.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
@@ -43,9 +45,7 @@ public class ErrorHandler {
                 .map(id -> e.getMessage() + " And product id: " + id)
                 .orElseGet(e::getMessage);
 
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e, message);
     }
 
     @ExceptionHandler(LoginExistsException.class)
@@ -55,9 +55,7 @@ public class ErrorHandler {
                 .map(id -> e.getMessage() + " And customer id: " + id)
                 .orElseGet(e::getMessage);
 
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e, message);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -73,9 +71,7 @@ public class ErrorHandler {
         }
         String message = String.join(DELIMITER, messages);
 
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e, message);
     }
 
     @ExceptionHandler(OperationNotDefinedByStringException.class)
@@ -150,18 +146,34 @@ public class ErrorHandler {
         return createApiError(e);
     }
 
+    @ExceptionHandler(RequestFindAccountNumberException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerRequestFindAccountNumberException(final RequestFindAccountNumberException e) {
+        String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
+        return createApiError(e, message);
+    }
+
+    @ExceptionHandler(RequestFindInnException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerRequestFindInnException(final RequestFindInnException e) {
+        String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
+        return createApiError(e, message);
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ApiError> handlerThrowable(final Throwable e) {
         String message = INTERNAL_SERVER_ERROR;
         log.warn(message, e);
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+        return createApiError(e, message);
     }
 
     private ResponseEntity<ApiError> createApiError(final Throwable e) {
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), e.getMessage(),
+        return createApiError(e, e.getMessage());
+    }
+
+    private ResponseEntity<ApiError> createApiError(final Throwable e, final String message) {
+        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
                 Instant.now(), e.getStackTrace()[ZERO].getFileName());
         return ResponseEntity.ofNullable(apiError);
     }

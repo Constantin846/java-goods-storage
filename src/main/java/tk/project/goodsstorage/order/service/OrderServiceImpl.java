@@ -151,7 +151,6 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }).collect(Collectors.toSet());
 
-        //productRepository.saveAll(productMap.values());
         order.getProducts().addAll(orderedProducts);
     }
 

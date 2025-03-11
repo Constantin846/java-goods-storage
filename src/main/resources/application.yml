@@ -37,6 +37,18 @@ currency-service:
     get-currencies: /app-currency/v1/currencies
   timeout: 2000 #ms
 
+account-service:
+  host: http://localhost:8088
+  method:
+    get-account-numbers: /account-service/numbers
+  timeout: 300000 #ms
+
+crm-service:
+  host: http://localhost:8088
+  method:
+    get-inns: /crm-service/inns
+  timeout: 300000 #ms
+
 logging:
   level:
     org.hibernate:
