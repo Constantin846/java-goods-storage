@@ -2,6 +2,14 @@ server:
   servlet.context-path: /gs
   port: ${SERVER_PORT:8080}
 
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      base-path: /
+      exposure.include: health,env,beans,metrics
+
 
 spring:
   datasource:
@@ -26,8 +34,8 @@ app:
     period: 60000 #ms
     priceIncreasePercentage: 10.1
     optimization:
-      type: optimized-my # optimized # optimized-my
-      exclusive-lock: false # doesn't work with h2
+      type: optimized-my  # optimized # optimized-my
+      exclusive-lock: true
   dbInit: false
   currency-service.type: real # real # mock
 

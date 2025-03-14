@@ -33,6 +33,7 @@ import java.util.UUID;
 @Profile("!local")
 @ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized-my')")
 public class OptimizedProductPriceSchedulerMy {
+    private static final Boolean IS_APPENDING_FILE = true;
     private final String filePath;
     private static final String COMMA = ",";
     private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
@@ -98,7 +99,7 @@ public class OptimizedProductPriceSchedulerMy {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath));
+                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);

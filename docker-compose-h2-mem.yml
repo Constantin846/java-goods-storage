@@ -1,0 +1,13 @@
+services:
+  gs-service:            # docker-compose -f .\docker-compose-h2-mem.yml build
+    build: .
+    image: gs-service-h2-mem
+    container_name: gs-service-h2-mem
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=local"
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:gs
+      - SPRING_DATASOURCE_USERNAME=gs
+      - SPRING_DATASOURCE_PASSWORD=gs
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver

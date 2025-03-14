@@ -1,7 +1,7 @@
 services:
   gs-service:
     build: .
-    image: gs-service
+    image: gs-service  #  docker-compose -f docker-compose.yml up gs-service // up only this service
     container_name: gs-service
     ports:
       - "8080:8080"
@@ -12,9 +12,13 @@ services:
       - SPRING_DATASOURCE_USERNAME=gs
       - SPRING_DATASOURCE_PASSWORD=gs
       - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+    volumes:
+      - type: bind
+        source: ./src/main/resources/optimized-product-price-scheduling/result.csv
+        target: /src/main/resources/optimized-product-price-scheduling/result.csv
 
   gs-db:
-    image: postgres:16.1
+    image: postgres:17
     container_name: postgres-gs-db
     ports:
       - "6542:5432"

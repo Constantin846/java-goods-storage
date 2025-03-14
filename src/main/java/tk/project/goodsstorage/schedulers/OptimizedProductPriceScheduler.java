@@ -32,7 +32,8 @@ import java.util.Objects;
 @Profile("!local")
 @ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized')")
 public class OptimizedProductPriceScheduler {
-    private final String filePath;
+    private static final Boolean IS_APPENDING_FILE = true;
+    private static final String FILE_PATH = "/src/main/resources/optimized-product-price-scheduling/result.csv";
     private static final String COMMA = ",";
     private static final String SELECT_PRODUCT = """
             SELECT *
@@ -41,6 +42,7 @@ public class OptimizedProductPriceScheduler {
     private static final String UPDATE_PRODUCT_PRICE = """
             UPDATE product
             SET price = price * (1 + ?/100)
+            RETURNING *
             """; // RETURNING * - doesn't work with h2
     private static final String LOCK_PRODUCT_TABLE = "LOCK TABLE product IN ACCESS EXCLUSIVE MODE"; // doesn't work with h2
     private final BigDecimal priceIncreasePercentage;
@@ -57,8 +59,6 @@ public class OptimizedProductPriceScheduler {
         this.priceIncreasePercentage = priceIncreasePercentage;
         this.isExclusiveLocked = !Objects.isNull(isExclusiveLocked) && isExclusiveLocked;
         this.entityManagerFactory = entityManagerFactory;
-        this.filePath = this.getClass().getClassLoader()
-                .getResource("optimized-product-price-scheduling/result.csv").getPath();
     }
 
     @PostConstruct
@@ -80,7 +80,7 @@ public class OptimizedProductPriceScheduler {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath));
+                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(FILE_PATH, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);
@@ -92,10 +92,7 @@ public class OptimizedProductPriceScheduler {
 
                         PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_PRICE);
                         preparedStatement.setBigDecimal(1, priceIncreasePercentage);
-                        preparedStatement.executeUpdate();
-
-                        PreparedStatement psSelect = connection.prepareStatement(SELECT_PRODUCT);
-                        ResultSet resultSet = psSelect.executeQuery();
+                        ResultSet resultSet = preparedStatement.executeQuery();
 
                         while (resultSet.next()) {
                             fileWriter.append(resultSet.getString("id")).append(COMMA)
@@ -112,9 +109,11 @@ public class OptimizedProductPriceScheduler {
                         connection.commit();
 
                     } catch (SQLException e) {
+                        connection.setAutoCommit(false);
                         connection.rollback();
                         throw new OptimizedProductPriceSchedulingSQLException(e.getMessage());
                     } catch (IOException e) {
+                        connection.setAutoCommit(false);
                         connection.rollback();
                         throw new OptimizedProductPriceSchedulingResultWriteFileException(e.getMessage());
                     }
