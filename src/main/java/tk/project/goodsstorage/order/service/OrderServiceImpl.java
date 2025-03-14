@@ -33,6 +33,7 @@ import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = mapper.toOrder(orderDto);
         order.setCustomer(customer);
         order.setStatus(OrderStatus.CREATED);
+        order.setProducts(new HashSet<>());
 
         addOrderedProducts(orderDto.getProducts(), order);
         order = orderRepository.save(order);
@@ -151,7 +153,6 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }).collect(Collectors.toSet());
 
-        //productRepository.saveAll(productMap.values());
         order.getProducts().addAll(orderedProducts);
     }
 

@@ -1,6 +1,7 @@
 package tk.project.goodsstorage.order.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import tk.project.goodsstorage.order.dto.create.CreateOrderDto;
 import tk.project.goodsstorage.order.dto.create.CreateOrderRequest;
@@ -18,6 +19,7 @@ public interface OrderDtoMapper {
 
     CreateOrderDto toCreateOrderDto(CreateOrderRequest orderRequest);
 
+    @Mapping(target = "products", ignore = true)
     Order toOrder(CreateOrderDto orderDto);
 
     FindOrderResponse toFindOrderResponse(FindOrderDto orderDto);
