@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gs-configmap
+  namespace: myspace
+data:
+  SCHEDULING_ENABLE_FROM_MAP: "true"
+  SCHEDULING_OPTIMIZATION_TYPE_FROM_MAP: "optimized-my"
+  DB_PRODUCTS_GENERATOR_FROM_MAP: "true"
+  CURRENCY_SERVICE_TYPE_FROM_MAP: "mock"

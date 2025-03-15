@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.exceptions.schedulers.OptimizedProductPriceSchedulingResultWriteFileException;
@@ -30,9 +29,11 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-@Profile("!local")
+//@Profile("!local")
 @ConditionalOnExpression("${app.scheduling.enable:false} && '${app.scheduling.optimization.type}'.equals('optimized-my')")
 public class OptimizedProductPriceSchedulerMy {
+    private static final Boolean IS_APPENDING_FILE = true;
+    private static final String FILE_PATH = "/src/main/resources/optimized-product-price-scheduling/result.csv";
     private final String filePath;
     private static final String COMMA = ",";
     private static final Integer COUNT_ITERATION_PRODUCT = 100_000;
@@ -61,6 +62,8 @@ public class OptimizedProductPriceSchedulerMy {
     private final EntityManagerFactory entityManagerFactory;
 
     public OptimizedProductPriceSchedulerMy(
+            @Value("${app.scheduling.optimization.docker-file-path:false}")
+            Boolean isDockerFilePath,
             @Value("${app.scheduling.priceIncreasePercentage}")
             BigDecimal priceIncreasePercentage,
             @Value("${app.scheduling.optimization.exclusive-lock:true}")
@@ -69,8 +72,13 @@ public class OptimizedProductPriceSchedulerMy {
     ) {
         this.priceIncreaseRate = priceIncreasePercentage.divide(HUNDRED, RoundingMode.HALF_EVEN).add(ONE);
         this.entityManagerFactory = entityManagerFactory;
-        this.filePath = this.getClass().getClassLoader()
-                .getResource("optimized-product-price-scheduling/result.csv").getPath();
+
+        if (isDockerFilePath) {
+            this.filePath = FILE_PATH;
+        } else {
+            this.filePath = this.getClass().getClassLoader()
+                    .getResource("optimized-product-price-scheduling/result.csv").getPath();
+        }
 
         if (!Objects.isNull(isExclusiveLocked) && isExclusiveLocked) {
             selectQuery = SELECT_PRODUCTS_LIMIT_OFFSET_FOR_UPDATE;
@@ -89,7 +97,7 @@ public class OptimizedProductPriceSchedulerMy {
     @Transactional
     @Scheduled(fixedDelayString = "${app.scheduling.period}")
     public void increaseProductPrice() {
-        log.info("OPTIMIZED PRODUCT PRICE SCHEDULER is running");
+        log.info("OPTIMIZED PRODUCT PRICE SCHEDULER MY is running");
 
         final Session session = entityManagerFactory.createEntityManager().unwrap(Session.class);
 
@@ -98,7 +106,7 @@ public class OptimizedProductPriceSchedulerMy {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath));
+                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);
@@ -145,6 +153,6 @@ public class OptimizedProductPriceSchedulerMy {
                 }
             });
         }
-        log.info("OPTIMIZED PRODUCT PRICE SCHEDULER finished");
+        log.info("OPTIMIZED PRODUCT PRICE SCHEDULER MY finished");
     }
 }

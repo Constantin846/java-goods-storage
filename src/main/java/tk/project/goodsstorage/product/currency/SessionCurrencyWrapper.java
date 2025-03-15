@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.currency;
+package tk.project.goodsstorage.product.currency;
 
 import lombok.Getter;
 import lombok.Setter;

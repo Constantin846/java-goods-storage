@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.currency.provider;
+package tk.project.goodsstorage.product.currency.provider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,10 +6,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tk.project.goodsstorage.currency.CurrenciesDto;
-import tk.project.goodsstorage.currency.client.CurrencyService;
-import tk.project.goodsstorage.currency.loader.CurrencyFileLoader;
 import tk.project.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
+import tk.project.goodsstorage.product.currency.CurrenciesDto;
+import tk.project.goodsstorage.product.currency.client.CurrencyService;
+import tk.project.goodsstorage.product.currency.loader.CurrencyFileLoader;
 
 @Slf4j
 @Service

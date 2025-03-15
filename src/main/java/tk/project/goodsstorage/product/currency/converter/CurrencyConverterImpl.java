@@ -1,11 +1,11 @@
-package tk.project.goodsstorage.currency.converter;
+package tk.project.goodsstorage.product.currency.converter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tk.project.goodsstorage.currency.CurrenciesDto;
-import tk.project.goodsstorage.currency.Currency;
-import tk.project.goodsstorage.currency.provider.CurrenciesProvider;
+import tk.project.goodsstorage.product.currency.CurrenciesDto;
+import tk.project.goodsstorage.product.currency.Currency;
+import tk.project.goodsstorage.product.currency.provider.CurrenciesProvider;
 import tk.project.goodsstorage.product.dto.ProductDto;
 
 import java.math.BigDecimal;

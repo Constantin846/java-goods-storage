@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gs-pod
+  namespace: myspace #если не указать, то по умолчанию будет namespace: default; именное пространство, в котором будет задеплоен под
+  labels:
+    app: gs-app #дополнительные опциональные метки, служат для привязки других структур кубернетеса
+spec:
+  containers:
+    - name: gs-service-h2-mem
+      image: constantin846/gs-service-h2-mem:1
+      ports:
+        - containerPort: 8080
+          name: app
+        - containerPort: 9090
+          name: actuator
+      env: #переменные среды для запуска контейнера, переменная используется SpringBoot приложением
+        - name: SPRING_PROFILES_ACTIVE
+          value: "local"
+
+      startupProbe: #проба старта приложения
+        httpGet:
+          port: 9090
+          path: /health
+        failureThreshold: 30
+        periodSeconds: 10
+      readinessProbe: #проба готовности приложения к приему трафика
+        httpGet:
+          port: 9090
+          path: /health
+        failureThreshold: 1
+        periodSeconds: 10
+      livenessProbe: #проба жизнеспособности приложения, что оно не зависло
+        httpGet:
+          port: 9090
+          path: /health
+        failureThreshold: 3
+        periodSeconds: 10

@@ -15,5 +15,5 @@ spring:
   h2.console.enabled: true #http://localhost:8080/gs/h2-console
 
   liquibase:
-    change-log: classpath:db/changelog/h2-changelog-main.xml
+    change-log: classpath:db/changelog/local-changelog-main.xml
     enabled: true

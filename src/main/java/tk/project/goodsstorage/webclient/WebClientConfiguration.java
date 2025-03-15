@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.currency.client;
+package tk.project.goodsstorage.webclient;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
@@ -11,17 +11,35 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class WebClientConfiguration {
-    @Value("${currency-service.host}")
-    private String baseUrl;
-    @Value("${currency-service.timeout}")
-    public int timeout = 1000;
+    private static final int TIMEOUT = 1000;
 
     @Bean
-    public WebClient webClientWithTimeout() {
+    public WebClient currencyWebClient(@Value("${currency-service.host}") String baseUrl,
+                                       @Value("${currency-service.timeout}") Integer timeout) {
+        timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
+        return webClientWithTimeout(baseUrl, timeout);
+    }
+
+    @Bean
+    public WebClient accountNumberWebClient(@Value("${account-service.host}") String baseUrl,
+                                            @Value("${account-service.timeout}") Integer timeout) {
+        timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
+        return webClientWithTimeout(baseUrl, timeout);
+    }
+
+    @Bean
+    public WebClient innWebClient(@Value("${crm-service.host}") String baseUrl,
+                                  @Value("${crm-service.timeout}") Integer timeout) {
+        timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
+        return webClientWithTimeout(baseUrl, timeout);
+    }
+
+    private WebClient webClientWithTimeout(String baseUrl, Integer timeout) {
         final var tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeout)

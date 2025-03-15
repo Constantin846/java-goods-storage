@@ -22,9 +22,12 @@ import tk.project.goodsstorage.order.dto.update.UpdateOrderDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderRequest;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderResponse;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderStatusDto;
+import tk.project.goodsstorage.order.info.OrderInfo;
+import tk.project.goodsstorage.order.info.OrderInfoService;
 import tk.project.goodsstorage.order.mapper.OrderDtoMapper;
 import tk.project.goodsstorage.order.service.OrderService;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,6 +41,7 @@ public class OrderController {
     private static final String ORDER_ID_PATH = "/{orderId}";
     private final CustomerIdWrapper customerIdWrapper;
     private final OrderDtoMapper mapper;
+    private final OrderInfoService orderInfoService;
     private final OrderService orderService;
 
     @PostMapping
@@ -63,6 +67,13 @@ public class OrderController {
         log.info("Find order by id: {}", orderId);
         FindOrderDto orderDto = orderService.findById(orderId, customerIdWrapper.getCustomerId());
         return mapper.toFindOrderResponse(orderDto);
+    }
+
+    @GetMapping("/info/group-by-product-id")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<UUID, List<OrderInfo>> findProductIdOrdersInfo() {
+        log.info("Find orders info and group by product id");
+        return orderInfoService.findProductIdOrdersInfo();
     }
 
     @PatchMapping(ORDER_ID_PATH)

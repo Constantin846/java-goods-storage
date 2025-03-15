@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gs-pod #название пода, которое будет видно в kubectl get pods
+spec:
+  containers:
+    - name: gs-service-h2-mem #имя контейнера внутри пода, может быть несколько разных контейнеров внутри пода
+      image: constantin846/gs-service-h2-mem:1 #название имейджа из докерхаба. кубер сам выкачает имейдж
+      ports:
+        - containerPort: 8080 #номер порта, открытый для контейнера, например тут нужно указать порт, на котором запущен томкат SpringBoot приложения
+          name: app
+        - containerPort: 9090 #еще один порт, открытый для контейнера. На этом порту отвечает актуатор Spring
+          name: actuator
+      env: #переменные среды для запуска контейнера, переменная используется SpringBoot приложением
+        - name: SPRING_PROFILES_ACTIVE
+          value: "local"
+
+# kubectl apply -f ./deployment/mypod.yaml
+# kubectl logs -f gs-pod

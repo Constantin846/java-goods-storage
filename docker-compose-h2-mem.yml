@@ -1,0 +1,19 @@
+services:
+  gs-service:            # docker-compose -f .\docker-compose-h2-mem.yml build
+    build: .
+    image: constantin846/gs-service-h2-mem:2
+    container_name: gs-service-h2-mem
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=local"
+      - "DB_PRODUCTS_GENERATOR=true"
+      - "DOCKER_FILE_PATH=true"
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:gs
+      - SPRING_DATASOURCE_USERNAME=gs
+      - SPRING_DATASOURCE_PASSWORD=gs
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver
+    volumes:
+      - type: bind
+        source: ./src/main/resources/optimized-product-price-scheduling/result.csv
+        target: /src/main/resources/optimized-product-price-scheduling/result.csv

@@ -1,6 +1,6 @@
-package tk.project.goodsstorage.currency.converter;
+package tk.project.goodsstorage.product.currency.converter;
 
-import tk.project.goodsstorage.currency.Currency;
+import tk.project.goodsstorage.product.currency.Currency;
 import tk.project.goodsstorage.product.dto.ProductDto;
 
 import java.util.List;
