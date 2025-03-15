@@ -30,14 +30,15 @@ spring:
 
 app:
   scheduling:
-    enable: true
+    enable: ${SCHEDULING_ENABLE:true}
     period: 60000 #ms
     priceIncreasePercentage: 10.1
     optimization:
-      type: optimized-my  # optimized # optimized-my
+      type: ${SCHEDULING_OPTIMIZATION_TYPE:optimized-my}  # optimized # optimized-my (for h2) # any other means simple
       exclusive-lock: true
-  dbInit: false
-  currency-service.type: real # real # mock
+      docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my running in docker
+  prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
+  currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
 
 currency-service:
   host: http://localhost:8088

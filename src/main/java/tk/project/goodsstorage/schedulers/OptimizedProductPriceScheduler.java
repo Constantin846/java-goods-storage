@@ -35,10 +35,6 @@ public class OptimizedProductPriceScheduler {
     private static final Boolean IS_APPENDING_FILE = true;
     private static final String FILE_PATH = "/src/main/resources/optimized-product-price-scheduling/result.csv";
     private static final String COMMA = ",";
-    private static final String SELECT_PRODUCT = """
-            SELECT *
-            FROM product
-            """;
     private static final String UPDATE_PRODUCT_PRICE = """
             UPDATE product
             SET price = price * (1 + ?/100)

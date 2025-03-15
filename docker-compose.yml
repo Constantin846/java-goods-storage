@@ -1,7 +1,7 @@
 services:
   gs-service:
     build: .
-    image: gs-service  #  docker-compose -f docker-compose.yml up gs-service // up only this service
+    image: constantin846/gs-service:v1  #  docker-compose -f docker-compose.yml up gs-service // up only this service
     container_name: gs-service
     ports:
       - "8080:8080"

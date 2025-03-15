@@ -29,17 +29,5 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             where o.status in (:statuses)
             """)
     List<Order> findByOrderStatus(Collection<OrderStatus> statuses);
-
-    List<Order> findByStatusIn(List<OrderStatus> statuses);
 }
 
-/*
-* @Query(value = """
-            SELECT *
-            FROM order_app ord
-            LEFT JOIN customer c ON c.id = ord.customer_id
-            LEFT JOIN ordered_product op ON op.order_id = ord.id
-            WHERE ord.status in :statuses
-            """, nativeQuery = true)
-*
-* */
