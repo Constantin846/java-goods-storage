@@ -30,7 +30,7 @@ spring:
 
 app:
   scheduling:
-    enable: ${SCHEDULING_ENABLE:true}
+    enable: ${SCHEDULING_ENABLE:false}
     period: 60000 #ms
     priceIncreasePercentage: 10.1
     optimization:
@@ -39,6 +39,11 @@ app:
       docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my running in docker
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
+
+  kafka:
+    enabled: true
+    bootstrapAddress: ${KAFKA_BOOTSTRAP_ADDRESS:http://localhost:9091}
+    groupId: product-service
 
 currency-service:
   host: http://localhost:8088

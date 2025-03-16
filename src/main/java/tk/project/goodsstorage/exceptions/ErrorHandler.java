@@ -12,6 +12,8 @@ import tk.project.goodsstorage.exceptions.customer.CustomerNotFoundException;
 import tk.project.goodsstorage.exceptions.customer.LoginExistsException;
 import tk.project.goodsstorage.exceptions.customer.RequestFindAccountNumberException;
 import tk.project.goodsstorage.exceptions.customer.RequestFindInnException;
+import tk.project.goodsstorage.exceptions.kafka.EventHandlerNotFoundException;
+import tk.project.goodsstorage.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
 import tk.project.goodsstorage.exceptions.order.OrderNotAccessException;
 import tk.project.goodsstorage.exceptions.order.OrderNotFoundException;
 import tk.project.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
@@ -72,6 +74,18 @@ public class ErrorHandler {
         String message = String.join(DELIMITER, messages);
 
         return createApiError(e, message);
+    }
+
+    @ExceptionHandler(EventHandlerNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiError> handlerEventHandlerNotFoundException(final EventHandlerNotFoundException e) {
+        return createApiError(e);
+    }
+
+    @ExceptionHandler(KafkaConsumerJsonProcessingFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ApiError> handlerKafkaConsumerJsonProcessingFoundException(final KafkaConsumerJsonProcessingFoundException e) {
+        return createApiError(e);
     }
 
     @ExceptionHandler(OperationNotDefinedByStringException.class)
