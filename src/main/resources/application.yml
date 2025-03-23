@@ -41,7 +41,7 @@ app:
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
 
   kafka:
-    enabled: true
+    enabled: false
     bootstrapAddress: ${KAFKA_BOOTSTRAP_ADDRESS:http://localhost:9091}
     groupId: product-service
 

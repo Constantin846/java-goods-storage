@@ -3,7 +3,7 @@ package tk.project.goodsstorage.product.currency.client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
-import tk.project.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
 import tk.project.goodsstorage.product.currency.CurrenciesDto;
 
 import java.math.BigDecimal;

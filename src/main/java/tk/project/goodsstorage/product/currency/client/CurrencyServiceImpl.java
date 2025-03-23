@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
-import tk.project.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
 import tk.project.goodsstorage.product.currency.CurrenciesDto;
 
 import java.time.Duration;
