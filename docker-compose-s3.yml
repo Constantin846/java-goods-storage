@@ -1,0 +1,11 @@
+services:
+  upload-service:
+    build: upload/upload-server
+    image: scality/s3server
+    container_name: upload-server
+    ports:
+      - "9191:9191"
+    environment:
+      - BUCKET_NAME=my_bucket
+      - ACCESS_KEY_ID=my_key
+      - SECRET_KEY=my_secret

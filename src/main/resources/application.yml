@@ -40,6 +40,11 @@ app:
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
 
+  s3-service:
+    bucket-name: ${S3_BUCKET_NAME:my_bucket}
+    access-key-id: ${S3_ACCESS_KEY_ID:my_key}
+    secret-access-key: ${S3_SECRET_KEY:my_secret}
+
   kafka:
     enabled: false
     bootstrapAddress: ${KAFKA_BOOTSTRAP_ADDRESS:http://localhost:9091}
