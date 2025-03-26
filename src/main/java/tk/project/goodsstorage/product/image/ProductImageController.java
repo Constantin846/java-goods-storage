@@ -3,6 +3,7 @@ package tk.project.goodsstorage.product.image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import tk.project.goodsstorage.product.image.service.ProductImageService;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.zip.ZipOutputStream;
@@ -25,7 +28,7 @@ import java.util.zip.ZipOutputStream;
 public class ProductImageController {
     private static final String PRODUCT_ID_IMAGES_PATH = "/{productId}/images";
     private static final String PRODUCT_ID = "productId";
-    private static final String URL = "url";
+    private static final String FILE_NAME = "fileName";
     private final ProductImageService productImageService;
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,19 +36,23 @@ public class ProductImageController {
     public Map<String, String> addProductImage(@PathVariable(PRODUCT_ID) UUID productId,
                                                @RequestPart("image") MultipartFile file) {
         log.info("Add image to product with id: {}", productId);
-        String url = productImageService.upload(productId, file);
-        return Map.of(URL, url);
+        String fileName = productImageService.upload(productId, file);
+        return Map.of(FILE_NAME, fileName);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(PRODUCT_ID_IMAGES_PATH)
-    public ResponseEntity<ZipOutputStream> findImagesByProductId(@PathVariable(PRODUCT_ID) UUID productId) {
+    @GetMapping(value = PRODUCT_ID_IMAGES_PATH, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<StreamingResponseBody> findImagesByProductId(
+            @PathVariable(PRODUCT_ID) UUID productId) throws IOException
+    {
         log.info("Find images by product id: {}", productId);
-        ZipOutputStream zipOut = productImageService.downloadImages(productId);
         return ResponseEntity
                 .ok()
-                .header("Content-Disposition", "attachment;filename=export.zip")
-                .header("Content-Type","application/octet-stream")
-                .body(zipOut);
+                .header("Content-Disposition", "attachment; filename=\"files.zip\"")
+                .body(out -> {
+                    ZipOutputStream zipOutputStream = new ZipOutputStream(out);
+                    productImageService.downloadImages(productId, zipOutputStream);
+                    zipOutputStream.close();
+                });
     }
 }

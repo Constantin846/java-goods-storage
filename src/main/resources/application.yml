@@ -40,10 +40,11 @@ app:
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
 
-  s3-service:
-    bucket-name: ${S3_BUCKET_NAME:my_bucket}
-    access-key-id: ${S3_ACCESS_KEY_ID:my_key}
-    secret-access-key: ${S3_SECRET_KEY:my_secret}
+  minio-service:
+    bucket-name: ${MINIO_BUCKET_NAME:bucket}
+    access-key-id: ${MINIO_ACCESS_KEY_ID:minio}
+    secret-access-key: ${MINIO_SECRET_KEY:minio123}
+    endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
 
   kafka:
     enabled: false

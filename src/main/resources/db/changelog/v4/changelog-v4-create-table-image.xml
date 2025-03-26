@@ -22,9 +22,6 @@
             <column name="original_name" type="varchar(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="url" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 

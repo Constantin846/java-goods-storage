@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.image.s3client;
+package tk.project.goodsstorage.product.image.minio;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,22 +9,26 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class S3Config {
+public class MinioConfig {
 
     final String bucketName;
     final String accessKeyId;
     final String secretAccessKey;
+    final String endpoint;
 
-    public S3Config(
-            @Value("${app.s3-service.bucket-name}")
+    public MinioConfig (
+            @Value("${app.minio-service.bucket-name}")
             String bucketName,
-            @Value("${app.s3-service.access-key-id}")
+            @Value("${app.minio-service.access-key-id}")
             String accessKeyId,
-            @Value("${app.s3-service.secret-access-key}")
-            String secretAccessKey
+            @Value("${app.minio-service.secret-access-key}")
+            String secretAccessKey,
+            @Value("${app.minio-service.endpoint}")
+            String endpoint
     ) {
         this.bucketName = bucketName;
         this.accessKeyId = accessKeyId;
         this.secretAccessKey = secretAccessKey;
+        this.endpoint = endpoint;
     }
 }

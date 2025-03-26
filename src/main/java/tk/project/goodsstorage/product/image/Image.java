@@ -33,7 +33,4 @@ public class Image {
 
     @Column(name = "original_name", nullable = false, length = 64)
     String originalName;
-
-    @Column(name = "url", nullable = false, length = 64)
-    String url;
 }

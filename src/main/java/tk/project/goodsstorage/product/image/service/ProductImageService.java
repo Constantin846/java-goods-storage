@@ -8,5 +8,5 @@ import java.util.zip.ZipOutputStream;
 public interface ProductImageService {
     String upload(UUID productId, MultipartFile file);
 
-    ZipOutputStream downloadImages(UUID productId);
+    void downloadImages(UUID productId, ZipOutputStream zipOutputStream);
 }
