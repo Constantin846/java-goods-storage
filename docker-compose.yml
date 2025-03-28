@@ -9,6 +9,7 @@ services:
       - gs-db
     environment:
       - "KAFKA_BOOTSTRAP_ADDRESS=kafka:9092"
+      - UPLOAD_SERVER_URL=http://upload-server:9191
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
       - SPRING_DATASOURCE_USERNAME=gs
       - SPRING_DATASOURCE_PASSWORD=gs
@@ -27,6 +28,7 @@ services:
       - gs-db
     environment:
       - "KAFKA_BOOTSTRAP_ADDRESS=kafka:9092"
+      - UPLOAD_SERVER_URL=http://upload-server:9191
       - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
       - SPRING_DATASOURCE_USERNAME=gs
       - SPRING_DATASOURCE_PASSWORD=gs

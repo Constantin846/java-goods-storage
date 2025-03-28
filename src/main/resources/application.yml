@@ -40,8 +40,14 @@ app:
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
 
+  minio-service:
+    bucket-name: ${MINIO_BUCKET_NAME:bucket}
+    access-key-id: ${MINIO_ACCESS_KEY_ID:minio}
+    secret-access-key: ${MINIO_SECRET_KEY:minio123}
+    endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
+
   kafka:
-    enabled: true
+    enabled: false
     bootstrapAddress: ${KAFKA_BOOTSTRAP_ADDRESS:http://localhost:9091}
     groupId: product-service
 
