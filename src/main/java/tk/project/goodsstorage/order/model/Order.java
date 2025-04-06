@@ -24,6 +24,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import tk.project.goodsstorage.customer.Customer;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,4 +57,10 @@ public class Order {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     Set<OrderedProduct> products;
+
+    @Column(name = "business_key")
+    UUID businessKey;
+
+    @Column(name = "delivery_date")
+    LocalDate deliveryDate;
 }

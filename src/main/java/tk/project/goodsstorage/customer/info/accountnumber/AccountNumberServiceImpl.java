@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
+@ConditionalOnMissingBean(AccountNumberServiceMock.class)
 public class AccountNumberServiceImpl implements AccountNumberService {
     private static final int RETRY_COUNT = 2;
     private final String uriPostAccountNumbers;

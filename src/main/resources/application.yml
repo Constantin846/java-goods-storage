@@ -36,9 +36,11 @@ app:
     optimization:
       type: ${SCHEDULING_OPTIMIZATION_TYPE:optimized-my}  # optimized # optimized-my (for h2) # any other means simple
       exclusive-lock: true
-      docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my running in docker
+      docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my scheduler running in docker
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
   currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
+  account-service.type: mock # real implementation in any case without mock
+  crm-service.type: mock # real implementation in any case without mock
 
   minio-service:
     bucket-name: ${MINIO_BUCKET_NAME:bucket}
@@ -68,6 +70,13 @@ crm-service:
   method:
     get-inns: /crm-service/inns
   timeout: 300000 #ms
+
+orchestrator-goods-storage:
+  host: http://localhost:8089
+  method:
+    confirm-order: /orc-gs/confirm-order
+  timeout: 300000 #ms
+  orchestrator-id: 123
 
 logging:
   level:

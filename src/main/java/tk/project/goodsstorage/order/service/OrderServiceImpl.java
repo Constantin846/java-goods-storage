@@ -10,15 +10,19 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotFoundEx
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreateException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotProcessingException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductCountNotEnoughException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotAvailableException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
 import tk.project.goodsstorage.customer.Customer;
 import tk.project.goodsstorage.customer.repository.CustomerRepository;
+import tk.project.goodsstorage.orchestrator.OrchestratorProvider;
+import tk.project.goodsstorage.orchestrator.dto.OrchestratorConfirmOrderDto;
 import tk.project.goodsstorage.order.dto.SaveOrderedProductDto;
 import tk.project.goodsstorage.order.dto.create.CreateOrderDto;
 import tk.project.goodsstorage.order.dto.find.FindOrderDto;
 import tk.project.goodsstorage.order.dto.find.FindOrderedProductDto;
+import tk.project.goodsstorage.order.dto.update.SetOrderStatusRequest;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDtoRes;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderStatusDto;
@@ -47,6 +51,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
+    private final OrchestratorProvider orchestratorProvider;
     private final OrderDtoMapper mapper;
     private final OrderedProductRepository orderedProductRepository;
     private final OrderRepository orderRepository;
@@ -68,8 +73,27 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void confirmById(UUID orderId, long customerId) {
-        // todo
+    public UUID confirmById(UUID orderId, long customerId) {
+        Order order = getOrderByIdFetch(orderId);
+        checkCustomerAccessToOrder(customerId, order);
+        checkOrderStatusIsCreate(order);
+
+        OrchestratorConfirmOrderDto confirmOrderDto = new OrchestratorConfirmOrderDto();
+        confirmOrderDto.setId(order.getId());
+        confirmOrderDto.setDeliveryAddress(order.getDeliveryAddress());
+        confirmOrderDto.setCustomerLogin(order.getCustomer().getLogin());
+        confirmOrderDto.setPrice(
+                order.getProducts().stream()
+                        .map(it -> it.getPrice().multiply(BigDecimal.valueOf(it.getCount())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        );
+
+        UUID businessKey = orchestratorProvider.confirmOrder(confirmOrderDto);
+
+        order.setBusinessKey(businessKey);
+        order.setStatus(OrderStatus.PROCESSING);
+        orderRepository.save(order);
+        return businessKey;
     }
 
     @Override
@@ -118,6 +142,16 @@ public class OrderServiceImpl implements OrderService {
         checkOrderStatusIsNotCancelled(order);
         checkOrderStatusIsNotRejected(order);
         order.setStatus(OrderStatus.DONE);
+        orderRepository.save(order);
+        return new UpdateOrderStatusDto(order.getStatus());
+    }
+
+    @Override
+    public UpdateOrderStatusDto setStatusByOrchestrator(SetOrderStatusRequest statusRequest) {
+        Order order = getOrderByIdFetch(statusRequest.getOrderId());
+        checkOrderStatusIsProcessing(order);
+        order.setStatus(statusRequest.getStatus());
+        order.setDeliveryDate(statusRequest.getDeliveryDate());
         orderRepository.save(order);
         return new UpdateOrderStatusDto(order.getStatus());
     }
@@ -244,6 +278,14 @@ public class OrderServiceImpl implements OrderService {
             String message = String.format("Order status has already been %s", OrderStatus.REJECTED);
             log.warn(message);
             throw new OrderStatusAlreadyRejectedException(message);
+        }
+    }
+
+    private void checkOrderStatusIsProcessing(Order order) {
+        if (order.getStatus() != OrderStatus.PROCESSING) {
+            String message = String.format("Order status must be %s", OrderStatus.PROCESSING);
+            log.warn(message);
+            throw new OrderStatusNotProcessingException(message);
         }
     }
 

@@ -43,12 +43,4 @@
         </createTable>
     </changeSet>
 
-    <!--<changeSet id="v1-2" author="Author">
-        <preConditions onFail="MARK_RAN"> &lt;!&ndash;todo delete &ndash;&gt;
-            <tableIsEmpty tableName="product"/>
-        </preConditions>
-
-        <loadData tableName="product" file="db/data/products-data1.csv"/>
-        <loadData tableName="product" file="db/data/products-data2.csv"/>
-    </changeSet>-->
 </databaseChangeLog>

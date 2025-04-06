@@ -8,7 +8,7 @@
     <changeSet id="v2-3" author="Author">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="order"/>
+                <tableExists tableName="order_app"/>
             </not>
         </preConditions>
 
