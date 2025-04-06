@@ -39,6 +39,13 @@ public class WebClientConfiguration {
         return webClientWithTimeout(baseUrl, timeout);
     }
 
+    @Bean
+    public WebClient orchestratorWebClient(@Value("${orchestrator-goods-storage.host}") String baseUrl,
+                                           @Value("${orchestrator-goods-storage.timeout}") Integer timeout) {
+        timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
+        return webClientWithTimeout(baseUrl, timeout);
+    }
+
     private WebClient webClientWithTimeout(String baseUrl, Integer timeout) {
         final var tcpClient = TcpClient
                 .create()

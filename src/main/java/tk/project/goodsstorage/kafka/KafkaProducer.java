@@ -17,8 +17,7 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(prefix = "app", name = "kafka.enabled", matchIfMissing = false)
 public class KafkaProducer {
     private final KafkaTemplate<String, byte[]> kafkaTemplateByteArray;
-    public static final String NOTIFICATION_TOPIC = "brokerage-order-command";
-    public static final String CLAIM_TOPIC = "brokerage-claim";
+    public static final String ORDER_COMMAND = "brokerage-order-command";
 
     public KafkaProducer(@Autowired KafkaTemplate<String, byte[]> kafkaTemplateByteArray) {
         this.kafkaTemplateByteArray = kafkaTemplateByteArray;

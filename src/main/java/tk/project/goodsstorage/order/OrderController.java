@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import tk.project.goodsstorage.customer.CustomerIdWrapper;
+import tk.project.goodsstorage.orchestrator.OrchestratorIdWrapper;
 import tk.project.goodsstorage.order.dto.create.CreateOrderDto;
 import tk.project.goodsstorage.order.dto.create.CreateOrderRequest;
 import tk.project.goodsstorage.order.dto.find.FindOrderDto;
 import tk.project.goodsstorage.order.dto.find.FindOrderResponse;
+import tk.project.goodsstorage.order.dto.update.SetOrderStatusRequest;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDto;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderRequest;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderResponse;
@@ -40,6 +42,7 @@ public class OrderController {
     private static final String ORDER_ID = "orderId";
     private static final String ORDER_ID_PATH = "/{orderId}";
     private final CustomerIdWrapper customerIdWrapper;
+    private final OrchestratorIdWrapper orchestratorIdWrapper;
     private final OrderDtoMapper mapper;
     private final OrderInfoService orderInfoService;
     private final OrderService orderService;
@@ -55,10 +58,10 @@ public class OrderController {
 
     @PostMapping(ORDER_ID_PATH + "/confirm")
     @ResponseStatus(HttpStatus.CREATED)
-    public void confirmById(@PathVariable(ORDER_ID) UUID orderId) {
+    public Map<String, UUID> confirmById(@PathVariable(ORDER_ID) UUID orderId) {
         log.info("Confirm order with id: {}", orderId);
-        orderService.confirmById(orderId, customerIdWrapper.getCustomerId());
-        // todo
+        UUID businessKey = orderService.confirmById(orderId, customerIdWrapper.getCustomerId());
+        return Map.of("businessKey", businessKey);
     }
 
     @GetMapping(ORDER_ID_PATH)
@@ -92,6 +95,14 @@ public class OrderController {
     public UpdateOrderStatusDto setStatusDone(@PathVariable(ORDER_ID) UUID orderId) {
         log.info("Set status DONE to order with id: {}", orderId);
         return orderService.setStatusDone(orderId, customerIdWrapper.getCustomerId());
+    }
+
+    @PatchMapping("/set-status")
+    @ResponseStatus(HttpStatus.OK)
+    public UpdateOrderStatusDto setStatusByOrchestrator(@RequestBody SetOrderStatusRequest statusRequest) {
+        log.info("Change status to order: {}", statusRequest);
+        orchestratorIdWrapper.checkOrchestratorAccess();
+        return orderService.setStatusByOrchestrator(statusRequest);
     }
 
     @DeleteMapping(ORDER_ID_PATH)
