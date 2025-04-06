@@ -1,0 +1,51 @@
+services:
+  gs-service:
+    build: .
+    image: gs-service:v3  #  docker-compose -f docker-compose.yml up gs-service // up only this service
+    container_name: gs-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - gs-db
+    environment:
+      - "KAFKA_BOOTSTRAP_ADDRESS=kafka:9092"
+      - UPLOAD_SERVER_URL=http://upload-server:9191
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
+      - SPRING_DATASOURCE_USERNAME=gs
+      - SPRING_DATASOURCE_PASSWORD=gs
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+    volumes:
+      - type: bind
+        source: ./src/main/resources/optimized-product-price-scheduling/result.csv
+        target: /src/main/resources/optimized-product-price-scheduling/result.csv
+
+  gs-service-2:
+    image: gs-service:v3  #  docker-compose -f docker-compose.yml up gs-service // up only this service
+    container_name: gs-service-2
+    ports:
+      - "8888:8888"
+    depends_on:
+      - gs-db
+    environment:
+      - "KAFKA_BOOTSTRAP_ADDRESS=kafka:9092"
+      - UPLOAD_SERVER_URL=http://upload-server:9191
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://gs-db:5432/gs
+      - SPRING_DATASOURCE_USERNAME=gs
+      - SPRING_DATASOURCE_PASSWORD=gs
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+
+  gs-db:
+    image: postgres:17
+    container_name: postgres-gs-db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_PASSWORD=gs
+      - POSTGRES_USER=gs
+      - POSTGRES_DB=gs
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+

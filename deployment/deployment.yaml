@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: myspace
+  name: gs-deployment
+  labels:
+    app: gs-app
+spec:
+  strategy:
+    type: RollingUpdate #еще есть Recreate
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gs-app
+  template:
+    metadata:
+      labels:
+        app: gs-app
+    spec:
+      containers:
+        - name: gs-service-h2-mem
+          image: constantin846/gs-service-h2-mem:2
+          ports:
+            - containerPort: 8080
+              name: app
+            - containerPort: 9090
+              name: actuator
+
+          livenessProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 1
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 30
+            periodSeconds: 10
+
+          env:
+            - name: SCHEDULING_ENABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: gs-configmap
+                  key: SCHEDULING_ENABLE_FROM_MAP
+            - name: SCHEDULING_OPTIMIZATION_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: gs-configmap
+                  key: SCHEDULING_OPTIMIZATION_TYPE_FROM_MAP
+            - name: DB_PRODUCTS_GENERATOR
+              valueFrom:
+                configMapKeyRef:
+                  name: gs-configmap
+                  key: DB_PRODUCTS_GENERATOR_FROM_MAP
+            - name: CURRENCY_SERVICE_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: gs-configmap
+                  key: CURRENCY_SERVICE_TYPE_FROM_MAP
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"

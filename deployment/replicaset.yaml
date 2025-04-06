@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: gs-replicaset
+  labels:
+    app: gs-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gs-app
+  template:
+    metadata:
+      labels:
+        app: gs-app
+    #далее идет описание, аналогичное блоку spec из пода
+    spec:
+      containers:
+        - name: gs-service-h2-mem
+          image: constantin846/gs-service-h2-mem:1
+          ports:
+            - containerPort: 8080
+              name: app
+            - containerPort: 9090
+              name: actuator
+          env: #переменные среды для запуска контейнера, переменная используется SpringBoot приложением
+            - name: SPRING_PROFILES_ACTIVE
+              value: "local"
+
+          startupProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 1
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 9090
+              path: /health
+            failureThreshold: 3
+            periodSeconds: 10
