@@ -1,0 +1,1580 @@
+{
+	"info": {
+		"_postman_id": "932be9ba-887c-421c-8dfe-d1d9d7f3bf73",
+		"name": "goods-storage",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35134799"
+	},
+	"item": [
+		{
+			"name": "Create product",
+			"item": [
+				{
+					"name": "Validation",
+					"item": [
+						{
+							"name": "Create product with duplicate article",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 409\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([409, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"article\": \"article\",\r\n    \"description\": \"description\",\r\n    \"category\": \"category\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product without article",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"description\",\r\n    \"category\": \"category\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product without name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"article\": \"article\",\r\n    \"description\": \"description\",\r\n    \"category\": \"category\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product without description",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"article\": \"article\",\r\n    \"category\": \"category\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product without category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"article\": \"article\",\r\n    \"description\": \"description\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product with negative price",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"article\": \"article\",\r\n    \"description\": \"description\",\r\n    \"category\": \"category\",\r\n    \"price\": -1,\r\n    \"count\": 1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create product without count",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+											"});\r",
+											"pm.test(\"Response have body\", function () {\r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"name\",\r\n    \"article\": \"article\",\r\n    \"description\": \"description\",\r\n    \"category\": \"category\",\r\n    \"price\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/products",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('id_product', myData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomNum\", _.random(1, 10000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"name first\",\r\n    \"article\": \"{{randomNum}}\",\r\n    \"description\": \"description\",\r\n    \"category\": \"UNDEFINED\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create second product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('id_second_product', myData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomNum\", _.random(1, 10000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"name second\",\r\n    \"article\": \"{{randomNum}}\",\r\n    \"description\": \"description second\",\r\n    \"category\": \"FRUIT\",\r\n    \"price\": 200,\r\n    \"count\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create third product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('id_third_product', myData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomNum\", _.random(1, 10000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"name 3\",\r\n    \"article\": \"{{randomNum}}\",\r\n    \"description\": \"description 3\",\r\n    \"category\": \"UNDEFINED\",\r\n    \"price\": 100,\r\n    \"count\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Find product",
+			"item": [
+				{
+					"name": "Find all products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/products?size=100&from=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "100"
+								},
+								{
+									"key": "from",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Currency",
+								"value": "EUR",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by criteria",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"field\": \"price\",\r\n        \"value\": 110.0,\r\n        \"operation\": \">=\"\r\n    },\r\n    {\r\n        \"field\": \"price\",\r\n        \"value\": 240.1,\r\n        \"operation\": \"<=\"\r\n    },\r\n    {\r\n        \"field\": \"createDate\",\r\n        \"value\": \"2024-03-12\",\r\n        \"operation\": \">=\"\r\n    },\r\n    {\r\n        \"field\": \"lastCountUpdateTime\",\r\n        \"value\": \"2025-02-22T14:32:00Z\",\r\n        \"operation\": \">=\"\r\n    },\r\n    {\r\n        \"field\": \"name\",\r\n        \"value\": \"1\",\r\n        \"operation\": \"~\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products/search?page=0&size=10&sort=name,ASC",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "name,ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by criteria Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"field\": \"price\",\r\n        \"value\": 110.0,\r\n        \"operation\": \">=\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products/search?page=0&size=10&sort=name,ASC",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "name,ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update product",
+			"item": [
+				{
+					"name": "Update product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"new description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"new name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"count\": 99\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Create customer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomNum\", _.random(1, 10000))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('id_customer', myData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"{{randomNum}}\",\r\n    \"email\": \"email@test.em\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find customer by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customers/{{id_customer}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customers",
+								"{{id_customer}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update customer by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": null,\r\n    \"isActive\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/customers/{{id_customer}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customers",
+								"{{id_customer}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete customer by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/customers/{{id_customer}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"customers",
+								"{{id_customer}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Create order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('id_order', myData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"deliveryAddress\": \"string\",\r\n\t\t\"products\" : [\r\n\t\t\t{\r\n\t\t\t\t\"id\": \"{{id_product}}\",\r\n\t\t\t\t\"count\": 3\r\n\t\t\t},\r\n            {\r\n\t\t\t\t\"id\": \"{{id_second_product}}\",\r\n\t\t\t\t\"count\": 3\r\n\t\t\t},\r\n            {\r\n\t\t\t\t\"id\": \"{{id_third_product}}\",\r\n\t\t\t\t\"count\": 3\r\n\t\t\t}\r\n\t\t]\r\n\t}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order/{{id_order}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\t\"deliveryAddress\": \"string\",\r\n\t\t\"products\" : [\r\n\t\t\t{\r\n\t\t\t\t\"id\": \"{{id_product}}\",\r\n\t\t\t\t\"count\": 4\r\n\t\t\t},\r\n            {\r\n\t\t\t\t\"id\": \"{{id_second_product}}\",\r\n\t\t\t\t\"count\": 3\r\n\t\t\t}\r\n\t\t]\r\n\t}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url-second}}/order/{{id_order}}",
+							"host": [
+								"{{url-second}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"products\" : [\r\n\t\t{\r\n\t\t\t\"id\": \"{{id_product}}\",\r\n\t\t\t\"count\": 4\r\n\t\t}\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order/{{id_order}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set status done to order by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"pm.test(\"Response have body\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url-second}}/order/{{id_order}}/status",
+							"host": [
+								"{{url-second}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order/{{id_order}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find order info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/order/info/group-by-product-id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"info",
+								"group-by-product-id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-Customer-ID",
+								"value": "{{id_customer}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/order/{{id_order}}/confirm",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"{{id_order}}",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product photo",
+			"item": [
+				{
+					"name": "Add product photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Константин/Desktop/фото/Снимок экрана 2024-01-25 192709.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}/images",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download product photoes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Existing test scripts\r",
+									"pm.test(\"Response data length must be greater than zero\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.length).to.be.greaterThan(0, \"Response data should not be empty\");\r",
+									"});\r",
+									"\r",
+									"var template = `\r",
+									"<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+									"\r",
+									"<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script>\r",
+									"\r",
+									"<script>\r",
+									"    var ctx = document.getElementById(\"myChart\");\r",
+									"\r",
+									"    var myChart = new Chart(ctx, {\r",
+									"        type: \"pie\",\r",
+									"        data: {\r",
+									"            labels: [],\r",
+									"            datasets: [{\r",
+									"                data: [],\r",
+									"                backgroundColor: []\r",
+									"            }]\r",
+									"        },\r",
+									"        options: {\r",
+									"            title: {\r",
+									"                display: true,\r",
+									"                text: 'Image Distribution'\r",
+									"            }\r",
+									"        }\r",
+									"    });\r",
+									"\r",
+									"    pm.getData(function (err, value) {\r",
+									"        myChart.data.labels = value.response.map(item => item.id);\r",
+									"        myChart.data.datasets[0].data = Array(value.response.length).fill(1); // Set each value to 1\r",
+									"        myChart.data.datasets[0].backgroundColor = value.response.map((_, index) => `hsl(${index * 20}, 100%, 50%)`); // Generate random colors\r",
+									"        myChart.update();\r",
+									"    });\r",
+									"</script>`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() };\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									"// Stores the image IDs in an environment or global variable\r",
+									"var imageIds = [];\r",
+									"var responseBody = pm.response.json();\r",
+									"responseBody.forEach(function(image) {\r",
+									"    imageIds.push(image.id);\r",
+									"});\r",
+									"pm.globals.set(\"imageIds\", imageIds);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/products/{{id_product}}/images",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"products",
+								"{{id_product}}",
+								"images"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orchestrator",
+			"item": [
+				{
+					"name": "Confirm order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"pm.environment.set('businessKey', myData.businessKey)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{id_product}}\",\r\n    \"deliveryAddress\": \"deliveryAddress\",\r\n    \"customerInn\": \"123445\",\r\n    \"customerAccountNumber\": \"123456789012\",\r\n    \"price\": \"111.11\",\r\n    \"customerLogin\": \"login\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8089/orc-gs/confirm-order",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"orc-gs",
+								"confirm-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Continue comfiirm order",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"businessKey\": \"{{businessKey}}\",\r\n    \"complianceStatus\": \"SUCCESS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8089/orc-gs/confirm-order/continue",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"orc-gs",
+								"confirm-order",
+								"continue"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "randomNum",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "url",
+			"value": "localhost:8080/gs",
+			"type": "string"
+		},
+		{
+			"key": "id_product",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id_second_product",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id_third_product",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id_customer",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "id_order",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
