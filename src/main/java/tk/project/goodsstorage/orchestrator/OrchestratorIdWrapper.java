@@ -15,7 +15,7 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessE
 @Setter
 public class OrchestratorIdWrapper {
 
-    @Value("orchestrator-goods-storage.orchestrator-id")
+    @Value("${orchestrator-goods-storage.orchestrator-id}")
     private String expectedOrchestratorId;
 
     private String orchestratorId;

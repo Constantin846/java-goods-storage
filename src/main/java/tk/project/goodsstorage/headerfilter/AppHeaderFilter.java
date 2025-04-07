@@ -39,9 +39,9 @@ public class AppHeaderFilter extends OncePerRequestFilter {
             customerIdWrapper.setCustomerId(Long.parseLong(customerIdHeader));
         }
 
-        String orchestratorIdHeader = request.getHeader(X_CUSTOMER_ID);
+        String orchestratorIdHeader = request.getHeader(X_ORCHESTRATOR_ID);
         if (Objects.nonNull(orchestratorIdHeader)) {
-            customerIdWrapper.setCustomerId(Long.parseLong(orchestratorIdHeader));
+            orchestratorIdWrapper.setOrchestratorId(orchestratorIdHeader);
         }
 
         filterChain.doFilter(request, response);

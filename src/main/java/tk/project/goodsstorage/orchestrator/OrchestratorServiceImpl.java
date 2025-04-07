@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.util.retry.Retry;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.RequestConfirmOrderToOrchestratorException;
 import tk.project.goodsstorage.orchestrator.dto.OrchestratorConfirmOrderDto;
+import tk.project.goodsstorage.orchestrator.dto.OrchestratorConfirmOrderResponse;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -39,11 +40,12 @@ public class OrchestratorServiceImpl implements OrchestratorService {
     public UUID sendRequestConfirmOrder(OrchestratorConfirmOrderDto orderDto) {
         log.info("Send request to confirm order");
 
-        return webClient.post()
+        OrchestratorConfirmOrderResponse response =
+                webClient.post()
                 .uri(confirmOrder)
                 .bodyValue(orderDto)
                 .retrieve()
-                .bodyToMono(UUID.class)
+                .bodyToMono(OrchestratorConfirmOrderResponse.class)
                 .retryWhen(Retry.fixedDelay(RETRY_COUNT, Duration.ofMillis(timeout)))
                 .doOnError(error -> {
                     String message = "Something went wrong while executing request to confirm order";
@@ -51,5 +53,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
                     throw new RequestConfirmOrderToOrchestratorException(message, error);
                 })
                 .block();
+
+        return response != null ? response.getBusinessKey() : null;
     }
 }
