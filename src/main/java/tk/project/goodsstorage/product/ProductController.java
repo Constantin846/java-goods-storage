@@ -51,7 +51,7 @@ public class ProductController {
     @PostMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> findByCriteria(Pageable pageable,
-                                                @Valid @RequestBody List<SearchCriteria<?>> criteria) {
+                                                @Valid @RequestBody List<SearchCriteria> criteria) {
         log.info("Find product by criteria: {}", criteria);
         List<ProductDto> products = productService.findByCriteria(pageable, criteria);
         return mapper.toProductResponse(products);

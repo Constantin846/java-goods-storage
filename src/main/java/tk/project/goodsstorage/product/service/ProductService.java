@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface ProductService {
     UUID create(CreateProductDto createProductDto);
 
-    List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria<?>> criteria);
+    List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria> criteria);
 
     ProductDto findById(UUID id);
 

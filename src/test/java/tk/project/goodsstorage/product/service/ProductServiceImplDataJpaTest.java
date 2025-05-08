@@ -19,7 +19,7 @@ import tk.project.goodsstorage.product.mapper.ProductDtoMapperImpl;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.model.objectmother.ProductMother;
 import tk.project.goodsstorage.product.repository.ProductRepository;
-import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
+import tk.project.goodsstorage.product.repository.ProductSpecification;
 import tk.project.goodsstorage.search.criteria.BigDecimalCriteria;
 import tk.project.goodsstorage.search.criteria.InstantCriteria;
 import tk.project.goodsstorage.search.criteria.LocalDateCriteria;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
         "spring.liquibase.enabled=false"
 })
 @Import(value = {CurrencyConverterImpl.class, ProductDtoMapperImpl.class,
-        ProductServiceImpl.class, SearchCriteriaManager.class})
+        ProductServiceImpl.class, ProductSpecification.class})
 class ProductServiceImplDataJpaTest {
     @MockBean
     private CurrenciesProvider currenciesProvider;
@@ -64,7 +64,7 @@ class ProductServiceImplDataJpaTest {
         when(sessionCurrencyWrapper.getCurrency()).thenReturn(Currency.RUS);
         when(currenciesProvider.getCurrencies()).thenReturn(CurrenciesDto.ofDoubles(1.1, 1.2, 1.3));
 
-        List<SearchCriteria<?>> searchCriteria = createCriteria();
+        List<SearchCriteria> searchCriteria = createCriteria();
 
         List<ProductDto> result = productServiceUnderTest
                 .findByCriteria(PageRequest.of(0, 10), searchCriteria);
@@ -81,8 +81,8 @@ class ProductServiceImplDataJpaTest {
         assertEquals(product.getCreateDate(), actualProduct.getCreateDate());
     }
 
-    private List<SearchCriteria<?>> createCriteria() {
-        List<SearchCriteria<?>> criteria = new ArrayList<>();
+    private List<SearchCriteria> createCriteria() {
+        List<SearchCriteria> criteria = new ArrayList<>();
         StringCriteria nameCriteria = StringCriteria.builder()
                 .field("name")
                 .value(product.getName())

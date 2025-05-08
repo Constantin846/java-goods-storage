@@ -1,4 +1,4 @@
-package tk.project.goodsstorage.product.service.criteria;
+package tk.project.goodsstorage.search.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

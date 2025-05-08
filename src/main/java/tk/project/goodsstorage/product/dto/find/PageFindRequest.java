@@ -2,17 +2,20 @@ package tk.project.goodsstorage.product.dto.find;
 
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class PageFindRequest {
 
     @PositiveOrZero(message = "From param must not be negative")
-    int from = 0;
+    private final int from = 0;
 
     @Positive(message = "From param must be positive")
-    int size = 10;
+    private final int size = 10;
 }

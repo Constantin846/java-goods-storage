@@ -18,7 +18,7 @@ import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
-import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
+import tk.project.goodsstorage.product.repository.ProductSpecification;
 import tk.project.goodsstorage.search.criteria.SearchCriteria;
 
 import java.time.Instant;
@@ -35,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
     private final CurrencyConverter currencyConverter;
     private final ProductDtoMapper mapper;
     private final ProductRepository productRepository;
-    private final SearchCriteriaManager searchCriteriaManager;
     private final SessionCurrencyWrapper sessionCurrencyWrapper;
 
     @Transactional
@@ -48,14 +47,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria<?>> criteria) {
+    public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria> criteria) {
         List<Product> products;
 
         if (criteria.isEmpty()) {
             products = productRepository.findAll(pageable).stream().toList();
 
         } else {
-            Specification<Product> specification = searchCriteriaManager.getSpecification(criteria);
+            Specification<Product> specification = new ProductSpecification(criteria);
             products = productRepository.findAll(specification, pageable).stream().toList();
         }
         return products.stream()

@@ -1,15 +1,9 @@
-package tk.project.goodsstorage.product.dto.find.criteria;
+package tk.project.goodsstorage.search.criteria;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import tk.project.goodsstorage.product.service.criteria.Operation;
+import tk.project.goodsstorage.search.enums.Operation;
+import tk.project.goodsstorage.search.strategy.PredicateStrategy;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.SIMPLE_NAME, include = JsonTypeInfo.As.PROPERTY,
         property = "field", visible = true)
@@ -20,17 +14,13 @@ import tk.project.goodsstorage.product.service.criteria.Operation;
         @JsonSubTypes.Type(name = "lastCountUpdateTime", value = InstantCriteria.class),
         @JsonSubTypes.Type(name = "createDate", value = LocalDateCriteria.class)
 })
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PROTECTED)
-public class SearchCriteria<T> {
+public interface SearchCriteria<T> {
 
-    @NotBlank(message = "Field of search criteria must be set")
-    String field;
+    PredicateStrategy<T> getStrategy();
 
-    T value;
+    String getField();
 
-    @NotNull(message = "Operation of search criteria must be set")
-    Operation operation;
+    T getValue();
+
+    Operation getOperation();
 }
