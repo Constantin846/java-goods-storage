@@ -15,7 +15,7 @@ public interface OrderedProductDtoMapper {
     @Mapping(target = "productId", source = "id")
     @Mapping(target = "order", ignore = true)
     @Mapping(target = "price", ignore = true)
-    OrderedProduct toOrderedProduct(CreateOrderedProductDto orderedProductDto);
+    OrderedProduct toOrderedProduct(final CreateOrderedProductDto orderedProductDto);
 
     default List<OrderedProduct> toOrderedProduct(List<CreateOrderedProductDto> orderedProductsDto) {
         return orderedProductsDto.stream()

@@ -1,21 +1,28 @@
 package tk.project.goodsstorage.order.dto.update;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class UpdateOrderDto {
 
-    UUID id;
+    private final UUID id;
 
-    Long customerId;
+    private final String deliveryAddress;
 
-    String deliveryAddress;
+    @ToString.Exclude
+    private final Set<UpdateOrderedProductDto> products;
 
-    Set<UpdateOrderedProductDto> products;
+    public Set<UpdateOrderedProductDto> getProducts() {
+        return new HashSet<>(products);
+    }
 }

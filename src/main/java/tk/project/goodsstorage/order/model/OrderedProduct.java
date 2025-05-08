@@ -7,14 +7,12 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -28,20 +26,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = {"order", "productId"})
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderedProduct {
     @Id
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    Order order;
+    private Order order;
 
     @Id
     @Column(name = "product_id", nullable = false)
-    UUID productId;
+    private UUID productId;
 
     @Column(name = "product_price", nullable = false)
-    BigDecimal price;
+    private BigDecimal price;
 
     @Column(name = "product_count", nullable = false)
-    Long count;
+    private Long count;
 }

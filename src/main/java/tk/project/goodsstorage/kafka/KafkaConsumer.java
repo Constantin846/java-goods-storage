@@ -25,7 +25,7 @@ public class KafkaConsumer {
     private final Map<Event, EventHandler<EventSource>> eventHandlers;
 
     @KafkaListener(topics = "brokerage-order-command", containerFactory = "kafkaListenerContainerFactoryString")
-    public void listen(String message) throws JsonProcessingException {
+    public void listen(final String message) throws JsonProcessingException {
         log.info("Receive message: {}", message);
 
         final ObjectMapper objectMapper = new ObjectMapper();

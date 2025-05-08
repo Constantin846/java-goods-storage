@@ -15,19 +15,19 @@ import tk.project.goodsstorage.customer.dto.update.UpdateCustomerResponse;
 public interface CustomerDtoMapper {
     CustomerDtoMapper MAPPER = Mappers.getMapper(CustomerDtoMapper.class);
 
-    CreateCustomerDto toCreateCustomerDto(CreateCustomerRequest customerRequest);
+    CreateCustomerDto toCreateCustomerDto(final CreateCustomerRequest customerRequest);
 
-    Customer toCustomer(CreateCustomerDto customerDto);
+    Customer toCustomer(final CreateCustomerDto customerDto);
 
-    FindCustomerResponse toFindCustomerResponse(FindCustomerDto customerDto);
+    FindCustomerResponse toFindCustomerResponse(final FindCustomerDto customerDto);
 
-    FindCustomerDto toFindCustomerDto(Customer customer);
+    FindCustomerDto toFindCustomerDto(final Customer customer);
 
-    UpdateCustomerDto toUpdateCustomerDto(UpdateCustomerRequest customerRequest);
+    UpdateCustomerDto toUpdateCustomerDto(final UpdateCustomerRequest customerRequest);
 
-    UpdateCustomerResponse toUpdateCustomerResponse(UpdateCustomerDto customerDto);
+    UpdateCustomerResponse toUpdateCustomerResponse(final UpdateCustomerDto customerDto);
 
-    Customer toCustomer(UpdateCustomerDto customerDto);
+    Customer toCustomer(final UpdateCustomerDto customerDto);
 
-    UpdateCustomerDto toUpdateCustomerDto(Customer customer);
+    UpdateCustomerDto toUpdateCustomerDto(final Customer customer);
 }

@@ -10,7 +10,6 @@ import tk.project.goodsstorage.product.dto.ProductDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -19,30 +18,31 @@ public class CurrencyConverterImpl implements CurrencyConverter {
     private final CurrenciesProvider currenciesProvider;
 
     @Override
-    public ProductDto changeCurrency(ProductDto productDto, Currency currency) {
+    public ProductDto changeCurrency(final ProductDto productDto, final Currency currency) {
         if (currency == Currency.RUS) {
-            productDto.setCurrency(Currency.RUS);
             return productDto;
         }
 
-        CurrenciesDto currencies = currenciesProvider.getCurrencies();
-        BigDecimal currencyRate = getCurrencyRate(currencies, currency);
+        final CurrenciesDto currencies = currenciesProvider.getCurrencies();
+        final BigDecimal currencyRate = getCurrencyRate(currencies, currency);
+        final BigDecimal currentPrice = productDto.getPrice().divide(currencyRate, RoundingMode.HALF_EVEN);
 
-        productDto.setPrice(productDto.getPrice().divide(currencyRate, RoundingMode.HALF_EVEN));
-        productDto.setCurrency(currency);
-
-        log.info("ProductDto id={} was set currency {}", productDto.getId(), productDto.getCurrency());
-        return productDto;
+        return ProductDto.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .article(productDto.getArticle())
+                .description(productDto.getDescription())
+                .category(productDto.getCategory())
+                .price(currentPrice)
+                .count(productDto.getCount())
+                .lastCountUpdateTime(productDto.getLastCountUpdateTime())
+                .createDate(productDto.getCreateDate())
+                .isAvailable(productDto.getIsAvailable())
+                .currency(currency)
+                .build();
     }
 
-    @Override
-    public List<ProductDto> changeCurrency(List<ProductDto> productsDto, Currency currency) {
-        return productsDto.stream()
-                .map(productDto -> this.changeCurrency(productDto, currency))
-                .toList();
-    }
-
-    private BigDecimal getCurrencyRate(CurrenciesDto currencies, Currency currency) {
+    private BigDecimal getCurrencyRate(final CurrenciesDto currencies, final Currency currency) {
         return switch (currency) {
             case CNY -> currencies.getCny();
             case EUR -> currencies.getEur();

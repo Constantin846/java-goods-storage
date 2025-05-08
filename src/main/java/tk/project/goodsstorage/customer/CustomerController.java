@@ -37,34 +37,33 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Long> create(@Valid @RequestBody CreateCustomerRequest customerRequest) {
+    public Map<String, Long> create(@Valid @RequestBody final CreateCustomerRequest customerRequest) {
         log.info("Create customer: {}", customerRequest);
-        CreateCustomerDto createCustomerDto = mapper.toCreateCustomerDto(customerRequest);
+        final CreateCustomerDto createCustomerDto = mapper.toCreateCustomerDto(customerRequest);
         return Map.of(ID, customerService.create(createCustomerDto));
     }
 
     @GetMapping(ID_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public FindCustomerResponse findById(@PathVariable(ID) Long id) {
+    public FindCustomerResponse findById(@PathVariable(ID) final Long id) {
         log.info("Find customer by id: {}", id);
-        FindCustomerDto customerDto = customerService.findById(id);
+        final FindCustomerDto customerDto = customerService.findById(id);
         return mapper.toFindCustomerResponse(customerDto);
     }
 
     @PatchMapping(ID_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public UpdateCustomerResponse update(@Valid @RequestBody UpdateCustomerRequest customerRequest,
-                                         @PathVariable(ID) Long id) {
+    public UpdateCustomerResponse update(@Valid @RequestBody final UpdateCustomerRequest customerRequest,
+                                         @PathVariable(ID) final Long id) {
         log.info("Update customer with id: {}", id);
-        UpdateCustomerDto updateCustomerDto = mapper.toUpdateCustomerDto(customerRequest);
-        updateCustomerDto.setId(id);
-        updateCustomerDto = customerService.update(updateCustomerDto);
-        return mapper.toUpdateCustomerResponse(updateCustomerDto);
+        final UpdateCustomerDto updateCustomerDto = mapper.toUpdateCustomerDto(customerRequest);
+        final UpdateCustomerDto resultUpdateCustomerDto = customerService.update(updateCustomerDto, id);
+        return mapper.toUpdateCustomerResponse(resultUpdateCustomerDto);
     }
 
     @DeleteMapping(ID_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public void deleteById(@PathVariable(ID) Long id) {
+    public void deleteById(@PathVariable(ID) final Long id) {
         log.info("Delete customer by id: {}", id);
         customerService.deleteById(id);
     }

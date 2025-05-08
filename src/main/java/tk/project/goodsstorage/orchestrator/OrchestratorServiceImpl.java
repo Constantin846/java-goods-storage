@@ -24,12 +24,12 @@ public class OrchestratorServiceImpl implements OrchestratorService {
 
     public OrchestratorServiceImpl(
             @Value("${orchestrator-goods-storage.method.confirm-order}")
-            String confirmOrder,
+            final String confirmOrder,
             @Value("${orchestrator-goods-storage.timeout}")
-            long timeout,
+            final long timeout,
             @Autowired
             @Qualifier("orchestratorWebClient")
-            WebClient webClient
+            final WebClient webClient
     ) {
         this.confirmOrder = confirmOrder;
         this.timeout = timeout;
@@ -40,7 +40,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
     public UUID sendRequestConfirmOrder(OrchestratorConfirmOrderDto orderDto) {
         log.info("Send request to confirm order");
 
-        OrchestratorConfirmOrderResponse response =
+        final OrchestratorConfirmOrderResponse response =
                 webClient.post()
                 .uri(confirmOrder)
                 .bodyValue(orderDto)

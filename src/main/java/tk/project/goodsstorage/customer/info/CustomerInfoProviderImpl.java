@@ -20,7 +20,7 @@ public class CustomerInfoProviderImpl implements CustomerInfoProvider {
     private final InnService innService;
 
     @Override
-    public Map<Long, CustomerInfo> getIdCustomerInfoMap(Set<Customer> customers) {
+    public Map<Long, CustomerInfo> getIdCustomerInfoMap(final Set<Customer> customers) {
         List<String> logins = customers.stream()
                 .map(Customer::getLogin)
                 .toList();
@@ -32,22 +32,22 @@ public class CustomerInfoProviderImpl implements CustomerInfoProvider {
 
         return customers.stream()
                 .collect(Collectors.toMap(Customer::getId, customer -> {
-                    CustomerInfo customerInfo = new CustomerInfo();
-                    customerInfo.setId(customer.getId());
-                    customerInfo.setEmail(customer.getEmail());
-                    customerInfo.setAccountNumber(loginAccountNumberMap.get(customer.getLogin()));
-                    customerInfo.setInn(loginInnMap.get(customer.getLogin()));
-                    return customerInfo;
+                    return CustomerInfo.builder()
+                            .id(customer.getId())
+                            .email(customer.getEmail())
+                            .accountNumber(loginAccountNumberMap.get(customer.getLogin()))
+                            .inn(loginInnMap.get(customer.getLogin()))
+                            .build();
                 }));
     }
 
     @Override
-    public CompletableFuture<Map<String, String>> getLoginAccountNumberMap(List<String> logins) {
+    public CompletableFuture<Map<String, String>> getLoginAccountNumberMap(final List<String> logins) {
         return accountNumberService.sendRequestAccountNumbersByLogins(logins);
     }
 
     @Override
-    public CompletableFuture<Map<String, String>> getLoginInn(List<String> logins) {
+    public CompletableFuture<Map<String, String>> getLoginInn(final List<String> logins) {
         return innService.sendRequestInnByLogins(logins);
     }
 }

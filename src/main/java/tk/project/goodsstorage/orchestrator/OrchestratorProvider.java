@@ -3,6 +3,7 @@ package tk.project.goodsstorage.orchestrator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.customer.info.CustomerInfoProvider;
+import tk.project.goodsstorage.orchestrator.dto.ConfirmOrderDto;
 import tk.project.goodsstorage.orchestrator.dto.OrchestratorConfirmOrderDto;
 
 import java.util.List;
@@ -16,14 +17,20 @@ public class OrchestratorProvider {
     private final CustomerInfoProvider customerInfoProvider;
     private final OrchestratorService orchestratorService;
 
-    public UUID confirmOrder(OrchestratorConfirmOrderDto orderDto) {
-        List<String> login = List.of(orderDto.getCustomerLogin());
-        CompletableFuture<Map<String, String>> inn = customerInfoProvider.getLoginInn(login);
-        CompletableFuture<Map<String, String>> accountNumber = customerInfoProvider.getLoginAccountNumberMap(login);
+    public UUID confirmOrder(final ConfirmOrderDto orderDto) {
+        final List<String> login = List.of(orderDto.getCustomerLogin());
+        final CompletableFuture<Map<String, String>> inn = customerInfoProvider.getLoginInn(login);
+        final CompletableFuture<Map<String, String>> accountNumber = customerInfoProvider.getLoginAccountNumberMap(login);
 
-        orderDto.setCustomerInn(inn.join().get(orderDto.getCustomerLogin()));
-        orderDto.setCustomerAccountNumber(accountNumber.join().get(orderDto.getCustomerLogin()));
+        final OrchestratorConfirmOrderDto orchestratorConfirmOrderDto = OrchestratorConfirmOrderDto.builder()
+                .id(orderDto.getId())
+                .deliveryAddress(orderDto.getDeliveryAddress())
+                .customerInn(inn.join().get(orderDto.getCustomerLogin()))
+                .customerAccountNumber(accountNumber.join().get(orderDto.getCustomerLogin()))
+                .price(orderDto.getPrice())
+                .customerLogin(orderDto.getCustomerLogin())
+                .build();
 
-        return orchestratorService.sendRequestConfirmOrder(orderDto);
+        return orchestratorService.sendRequestConfirmOrder(orchestratorConfirmOrderDto);
     }
 }

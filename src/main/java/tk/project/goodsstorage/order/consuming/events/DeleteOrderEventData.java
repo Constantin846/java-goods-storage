@@ -1,19 +1,22 @@
 package tk.project.goodsstorage.order.consuming.events;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tk.project.goodsstorage.kafka.event.Event;
 
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class DeleteOrderEventData implements OrderEventData {
 
-    UUID orderId;
+    private final UUID orderId;
 
-    Long customerId;
+    private final Long customerId;
 
-    Event event;
+    private final Event event;
 }

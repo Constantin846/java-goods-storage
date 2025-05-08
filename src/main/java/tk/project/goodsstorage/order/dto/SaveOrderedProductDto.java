@@ -1,16 +1,19 @@
 package tk.project.goodsstorage.order.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PROTECTED)
+@Getter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
 public abstract class SaveOrderedProductDto {
 
-    UUID id;
+    private final UUID id;
 
-    Long count;
+    private final Long count;
 }

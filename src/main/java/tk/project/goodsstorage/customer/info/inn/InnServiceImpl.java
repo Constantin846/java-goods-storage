@@ -28,12 +28,12 @@ public class InnServiceImpl implements InnService {
 
     public InnServiceImpl(
             @Value("${crm-service.method.get-inns}")
-            String uriPostInns,
+            final String uriPostInns,
             @Value("${crm-service.timeout}")
-            long timeout,
+            final long timeout,
             @Autowired
             @Qualifier("innWebClient")
-            WebClient webClient
+            final WebClient webClient
     ) {
         this.uriPostInns = uriPostInns;
         this.timeout = timeout;
@@ -44,7 +44,7 @@ public class InnServiceImpl implements InnService {
 
     @Async
     @Override
-    public CompletableFuture<Map<String, String>> sendRequestInnByLogins(List<String> logins) {
+    public CompletableFuture<Map<String, String>> sendRequestInnByLogins(final List<String> logins) {
         log.info("Send request to get inns form INN SERVICE");
 
         return webClient.post()

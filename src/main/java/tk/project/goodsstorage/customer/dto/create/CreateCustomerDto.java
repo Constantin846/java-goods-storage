@@ -1,16 +1,19 @@
 package tk.project.goodsstorage.customer.dto.create;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CreateCustomerDto {
 
-    String login;
+    private final String login;
 
-    String email;
+    private final String email;
 
-    Boolean isActive;
+    private final Boolean isActive;
 }

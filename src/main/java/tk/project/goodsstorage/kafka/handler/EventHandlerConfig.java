@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class EventHandlerConfig {
 
     @Bean
-    <T extends EventSource> Map<Event, EventHandler<T>> eventHandlers(Set<EventHandler<T>> eventHandlers) {
+    <T extends EventSource> Map<Event, EventHandler<T>> eventHandlers(final Set<EventHandler<T>> eventHandlers) {
         return eventHandlers.stream()
                 .collect(Collectors.toMap(EventHandler::getEvent, Function.identity()));
     }

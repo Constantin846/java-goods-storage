@@ -21,7 +21,7 @@ public class CreateOrderEventHandler implements EventHandler<CreateOrderEventDat
     }
 
     @Override
-    public void handleEvent(CreateOrderEventData eventSource) {
+    public void handleEvent(final CreateOrderEventData eventSource) {
         orderService.create(eventSource.getOrderDto());
         log.info("Create order event has been handled successfully: {}", eventSource);
     }

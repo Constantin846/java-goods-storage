@@ -1,16 +1,19 @@
 package tk.project.goodsstorage.order.consuming.events;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tk.project.goodsstorage.kafka.event.Event;
 import tk.project.goodsstorage.order.dto.update.UpdateOrderDto;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class UpdateOrderEventData implements OrderEventData {
 
-    UpdateOrderDto orderDto;
+    private final UpdateOrderDto orderDto;
 
-    Event event;
+    private final Event event;
 }

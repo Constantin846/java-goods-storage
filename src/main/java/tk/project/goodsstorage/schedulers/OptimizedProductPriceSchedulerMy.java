@@ -63,12 +63,12 @@ public class OptimizedProductPriceSchedulerMy {
 
     public OptimizedProductPriceSchedulerMy(
             @Value("${app.scheduling.optimization.docker-file-path:false}")
-            Boolean isDockerFilePath,
+            final Boolean isDockerFilePath,
             @Value("${app.scheduling.priceIncreasePercentage}")
-            BigDecimal priceIncreasePercentage,
+            final BigDecimal priceIncreasePercentage,
             @Value("${app.scheduling.optimization.exclusive-lock:true}")
-            Boolean isExclusiveLocked,
-            EntityManagerFactory entityManagerFactory
+            final Boolean isExclusiveLocked,
+            final EntityManagerFactory entityManagerFactory
     ) {
         this.priceIncreaseRate = priceIncreasePercentage.divide(HUNDRED, RoundingMode.HALF_EVEN).add(ONE);
         this.entityManagerFactory = entityManagerFactory;
@@ -106,7 +106,7 @@ public class OptimizedProductPriceSchedulerMy {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath, IS_APPENDING_FILE));
+                            final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filePath, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);
@@ -121,7 +121,7 @@ public class OptimizedProductPriceSchedulerMy {
                             if (!resultSet.isBeforeFirst()) break;
 
                             while (resultSet.next()) {
-                                UUID productId = UUID.fromString(resultSet.getString("id"));
+                                final UUID productId = UUID.fromString(resultSet.getString("id"));
                                 BigDecimal productPrice = resultSet.getBigDecimal("price");
                                 productPrice = productPrice.multiply(priceIncreaseRate);
 

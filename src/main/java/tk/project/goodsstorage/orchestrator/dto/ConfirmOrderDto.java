@@ -5,13 +5,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
-public class OrchestratorConfirmOrderResponse {
+public class ConfirmOrderDto {
 
-    private final UUID businessKey;
+    private final UUID id;
+
+    private final String deliveryAddress;
+
+    private final BigDecimal price;
+
+    private final String customerLogin;
 }

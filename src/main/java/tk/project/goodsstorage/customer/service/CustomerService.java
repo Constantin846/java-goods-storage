@@ -6,11 +6,11 @@ import tk.project.goodsstorage.customer.dto.update.UpdateCustomerDto;
 
 public interface CustomerService {
 
-    Long create(CreateCustomerDto customerDto);
+    Long create(final CreateCustomerDto customerDto);
 
-    FindCustomerDto findById(long id);
+    FindCustomerDto findById(final long id);
 
-    UpdateCustomerDto update(UpdateCustomerDto customerDto);
+    UpdateCustomerDto update(final UpdateCustomerDto customerDto, final long id);
 
-    void deleteById(long id);
+    void deleteById(final long id);
 }

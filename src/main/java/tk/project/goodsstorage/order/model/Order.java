@@ -12,14 +12,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import tk.project.goodsstorage.customer.Customer;
@@ -36,31 +34,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "id")
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
-    UUID id;
+    private UUID id;
 
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "customer_id", nullable = false)
-    Customer customer;
+    private Customer customer;
 
     @Column(name = "status", nullable = false, length = 64)
     @Enumerated(EnumType.STRING)
-    OrderStatus status;
+    private OrderStatus status;
 
     @Column(name = "delivery_address", nullable = false, length = 128)
-    String deliveryAddress;
+    private String deliveryAddress;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
-    Set<OrderedProduct> products;
+    private Set<OrderedProduct> products;
 
     @Column(name = "business_key")
-    UUID businessKey;
+    private UUID businessKey;
 
     @Column(name = "delivery_date")
-    LocalDate deliveryDate;
+    private LocalDate deliveryDate;
 }

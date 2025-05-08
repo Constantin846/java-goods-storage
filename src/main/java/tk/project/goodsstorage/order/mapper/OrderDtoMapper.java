@@ -17,16 +17,16 @@ import tk.project.goodsstorage.order.model.Order;
 public interface OrderDtoMapper {
     OrderDtoMapper MAPPER = Mappers.getMapper(OrderDtoMapper.class);
 
-    CreateOrderDto toCreateOrderDto(CreateOrderRequest orderRequest);
+    CreateOrderDto toCreateOrderDto(final CreateOrderRequest orderRequest);
 
     @Mapping(target = "products", ignore = true)
-    Order toOrder(CreateOrderDto orderDto);
+    Order toOrder(final CreateOrderDto orderDto);
 
-    FindOrderResponse toFindOrderResponse(FindOrderDto orderDto);
+    FindOrderResponse toFindOrderResponse(final FindOrderDto orderDto);
 
-    UpdateOrderDto toUpdateOrderDto(UpdateOrderRequest orderRequest);
+    UpdateOrderDto toUpdateOrderDto(final UpdateOrderRequest orderRequest);
 
-    UpdateOrderDtoRes toUpdateOrderDtoRes(Order order);
+    UpdateOrderDtoRes toUpdateOrderDtoRes(final Order order);
 
-    UpdateOrderResponse toUpdateOrderResponse(UpdateOrderDtoRes orderDto);
+    UpdateOrderResponse toUpdateOrderResponse(final UpdateOrderDtoRes orderDto);
 }

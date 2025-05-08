@@ -45,7 +45,7 @@ public class SimpleProductPriceScheduler {
     public void increaseProductPrice() {
         log.info("SIMPLE PRODUCT PRICE SCHEDULER is running");
 
-        BigDecimal priceIncreaseRate = calculatePriceIncreaseRate();
+        final BigDecimal priceIncreaseRate = calculatePriceIncreaseRate();
         List<Product> products = productRepository.findAll();
         products = products.stream()
                 .map(product -> {

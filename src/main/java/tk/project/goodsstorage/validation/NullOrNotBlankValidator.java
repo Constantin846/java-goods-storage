@@ -10,7 +10,7 @@ public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBla
     }
 
     @Override
-    public boolean isValid(String field, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(final String field, final ConstraintValidatorContext constraintValidatorContext) {
         if (field == null) return true;
         return !field.isBlank();
     }

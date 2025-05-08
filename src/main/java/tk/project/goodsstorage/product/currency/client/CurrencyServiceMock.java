@@ -32,14 +32,14 @@ public class CurrencyServiceMock implements CurrencyService {
         if (random.nextInt(TWO) == ONE) {
             throw new RequestGetCurrenciesException("Currency service mock threw exception");
         }
-        CurrenciesDto currenciesDto = new CurrenciesDto();
-        currenciesDto.setCny(generateBigDecimal(maxCNY));
-        currenciesDto.setEur(generateBigDecimal(maxEUR));
-        currenciesDto.setUsd(generateBigDecimal(maxUSD));
-        return currenciesDto;
+        return CurrenciesDto.builder()
+                .cny(generateBigDecimal(maxCNY))
+                .eur(generateBigDecimal(maxEUR))
+                .usd(generateBigDecimal(maxUSD))
+                .build();
     }
 
-    private BigDecimal generateBigDecimal(double max) {
+    private BigDecimal generateBigDecimal(final double max) {
         return BigDecimal.valueOf(random.nextDouble(max));
     }
 }

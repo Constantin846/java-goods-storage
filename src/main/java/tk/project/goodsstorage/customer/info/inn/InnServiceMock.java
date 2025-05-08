@@ -24,7 +24,7 @@ public class InnServiceMock implements InnService {
     }
 
     @Override
-    public CompletableFuture<Map<String, String>> sendRequestInnByLogins(List<String> logins) {
+    public CompletableFuture<Map<String, String>> sendRequestInnByLogins(final List<String> logins) {
         log.info("Generate inns in mock for logins : {}", logins);
         return CompletableFuture.completedFuture(
                 logins.stream()
@@ -32,7 +32,7 @@ public class InnServiceMock implements InnService {
         );
     }
 
-    private String getInn(String login) {
+    private String getInn(final String login) {
         return Long.toString(random.nextLong(startInn, endInn));
     }
 }

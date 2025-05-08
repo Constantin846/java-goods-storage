@@ -5,5 +5,5 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface AccountNumberService {
-    CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(List<String> logins);
+    CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(final List<String> logins);
 }

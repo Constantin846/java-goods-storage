@@ -19,34 +19,34 @@ public class WebClientConfiguration {
     private static final int TIMEOUT = 1000;
 
     @Bean
-    public WebClient currencyWebClient(@Value("${currency-service.host}") String baseUrl,
+    public WebClient currencyWebClient(@Value("${currency-service.host}") final String baseUrl,
                                        @Value("${currency-service.timeout}") Integer timeout) {
         timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
         return webClientWithTimeout(baseUrl, timeout);
     }
 
     @Bean
-    public WebClient accountNumberWebClient(@Value("${account-service.host}") String baseUrl,
+    public WebClient accountNumberWebClient(@Value("${account-service.host}") final String baseUrl,
                                             @Value("${account-service.timeout}") Integer timeout) {
         timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
         return webClientWithTimeout(baseUrl, timeout);
     }
 
     @Bean
-    public WebClient innWebClient(@Value("${crm-service.host}") String baseUrl,
+    public WebClient innWebClient(@Value("${crm-service.host}") final String baseUrl,
                                   @Value("${crm-service.timeout}") Integer timeout) {
         timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
         return webClientWithTimeout(baseUrl, timeout);
     }
 
     @Bean
-    public WebClient orchestratorWebClient(@Value("${orchestrator-goods-storage.host}") String baseUrl,
+    public WebClient orchestratorWebClient(@Value("${orchestrator-goods-storage.host}") final String baseUrl,
                                            @Value("${orchestrator-goods-storage.timeout}") Integer timeout) {
         timeout = Objects.isNull(timeout) ? TIMEOUT : timeout;
         return webClientWithTimeout(baseUrl, timeout);
     }
 
-    private WebClient webClientWithTimeout(String baseUrl, Integer timeout) {
+    private WebClient webClientWithTimeout(final String baseUrl, final Integer timeout) {
         final var tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeout)

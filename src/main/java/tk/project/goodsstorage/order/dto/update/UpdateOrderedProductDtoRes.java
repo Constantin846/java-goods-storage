@@ -1,16 +1,19 @@
 package tk.project.goodsstorage.order.dto.update;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class UpdateOrderedProductDtoRes {
 
-    UUID productId;
+    private final UUID productId;
 
-    Long count;
+    private final Long count;
 }

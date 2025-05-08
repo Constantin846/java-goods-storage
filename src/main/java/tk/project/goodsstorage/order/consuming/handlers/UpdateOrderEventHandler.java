@@ -20,8 +20,8 @@ public class UpdateOrderEventHandler implements EventHandler<UpdateOrderEventDat
     }
 
     @Override
-    public void handleEvent(UpdateOrderEventData eventSource) {
-        orderService.update(eventSource.getOrderDto());
+    public void handleEvent(final UpdateOrderEventData eventSource) {
+        orderService.update(eventSource.getOrderDto(), eventSource.getOrderDto().getId());
         log.info("Update order event has been handled successfully: {}", eventSource);
     }
 }

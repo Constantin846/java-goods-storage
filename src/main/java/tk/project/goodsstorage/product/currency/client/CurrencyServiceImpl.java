@@ -24,12 +24,12 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     public CurrencyServiceImpl(
             @Value("${currency-service.method.get-currencies}")
-            String uriGetCurrencies,
+            final String uriGetCurrencies,
             @Value("${currency-service.timeout}")
-            long timeout,
+            final long timeout,
             @Autowired
             @Qualifier("currencyWebClient")
-            WebClient webClient
+            final WebClient webClient
     ) {
         this.uriGetCurrencies = uriGetCurrencies;
         this.timeout = timeout;

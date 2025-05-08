@@ -19,7 +19,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             left join fetch o.products op
             where o.id = :id
             """)
-    Optional<Order> findByIdFetch(UUID id);
+    Optional<Order> findByIdFetch(final UUID id);
 
     @Query(value = """
             select o
@@ -28,6 +28,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             left join fetch o.products op
             where o.status in (:statuses)
             """)
-    List<Order> findByOrderStatus(Collection<OrderStatus> statuses);
+    List<Order> findByOrderStatus(final Collection<OrderStatus> statuses);
 }
 

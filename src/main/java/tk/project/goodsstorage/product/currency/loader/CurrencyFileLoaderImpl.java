@@ -25,7 +25,7 @@ public class CurrencyFileLoaderImpl implements CurrencyFileLoader {
     @Override
     public CurrenciesDto loadCurrencies() {
         try {
-            String content = Files.readString(Path.of(filePath));
+            final String content = Files.readString(Path.of(filePath));
             return objectMapper.readValue(content.toLowerCase(), CurrenciesDto.class);
 
         } catch (JsonProcessingException e) {

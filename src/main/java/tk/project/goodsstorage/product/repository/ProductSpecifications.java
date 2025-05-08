@@ -10,22 +10,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 @UtilityClass
-public class ProductSpecifications {
+public class ProductSpecifications { // todo update
 
     public static Specification<Product> hasProductStringFieldEquals(String field, List<String> values) {
         return ((root, query, criteriaBuilder) -> root.get(field).in(values));
     }
 
-    public static Specification<Product> hasProductStringFieldStartWith(String field, String values) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), values + "%"));
+    public static Specification<Product> hasProductStringFieldStartWith(String field, String value) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), value + "%"));
     }
 
-    public static Specification<Product> hasProductStringFieldEndWith(String field, String values) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), "%" + values));
+    public static Specification<Product> hasProductStringFieldEndWith(String field, String value) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), "%" + value));
     }
 
-    public static Specification<Product> hasProductStringFieldLike(String field, String values) {
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), "%" + values + "%"));
+    public static Specification<Product> hasProductStringFieldLike(String field, String value) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(field), "%" + value + "%"));
     }
 
     public static Specification<Product> hasProductNumberFieldEquals(String field, List<Number> values) {

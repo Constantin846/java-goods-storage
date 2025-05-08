@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OrderInfoServiceImpl implements OrderInfoService{
+public class OrderInfoServiceImpl implements OrderInfoService {
     private final CustomerInfoProvider customerInfoProvider;
     private final OrderRepository orderRepository;
 
@@ -36,13 +36,13 @@ public class OrderInfoServiceImpl implements OrderInfoService{
                 .collect(Collectors.groupingBy(OrderedProduct::getProductId,
                         Collectors.mapping(orderedProduct -> {
                             Order order = orderedProduct.getOrder();
-                            OrderInfo orderInfo = new OrderInfo();
-                            orderInfo.setId(order.getId());
-                            orderInfo.setCustomer(customerInfoMap.get(order.getCustomer().getId()));
-                            orderInfo.setStatus(order.getStatus());
-                            orderInfo.setDeliveryAddress(order.getDeliveryAddress());
-                            orderInfo.setCount(orderedProduct.getCount());
-                            return orderInfo;
+                            return OrderInfo.builder()
+                                    .id(order.getId())
+                                    .customer(customerInfoMap.get(order.getCustomer().getId()))
+                                    .status(order.getStatus())
+                                    .deliveryAddress(order.getDeliveryAddress())
+                                    .count(orderedProduct.getCount())
+                                    .build();
                         }, Collectors.toList())));
     }
 }

@@ -10,17 +10,17 @@ import tk.project.goodsstorage.order.dto.update.UpdateOrderStatusDto;
 import java.util.UUID;
 
 public interface OrderService {
-    UUID create(CreateOrderDto orderDto);
+    UUID create(final CreateOrderDto orderDto);
 
-    UUID confirmById(UUID orderId, long customerId);
+    UUID confirmById(final UUID orderId);
 
-    FindOrderDto findById(UUID orderId, long customerId);
+    FindOrderDto findById(final UUID orderId);
 
-    UpdateOrderDtoRes update(UpdateOrderDto updateOrderDto);
+    UpdateOrderDtoRes update(final UpdateOrderDto updateOrderDto, final UUID orderId);
 
-    UpdateOrderStatusDto setStatusDone(UUID orderId, long customerId);
+    UpdateOrderStatusDto setStatusDone(final UUID orderId);
 
-    UpdateOrderStatusDto setStatusByOrchestrator(SetOrderStatusRequest statusRequest);
+    UpdateOrderStatusDto setStatusByOrchestrator(final SetOrderStatusRequest statusRequest);
 
-    void deleteById(UUID orderId, long customerId);
+    void deleteById(final UUID orderId);
 }

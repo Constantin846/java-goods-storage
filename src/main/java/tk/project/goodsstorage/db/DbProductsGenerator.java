@@ -47,7 +47,7 @@ public class DbProductsGenerator {
     }
 
     private void generateProducts() {
-        int count = PRODUCT_COUNT / TEN_ITERATION;
+        final int count = PRODUCT_COUNT / TEN_ITERATION;
         Deque<String> articles = generateArticle(count * TEN_ITERATION);
 
         for (int i = 0; i < TEN_ITERATION; i++) {
@@ -71,7 +71,7 @@ public class DbProductsGenerator {
         }
     }
 
-    private Deque<String> generateArticle(int count) {
+    private Deque<String> generateArticle(final int count) {
         Set<UUID> uuids = new HashSet<>();
         for (int i = 0; i < count; i++) {
             UUID uuid = UUID.randomUUID();

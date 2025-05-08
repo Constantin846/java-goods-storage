@@ -1,26 +1,29 @@
 package tk.project.goodsstorage.product.dto.create;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CreateProductDto {
 
-    String name;
+    private final String name;
 
-    String article;
+    private final String article;
 
-    String description;
+    private final String description;
 
-    String category;
+    private final String category;
 
-    BigDecimal price;
+    private final BigDecimal price;
 
-    Long count;
+    private final Long count;
 
-    Boolean isAvailable;
+    private final Boolean isAvailable;
 }

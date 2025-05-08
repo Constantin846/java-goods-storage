@@ -1,23 +1,26 @@
 package tk.project.goodsstorage.order.dto.find;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FindOrderedProductDto {
 
-    UUID productId;
+    private final UUID productId;
 
-    String name;
+    private final String name;
 
-    BigDecimal price;
+    private final BigDecimal price;
 
-    Long count;
+    private final Long count;
 }

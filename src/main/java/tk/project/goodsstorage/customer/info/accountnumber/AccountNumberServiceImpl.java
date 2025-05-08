@@ -28,12 +28,12 @@ public class AccountNumberServiceImpl implements AccountNumberService {
 
     public AccountNumberServiceImpl(
             @Value("${account-service.method.get-account-numbers}")
-            String uriPostAccountNumbers,
+            final String uriPostAccountNumbers,
             @Value("${account-service.timeout}")
-            long timeout,
+            final long timeout,
             @Autowired
             @Qualifier("accountNumberWebClient")
-            WebClient webClient
+            final WebClient webClient
     ) {
         this.uriPostAccountNumbers = uriPostAccountNumbers;
         this.timeout = timeout;
@@ -44,7 +44,7 @@ public class AccountNumberServiceImpl implements AccountNumberService {
 
     @Async
     @Override
-    public CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(List<String> logins) {
+    public CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(final List<String> logins) {
         log.info("Send request to get account numbers form ACCOUNT NUMBER SERVICE");
 
         return webClient.post()

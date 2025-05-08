@@ -1,26 +1,29 @@
 package tk.project.goodsstorage.product.currency;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CurrenciesDto {
 
-    BigDecimal cny;
+    private final BigDecimal cny;
 
-    BigDecimal eur;
+    private final BigDecimal eur;
 
-    BigDecimal usd;
+    private final BigDecimal usd;
 
     public static CurrenciesDto ofDoubles(Double cny, Double eur, Double usd) {
-        CurrenciesDto currenciesDto = new CurrenciesDto();
-        currenciesDto.setCny(BigDecimal.valueOf(cny));
-        currenciesDto.setEur(BigDecimal.valueOf(eur));
-        currenciesDto.setUsd(BigDecimal.valueOf(usd));
-        return currenciesDto;
+        return CurrenciesDto.builder()
+                .cny(BigDecimal.valueOf(cny))
+                .eur(BigDecimal.valueOf(eur))
+                .usd(BigDecimal.valueOf(usd))
+                .build();
     }
 }

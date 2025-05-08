@@ -40,8 +40,7 @@ class ProductServiceImplTest {
 
     @Test
     void create() {
-        CreateProductDto createProductDto = new CreateProductDto();
-        createProductDto.setName("name");
+        CreateProductDto createProductDto = CreateProductDto.builder().name("name").build();
         UUID idExpected = UUID.randomUUID();
         Product product = new Product();
         product.setId(idExpected);
@@ -60,8 +59,7 @@ class ProductServiceImplTest {
         UUID id = UUID.randomUUID();
         Product product = new Product();
         product.setId(id);
-        ProductDto productDto = new ProductDto();
-        productDto.setId(product.getId());
+        ProductDto productDto = ProductDto.builder().id(product.getId()).build();
         Currency currency = Currency.RUS;
 
         when(mapperMock.toProductDto(product)).thenReturn(productDto);
@@ -85,8 +83,8 @@ class ProductServiceImplTest {
 
     @Test
     void update() {
-        UpdateProductDto updateProductDto = new UpdateProductDto();
-        updateProductDto.setId(UUID.randomUUID());
+        UUID productId = UUID.randomUUID();
+        UpdateProductDto updateProductDto = UpdateProductDto.builder().id(productId).build();
         Product product = new Product();
         product.setId(updateProductDto.getId());
 
@@ -96,38 +94,37 @@ class ProductServiceImplTest {
         when(productRepositoryMock.save(product)).thenReturn(product);
         when(productRepositoryMock.findById(updateProductDto.getId())).thenReturn(Optional.of(product));
 
-        UpdateProductDto updateProductDtoActual = productServiceUnderTest.update(updateProductDto);
+        UpdateProductDto updateProductDtoActual = productServiceUnderTest.update(updateProductDto, productId);
 
         assertEquals(updateProductDto.getId(), updateProductDtoActual.getId());
     }
 
     @Test
     void update_articleExistsException() {
-        UpdateProductDto updateProductDto = new UpdateProductDto();
-        updateProductDto.setId(UUID.randomUUID());
+        UUID productId = UUID.randomUUID();
+        String article = "article";
+        UpdateProductDto updateProductDto = UpdateProductDto.builder().id(productId).article(article).build();
         Product product = new Product();
         product.setId(updateProductDto.getId());
         Product oldProduct = new Product();
         oldProduct.setId(updateProductDto.getId());
-        String article = "article";
-        updateProductDto.setArticle(article);
         product.setArticle(article);
 
         when(mapperMock.toProduct(updateProductDto)).thenReturn(product);
         when(productRepositoryMock.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.of(oldProduct));
         when(productRepositoryMock.findByArticle(product.getArticle())).thenReturn(Optional.of(new Product()));
 
-        assertThrows(ArticleExistsException.class, () -> productServiceUnderTest.update(updateProductDto));
+        assertThrows(ArticleExistsException.class, () -> productServiceUnderTest.update(updateProductDto, productId));
     }
 
     @Test
     void update_productNotFoundException() {
-        UpdateProductDto updateProductDto = new UpdateProductDto();
-        updateProductDto.setId(UUID.randomUUID());
+        UUID productId = UUID.randomUUID();
+        UpdateProductDto updateProductDto = UpdateProductDto.builder().id(productId).build();
 
         when(productRepositoryMock.findByIdLocked(updateProductDto.getId())).thenReturn(Optional.empty());
 
-        assertThrows(ProductNotFoundException.class, () -> productServiceUnderTest.update(updateProductDto));
+        assertThrows(ProductNotFoundException.class, () -> productServiceUnderTest.update(updateProductDto, productId));
     }
 
     @Test

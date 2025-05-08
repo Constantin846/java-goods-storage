@@ -24,7 +24,7 @@ public class AccountNumberServiceMock implements AccountNumberService {
     }
 
     @Override
-    public CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(List<String> logins) {
+    public CompletableFuture<Map<String, String>> sendRequestAccountNumbersByLogins(final List<String> logins) {
         log.info("Generate account numbers in mock for logins: {}", logins);
         return CompletableFuture.completedFuture(
                 logins.stream()
@@ -32,7 +32,7 @@ public class AccountNumberServiceMock implements AccountNumberService {
         );
     }
 
-    private String getAccountNumber(String login) {
+    private String getAccountNumber(final String login) {
         return Integer.toString(random.nextInt(startNumber, endNumber));
     }
 }

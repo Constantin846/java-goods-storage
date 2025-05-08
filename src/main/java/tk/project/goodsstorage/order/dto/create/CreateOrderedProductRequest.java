@@ -2,20 +2,23 @@ package tk.project.goodsstorage.order.dto.create;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CreateOrderedProductRequest {
 
     @NotNull(message = "Products' ids must be set")
-    UUID id;
+    private final UUID id;
 
     @NotNull(message = "Products' counts must be set")
     @Positive(message = "Products' counts must be positive")
-    Long count;
+    private final Long count;
 }

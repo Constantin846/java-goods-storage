@@ -1,21 +1,28 @@
 package tk.project.goodsstorage.order.dto.create;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tk.project.goodsstorage.order.model.OrderStatus;
 
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CreateOrderDto {
 
-    Long customerId;
+    private final OrderStatus status = OrderStatus.CREATED;
 
-    OrderStatus status = OrderStatus.CREATED;
+    private final String deliveryAddress;
 
-    String deliveryAddress;
+    @ToString.Exclude
+    private final Set<CreateOrderedProductDto> products;
 
-    Set<CreateOrderedProductDto> products;
+    public Set<CreateOrderedProductDto> getProducts() {
+        return new HashSet<>(products);
+    }
 }

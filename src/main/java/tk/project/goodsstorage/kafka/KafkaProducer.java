@@ -19,7 +19,7 @@ public class KafkaProducer {
     private final KafkaTemplate<String, byte[]> kafkaTemplateByteArray;
     public static final String ORDER_COMMAND = "brokerage-order-command";
 
-    public KafkaProducer(@Autowired KafkaTemplate<String, byte[]> kafkaTemplateByteArray) {
+    public KafkaProducer(@Autowired final KafkaTemplate<String, byte[]> kafkaTemplateByteArray) {
         this.kafkaTemplateByteArray = kafkaTemplateByteArray;
     }
 
@@ -38,10 +38,8 @@ public class KafkaProducer {
             throw new RuntimeException(e);
         }
 
-        byte[] data = jsonString.getBytes();
-
         try {
-            kafkaTemplateByteArray.send(topic, key, data).get(1L, TimeUnit.MINUTES);
+            kafkaTemplateByteArray.send(topic, key, jsonString.getBytes()).get(1L, TimeUnit.MINUTES);
             log.info("Kafka send complete");
 
         } catch (Exception e) {

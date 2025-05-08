@@ -1,18 +1,21 @@
 package tk.project.goodsstorage.customer.dto.find;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class CustomerInfo {
 
-    Long id;
+    private final Long id;
 
-    String email;
+    private final String email;
 
-    String accountNumber;
+    private final String accountNumber;
 
-    String inn;
+    private final String inn;
 }

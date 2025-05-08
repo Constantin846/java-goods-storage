@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public Long create(CreateCustomerDto customerDto) {
+    public Long create(final CreateCustomerDto customerDto) {
         throwExceptionIfLoginExists(customerDto.getLogin());
         Customer customer = mapper.toCustomer(customerDto);
         customer = customerRepository.save(customer);
@@ -34,45 +34,45 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public FindCustomerDto findById(long id) {
-        Customer customer = getById(id);
+    public FindCustomerDto findById(final long id) {
+        final Customer customer = getById(id);
         return mapper.toFindCustomerDto(customer);
     }
 
     @Transactional
     @Override
-    public UpdateCustomerDto update(UpdateCustomerDto customerDto) {
-        Customer oldCustomer = getByIdForUpdate(customerDto.getId());
-        Customer newCustomer = mapper.toCustomer(customerDto);
-        oldCustomer = updateFields(oldCustomer, newCustomer);
+    public UpdateCustomerDto update(final UpdateCustomerDto customerDto, final long id) {
+        Customer oldCustomer = getByIdForUpdate(id);
+        final Customer newCustomer = mapper.toCustomer(customerDto);
+        oldCustomer = updateFieldsOfOldCustomer(oldCustomer, newCustomer);
         customerRepository.save(oldCustomer);
         return mapper.toUpdateCustomerDto(getById(oldCustomer.getId()));
     }
 
     @Transactional
     @Override
-    public void deleteById(long id) {
+    public void deleteById(final long id) {
         if (Objects.nonNull(getById(id))) {
             customerRepository.deleteById(id);
         }
     }
 
-    private Customer getByIdForUpdate(long id) {
+    private Customer getByIdForUpdate(final long id) {
         return customerRepository.findByIdLocked(id).orElseThrow(() -> throwCustomerNotFoundException(id));
     }
 
-    private Customer getById(long id) {
+    private Customer getById(final long id) {
         return customerRepository.findById(id).orElseThrow(() -> throwCustomerNotFoundException(id));
     }
 
-    private CustomerNotFoundException throwCustomerNotFoundException(long id) {
-        String message = String.format(CUSTOMER_WAS_NOT_FOUND_BY_ID, id);
+    private CustomerNotFoundException throwCustomerNotFoundException(final long id) {
+        final String message = String.format(CUSTOMER_WAS_NOT_FOUND_BY_ID, id);
         log.warn(message);
         return new CustomerNotFoundException(message);
     }
 
-    private void throwExceptionIfLoginExists(String login) {
-        Optional<Customer> customerOp = customerRepository.findByLogin(login);
+    private void throwExceptionIfLoginExists(final String login) {
+        final Optional<Customer> customerOp = customerRepository.findByLogin(login);
         if (customerOp.isPresent()) {
             String message = String.format("Customer login has already existed: %s", login);
             log.warn(message);
@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    private Customer updateFields(Customer oldCustomer, Customer newCustomer) {
+    private Customer updateFieldsOfOldCustomer(Customer oldCustomer, final Customer newCustomer) {
         if (Objects.nonNull(newCustomer.getLogin())) {
             oldCustomer.setLogin(newCustomer.getLogin());
         }

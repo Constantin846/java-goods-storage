@@ -1,24 +1,27 @@
 package tk.project.goodsstorage.order.info;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tk.project.goodsstorage.customer.dto.find.CustomerInfo;
 import tk.project.goodsstorage.order.model.OrderStatus;
 
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class OrderInfo {
 
-    UUID id;
+    private final UUID id;
 
-    CustomerInfo customer;
+    private final CustomerInfo customer;
 
-    OrderStatus status;
+    private final OrderStatus status;
 
-    String deliveryAddress;
+    private final String deliveryAddress;
 
-    Long count;
+    private final Long count;
 }

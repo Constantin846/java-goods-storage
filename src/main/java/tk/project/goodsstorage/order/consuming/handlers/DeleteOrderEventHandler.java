@@ -21,8 +21,8 @@ public class DeleteOrderEventHandler implements EventHandler<DeleteOrderEventDat
     }
 
     @Override
-    public void handleEvent(DeleteOrderEventData eventSource) {
-        orderService.deleteById(eventSource.getOrderId(), eventSource.getCustomerId());
+    public void handleEvent(final DeleteOrderEventData eventSource) {
+        orderService.deleteById(eventSource.getOrderId());
         log.info("Delete order event has been handled successfully: {}", eventSource);
     }
 }

@@ -21,8 +21,8 @@ public class SetOrderStatusDoneEventHandler implements EventHandler<SetOrderStat
     }
 
     @Override
-    public void handleEvent(SetOrderStatusDoneEventData eventSource) {
-        orderService.setStatusDone(eventSource.getOrderId(), eventSource.getCustomerId());
+    public void handleEvent(final SetOrderStatusDoneEventData eventSource) {
+        orderService.setStatusDone(eventSource.getOrderId());
         log.info("Set order status DONE event has been handled successfully: {}", eventSource);
     }
 }

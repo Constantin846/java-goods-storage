@@ -1,18 +1,21 @@
 package tk.project.goodsstorage.customer.dto.update;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class UpdateCustomerDto {
 
-    Long id;
+    private final Long id;
 
-    String login;
+    private final String login;
 
-    String email;
+    private final String email;
 
-    Boolean isActive;
+    private final Boolean isActive;
 }

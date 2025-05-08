@@ -5,5 +5,5 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public interface InnService {
-    CompletableFuture<Map<String, String>> sendRequestInnByLogins(List<String> logins);
+    CompletableFuture<Map<String, String>> sendRequestInnByLogins(final List<String> logins);
 }

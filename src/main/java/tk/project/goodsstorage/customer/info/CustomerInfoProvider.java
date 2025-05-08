@@ -9,9 +9,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public interface CustomerInfoProvider {
-    Map<Long, CustomerInfo> getIdCustomerInfoMap(Set<Customer> customers);
+    Map<Long, CustomerInfo> getIdCustomerInfoMap(final Set<Customer> customers);
 
-    CompletableFuture<Map<String, String>> getLoginAccountNumberMap(List<String> logins);
+    CompletableFuture<Map<String, String>> getLoginAccountNumberMap(final List<String> logins);
 
-    CompletableFuture<Map<String, String>> getLoginInn(List<String> logins);
+    CompletableFuture<Map<String, String>> getLoginInn(final List<String> logins);
 }

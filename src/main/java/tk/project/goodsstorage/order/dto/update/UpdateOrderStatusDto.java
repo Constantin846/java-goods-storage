@@ -1,15 +1,18 @@
 package tk.project.goodsstorage.order.dto.update;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tk.project.goodsstorage.order.model.OrderStatus;
 
-@Data
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateOrderStatusDto {
 
-    OrderStatus status;
+    private final OrderStatus status;
 }

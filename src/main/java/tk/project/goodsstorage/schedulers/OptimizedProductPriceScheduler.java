@@ -47,10 +47,10 @@ public class OptimizedProductPriceScheduler {
 
     public OptimizedProductPriceScheduler(
             @Value("${app.scheduling.priceIncreasePercentage}")
-            BigDecimal priceIncreasePercentage,
+            final BigDecimal priceIncreasePercentage,
             @Value("${app.scheduling.optimization.exclusive-lock:true}")
-            Boolean isExclusiveLocked,
-            EntityManagerFactory entityManagerFactory
+            final Boolean isExclusiveLocked,
+            final EntityManagerFactory entityManagerFactory
     ) {
         this.priceIncreasePercentage = priceIncreasePercentage;
         this.isExclusiveLocked = !Objects.isNull(isExclusiveLocked) && isExclusiveLocked;
@@ -76,7 +76,7 @@ public class OptimizedProductPriceScheduler {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(FILE_PATH, IS_APPENDING_FILE));
+                            final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(FILE_PATH, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);

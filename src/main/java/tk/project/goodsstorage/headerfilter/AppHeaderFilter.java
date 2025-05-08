@@ -26,20 +26,21 @@ public class AppHeaderFilter extends OncePerRequestFilter {
     private final SessionCurrencyWrapper currencyWrapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request,
+                                    final HttpServletResponse response,
+                                    final FilterChain filterChain) throws ServletException, IOException {
 
-        String currencyHeader = request.getHeader(X_CURRENCY);
+        final String currencyHeader = request.getHeader(X_CURRENCY);
         if (Objects.nonNull(currencyHeader)) {
             currencyWrapper.setCurrency(Currency.valueOf(currencyHeader));
         }
 
-        String customerIdHeader = request.getHeader(X_CUSTOMER_ID);
+        final String customerIdHeader = request.getHeader(X_CUSTOMER_ID);
         if (Objects.nonNull(customerIdHeader)) {
             customerIdWrapper.setCustomerId(Long.parseLong(customerIdHeader));
         }
 
-        String orchestratorIdHeader = request.getHeader(X_ORCHESTRATOR_ID);
+        final String orchestratorIdHeader = request.getHeader(X_ORCHESTRATOR_ID);
         if (Objects.nonNull(orchestratorIdHeader)) {
             orchestratorIdWrapper.setOrchestratorId(orchestratorIdHeader);
         }

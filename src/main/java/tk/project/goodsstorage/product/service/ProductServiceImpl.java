@@ -14,12 +14,12 @@ import tk.project.goodsstorage.product.currency.converter.CurrencyConverter;
 import tk.project.goodsstorage.product.dto.ProductDto;
 import tk.project.goodsstorage.product.dto.create.CreateProductDto;
 import tk.project.goodsstorage.product.dto.find.PageFindRequest;
-import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.repository.ProductRepository;
 import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
+import tk.project.goodsstorage.search.criteria.SearchCriteria;
 
 import java.time.Instant;
 import java.util.List;
@@ -84,8 +84,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public UpdateProductDto update(UpdateProductDto productDto) {
-        Product oldProduct = getByIdForUpdate(productDto.getId());
+    public UpdateProductDto update(UpdateProductDto productDto, UUID productId) {
+        Product oldProduct = getByIdForUpdate(productId);
         Product product = mapper.toProduct(productDto);
         oldProduct = updateFields(oldProduct, product);
         oldProduct = productRepository.save(oldProduct);

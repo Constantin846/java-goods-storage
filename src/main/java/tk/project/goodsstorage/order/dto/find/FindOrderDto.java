@@ -1,23 +1,32 @@
 package tk.project.goodsstorage.order.dto.find;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class FindOrderDto {
 
-    UUID orderId;
+    private final UUID orderId;
 
-    List<FindOrderedProductDto> products;
+    @ToString.Exclude
+    private final List<FindOrderedProductDto> products;
 
-    BigDecimal totalPrice;
+    private final BigDecimal totalPrice;
 
-    LocalDate deliveryDate;
+    private final LocalDate deliveryDate;
+
+    public List<FindOrderedProductDto> getProducts() {
+        return new ArrayList<>(products);
+    }
 }

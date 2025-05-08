@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Optional<Customer> findByLogin(String login);
+    Optional<Customer> findByLogin(final String login);
 
     @Query(value = "select * from customer c where c.id = :id for update", nativeQuery = true)
-    Optional<Customer> findByIdLocked(Long id);
+    Optional<Customer> findByIdLocked(final Long id);
 }

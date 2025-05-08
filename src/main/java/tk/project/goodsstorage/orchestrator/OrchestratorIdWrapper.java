@@ -22,7 +22,7 @@ public class OrchestratorIdWrapper {
 
     public void checkOrchestratorAccess() {
         if (!expectedOrchestratorId.equals(orchestratorId)) {
-            String msg = String.format("Invalid orchestrator id: %s", orchestratorId);
+            final String msg = String.format("Invalid orchestrator id: %s", orchestratorId);
             log.warn(msg);
             throw new OrderNotAccessException(msg);
         }

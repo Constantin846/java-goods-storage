@@ -19,12 +19,12 @@ import tk.project.goodsstorage.product.dto.create.CreateProductDto;
 import tk.project.goodsstorage.product.dto.create.CreateProductRequest;
 import tk.project.goodsstorage.product.dto.find.PageFindRequest;
 import tk.project.goodsstorage.product.dto.find.ProductResponse;
-import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
 import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
 import tk.project.goodsstorage.product.dto.update.UpdateProductRequest;
 import tk.project.goodsstorage.product.dto.update.UpdateProductResponse;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
 import tk.project.goodsstorage.product.service.ProductService;
+import tk.project.goodsstorage.search.criteria.SearchCriteria;
 
 import java.util.List;
 import java.util.Map;
@@ -78,10 +78,9 @@ public class ProductController {
     public UpdateProductResponse updateById(@Valid @RequestBody UpdateProductRequest productRequest,
                                             @PathVariable(ID) UUID id) {
         log.info("Update product: {}, by id={}", productRequest, id);
-        UpdateProductDto productDto = mapper.toUpdateProductDto(productRequest);
-        productDto.setId(id);
-        productDto = productService.update(productDto);
-        return mapper.toUpdateProductResponse(productDto);
+        final UpdateProductDto productDto = mapper.toUpdateProductDto(productRequest);
+        final UpdateProductDto resultProductDto = productService.update(productDto, id);
+        return mapper.toUpdateProductResponse(resultProductDto);
     }
 
     @DeleteMapping(ID_PATH)

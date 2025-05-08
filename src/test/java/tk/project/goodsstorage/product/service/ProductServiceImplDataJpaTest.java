@@ -15,18 +15,18 @@ import tk.project.goodsstorage.product.currency.SessionCurrencyWrapper;
 import tk.project.goodsstorage.product.currency.converter.CurrencyConverterImpl;
 import tk.project.goodsstorage.product.currency.provider.CurrenciesProvider;
 import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.dto.find.criteria.BigDecimalCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.InstantCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.LocalDateCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.LongCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.SearchCriteria;
-import tk.project.goodsstorage.product.dto.find.criteria.StringCriteria;
 import tk.project.goodsstorage.product.mapper.ProductDtoMapperImpl;
 import tk.project.goodsstorage.product.model.Product;
 import tk.project.goodsstorage.product.model.objectmother.ProductMother;
 import tk.project.goodsstorage.product.repository.ProductRepository;
-import tk.project.goodsstorage.product.service.criteria.Operation;
 import tk.project.goodsstorage.product.service.criteria.SearchCriteriaManager;
+import tk.project.goodsstorage.search.criteria.BigDecimalCriteria;
+import tk.project.goodsstorage.search.criteria.InstantCriteria;
+import tk.project.goodsstorage.search.criteria.LocalDateCriteria;
+import tk.project.goodsstorage.search.criteria.LongCriteria;
+import tk.project.goodsstorage.search.criteria.SearchCriteria;
+import tk.project.goodsstorage.search.criteria.StringCriteria;
+import tk.project.goodsstorage.search.enums.Operation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,46 +83,53 @@ class ProductServiceImplDataJpaTest {
 
     private List<SearchCriteria<?>> createCriteria() {
         List<SearchCriteria<?>> criteria = new ArrayList<>();
-        StringCriteria nameCriteria = new StringCriteria();
-        nameCriteria.setField("name");
-        nameCriteria.setValue(product.getName());
-        nameCriteria.setOperation(Operation.EQUALS);
+        StringCriteria nameCriteria = StringCriteria.builder()
+                .field("name")
+                .value(product.getName())
+                .operation(Operation.EQUALS)
+                .build();
         criteria.add(nameCriteria);
 
-        StringCriteria articleCriteria = new StringCriteria();
-        articleCriteria.setField("article");
-        articleCriteria.setValue(product.getArticle());
-        articleCriteria.setOperation(Operation.MORE_OR_EQUALS);
+        StringCriteria articleCriteria = StringCriteria.builder()
+                .field("article")
+                .value(product.getArticle())
+                .operation(Operation.MORE_OR_EQUALS)
+                .build();
         criteria.add(articleCriteria);
 
-        StringCriteria descriptionCriteria = new StringCriteria();
-        descriptionCriteria.setField("description");
-        descriptionCriteria.setValue(product.getDescription().substring(4));
-        descriptionCriteria.setOperation(Operation.LESS_OR_EQUALS);
+        StringCriteria descriptionCriteria = StringCriteria.builder()
+                .field("description")
+                .value(product.getDescription().substring(4))
+                .operation(Operation.LESS_OR_EQUALS)
+                .build();
         criteria.add(descriptionCriteria);
 
-        BigDecimalCriteria priceCriteria = new BigDecimalCriteria();
-        priceCriteria.setField("price");
-        priceCriteria.setValue(product.getPrice());
-        priceCriteria.setOperation(Operation.LIKE);
+        BigDecimalCriteria priceCriteria = BigDecimalCriteria.builder()
+                .field("price")
+                .value(product.getPrice())
+                .operation(Operation.LIKE)
+                .build();
         criteria.add(priceCriteria);
 
-        LongCriteria countCriteria = new LongCriteria();
-        countCriteria.setField("count");
-        countCriteria.setValue(product.getCount());
-        countCriteria.setOperation(Operation.LIKE);
+        LongCriteria countCriteria = LongCriteria.builder()
+                .field("count")
+                .value(product.getCount())
+                .operation(Operation.LIKE)
+                .build();
         criteria.add(countCriteria);
 
-        InstantCriteria lastCountUpdateTimeCriteria = new InstantCriteria();
-        lastCountUpdateTimeCriteria.setField("lastCountUpdateTime");
-        lastCountUpdateTimeCriteria.setValue(product.getLastCountUpdateTime());
-        lastCountUpdateTimeCriteria.setOperation(Operation.EQUALS);
+        InstantCriteria lastCountUpdateTimeCriteria = InstantCriteria.builder()
+                .field("lastCountUpdateTime")
+                .value(product.getLastCountUpdateTime())
+                .operation(Operation.EQUALS)
+                .build();
         criteria.add(lastCountUpdateTimeCriteria);
 
-        LocalDateCriteria createDateCriteria = new LocalDateCriteria();
-        createDateCriteria.setField("createDate");
-        createDateCriteria.setValue(product.getCreateDate());
-        createDateCriteria.setOperation(Operation.EQUALS);
+        LocalDateCriteria createDateCriteria = LocalDateCriteria.builder()
+                .field("createDate")
+                .value(product.getCreateDate())
+                .operation(Operation.EQUALS)
+                .build();
         criteria.add(createDateCriteria);
 
         return criteria;

@@ -17,5 +17,5 @@ public interface OrderedProductRepository extends JpaRepository<OrderedProduct, 
             join Product p on p.id = op.productId
             where op.order.id = :orderId
             """)
-    List<FindOrderedProductDto> findAllWithNameByOrderId(UUID orderId);
+    List<FindOrderedProductDto> findAllWithNameByOrderId(final UUID orderId);
 }
