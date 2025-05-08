@@ -9,17 +9,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
-import tk.project.goodsstorage.product.currency.CurrenciesDto;
-import tk.project.goodsstorage.product.currency.Currency;
-import tk.project.goodsstorage.product.currency.SessionCurrencyWrapper;
-import tk.project.goodsstorage.product.currency.converter.CurrencyConverterImpl;
-import tk.project.goodsstorage.product.currency.provider.CurrenciesProvider;
-import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.mapper.ProductDtoMapperImpl;
-import tk.project.goodsstorage.product.model.Product;
-import tk.project.goodsstorage.product.model.objectmother.ProductMother;
-import tk.project.goodsstorage.product.repository.ProductRepository;
-import tk.project.goodsstorage.product.repository.ProductSpecification;
+import tk.project.goodsstorage.dto.CurrenciesDto;
+import tk.project.goodsstorage.dto.product.ProductDto;
+import tk.project.goodsstorage.enums.Currency;
+import tk.project.goodsstorage.headerfilter.SessionCurrencyWrapper;
+import tk.project.goodsstorage.mappers.ProductDtoMapperImpl;
+import tk.project.goodsstorage.models.product.Product;
+import tk.project.goodsstorage.models.product.objectmother.ProductMother;
+import tk.project.goodsstorage.repositories.product.ProductRepository;
+import tk.project.goodsstorage.repositories.product.ProductSpecification;
 import tk.project.goodsstorage.search.criteria.BigDecimalCriteria;
 import tk.project.goodsstorage.search.criteria.InstantCriteria;
 import tk.project.goodsstorage.search.criteria.LocalDateCriteria;
@@ -27,6 +25,9 @@ import tk.project.goodsstorage.search.criteria.LongCriteria;
 import tk.project.goodsstorage.search.criteria.SearchCriteria;
 import tk.project.goodsstorage.search.criteria.StringCriteria;
 import tk.project.goodsstorage.search.enums.Operation;
+import tk.project.goodsstorage.services.currency.CurrencyServiceImpl;
+import tk.project.goodsstorage.services.currency.provider.CurrenciesProvider;
+import tk.project.goodsstorage.services.product.ProductServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.when;
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.liquibase.enabled=false"
 })
-@Import(value = {CurrencyConverterImpl.class, ProductDtoMapperImpl.class,
+@Import(value = {CurrencyServiceImpl.class, ProductDtoMapperImpl.class,
         ProductServiceImpl.class, ProductSpecification.class})
 class ProductServiceImplDataJpaTest {
     @MockBean
@@ -62,7 +63,7 @@ class ProductServiceImplDataJpaTest {
     @Test
     void findByCriteria() {
         when(sessionCurrencyWrapper.getCurrency()).thenReturn(Currency.RUS);
-        when(currenciesProvider.getCurrencies()).thenReturn(CurrenciesDto.ofDoubles(1.1, 1.2, 1.3));
+        when(currenciesProvider.getCurrencies()).thenReturn(new CurrenciesDto(1.1, 1.2, 1.3));
 
         List<SearchCriteria> searchCriteria = createCriteria();
 

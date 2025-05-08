@@ -1,0 +1,28 @@
+package tk.project.goodsstorage.kafka.handler.order;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import tk.project.goodsstorage.kafka.event.Event;
+import tk.project.goodsstorage.kafka.event.order.SetOrderStatusDoneEventData;
+import tk.project.goodsstorage.kafka.handler.EventHandler;
+import tk.project.goodsstorage.services.order.OrderService;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class SetOrderStatusDoneEventHandler implements EventHandler<SetOrderStatusDoneEventData> {
+    private static final Event EVENT = Event.SET_ORDER_STATUS_DONE;
+    private final OrderService orderService;
+
+    @Override
+    public Event getEvent() {
+        return EVENT;
+    }
+
+    @Override
+    public void handleEvent(final SetOrderStatusDoneEventData eventSource) {
+        orderService.setStatusDone(eventSource.getOrderId());
+        log.info("Set order status DONE event has been handled successfully: {}", eventSource);
+    }
+}

@@ -38,9 +38,9 @@ app:
       exclusive-lock: true
       docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my scheduler running in docker
   prepare-db.db-products-generator: ${DB_PRODUCTS_GENERATOR:false}
-  currency-service.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
-  account-service.type: mock # real implementation in any case without mock
-  crm-service.type: mock # real implementation in any case without mock
+  currency-client.type: ${CURRENCY_SERVICE_TYPE:real} # real # mock
+  account-client.type: mock # real implementation in any case without mock
+  crm-client.type: mock # real implementation in any case without mock
 
   minio-service:
     bucket-name: ${MINIO_BUCKET_NAME:bucket}

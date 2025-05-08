@@ -11,8 +11,8 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.EventHandlerNot
 import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
 import tk.project.goodsstorage.kafka.event.Event;
 import tk.project.goodsstorage.kafka.event.EventSource;
+import tk.project.goodsstorage.kafka.event.order.OrderEventData;
 import tk.project.goodsstorage.kafka.handler.EventHandler;
-import tk.project.goodsstorage.order.consuming.events.OrderEventData;
 
 import java.util.Map;
 

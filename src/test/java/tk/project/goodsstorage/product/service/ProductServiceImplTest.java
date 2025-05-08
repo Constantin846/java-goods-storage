@@ -7,15 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ArticleExistsException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotFoundException;
-import tk.project.goodsstorage.product.currency.Currency;
-import tk.project.goodsstorage.product.currency.SessionCurrencyWrapper;
-import tk.project.goodsstorage.product.currency.converter.CurrencyConverter;
-import tk.project.goodsstorage.product.dto.ProductDto;
-import tk.project.goodsstorage.product.dto.create.CreateProductDto;
-import tk.project.goodsstorage.product.dto.update.UpdateProductDto;
-import tk.project.goodsstorage.product.mapper.ProductDtoMapper;
-import tk.project.goodsstorage.product.model.Product;
-import tk.project.goodsstorage.product.repository.ProductRepository;
+import tk.project.goodsstorage.dto.product.ProductDto;
+import tk.project.goodsstorage.dto.product.create.CreateProductDto;
+import tk.project.goodsstorage.dto.product.update.UpdateProductDto;
+import tk.project.goodsstorage.enums.Currency;
+import tk.project.goodsstorage.headerfilter.SessionCurrencyWrapper;
+import tk.project.goodsstorage.mappers.ProductDtoMapper;
+import tk.project.goodsstorage.models.product.Product;
+import tk.project.goodsstorage.repositories.product.ProductRepository;
+import tk.project.goodsstorage.services.currency.CurrencyService;
+import tk.project.goodsstorage.services.product.ProductServiceImpl;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
     @Mock
-    private CurrencyConverter currencyConverterMock;
+    private CurrencyService currencyServiceMock;
     @Mock
     private ProductDtoMapper mapperMock;
     @Mock
@@ -65,7 +66,7 @@ class ProductServiceImplTest {
         when(mapperMock.toProductDto(product)).thenReturn(productDto);
         when(productRepositoryMock.findById(id)).thenReturn(Optional.of(product));
         when(sessionCurrencyWrapperMock.getCurrency()).thenReturn(currency);
-        when(currencyConverterMock.changeCurrency(productDto, currency)).thenReturn(productDto);
+        when(currencyServiceMock.changeCurrency(productDto, currency)).thenReturn(productDto);
 
         ProductDto actualProductDto = productServiceUnderTest.findById(id);
 

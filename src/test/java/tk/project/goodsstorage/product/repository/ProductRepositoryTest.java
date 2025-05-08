@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.domain.Specification;
-import tk.project.goodsstorage.product.model.CategoryType;
-import tk.project.goodsstorage.product.model.Product;
+import tk.project.goodsstorage.enums.CategoryType;
+import tk.project.goodsstorage.models.product.Product;
+import tk.project.goodsstorage.repositories.product.ProductRepository;
+import tk.project.goodsstorage.repositories.product.ProductSpecifications;
 
 import java.math.BigDecimal;
 import java.time.Instant;

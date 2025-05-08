@@ -2,6 +2,7 @@ package tk.project.goodsstorage.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import tk.project.goodsstorage.annotations.NullOrNotBlank;
 
 public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBlank, String> {
     @Override

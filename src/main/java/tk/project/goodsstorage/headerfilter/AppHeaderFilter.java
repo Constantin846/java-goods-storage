@@ -7,10 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tk.project.goodsstorage.customer.CustomerIdWrapper;
-import tk.project.goodsstorage.orchestrator.OrchestratorIdWrapper;
-import tk.project.goodsstorage.product.currency.Currency;
-import tk.project.goodsstorage.product.currency.SessionCurrencyWrapper;
+import tk.project.goodsstorage.enums.Currency;
 
 import java.io.IOException;
 import java.util.Objects;
