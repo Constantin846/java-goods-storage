@@ -1,30 +1,27 @@
 package tk.project.goodsstorage.product.image.minio;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class MinioConfig {
 
-    final String bucketName;
-    final String accessKeyId;
-    final String secretAccessKey;
-    final String endpoint;
+    private final String bucketName;
+    private final String accessKeyId;
+    private final String secretAccessKey;
+    private final String endpoint;
 
     public MinioConfig (
             @Value("${app.minio-service.bucket-name}")
-            String bucketName,
+            final String bucketName,
             @Value("${app.minio-service.access-key-id}")
-            String accessKeyId,
+            final String accessKeyId,
             @Value("${app.minio-service.secret-access-key}")
-            String secretAccessKey,
+            final String secretAccessKey,
             @Value("${app.minio-service.endpoint}")
-            String endpoint
+            final String endpoint
     ) {
         this.bucketName = bucketName;
         this.accessKeyId = accessKeyId;

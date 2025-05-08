@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public UUID create(CreateProductDto createProductDto) {
+    public UUID create(final CreateProductDto createProductDto) {
         throwExceptionIfArticleExists(createProductDto.getArticle());
         Product product = mapper.toProduct(createProductDto);
         product = productRepository.save(product);
@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria> criteria) {
+    public List<ProductDto> findByCriteria(final Pageable pageable, final List<SearchCriteria> criteria) {
         List<Product> products;
 
         if (criteria.isEmpty()) {
@@ -65,14 +65,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto findById(UUID id) {
-        Product product = getById(id);
+    public ProductDto findById(final UUID id) {
+        final Product product = getById(id);
         return currencyConverter.changeCurrency(mapper.toProductDto(product), sessionCurrencyWrapper.getCurrency());
     }
 
     @Override
-    public List<ProductDto> findAll(PageFindRequest page) {
-        List<Product> products =
+    public List<ProductDto> findAll(final PageFindRequest page) {
+        final List<Product> products =
                 productRepository.findAll(PageRequest.of(page.getFrom(), page.getSize())).stream().toList();
         return products.stream()
                 .map(product -> {
@@ -83,24 +83,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public UpdateProductDto update(UpdateProductDto productDto, UUID productId) {
+    public UpdateProductDto update(final UpdateProductDto productDto, final UUID productId) {
         Product oldProduct = getByIdForUpdate(productId);
-        Product product = mapper.toProduct(productDto);
-        oldProduct = updateFields(oldProduct, product);
+        final Product product = mapper.toProduct(productDto);
+        oldProduct = updateFieldsOldProduct(oldProduct, product);
         oldProduct = productRepository.save(oldProduct);
         return mapper.toUpdateProductDto(getById(oldProduct.getId()));
     }
 
     @Transactional
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(final UUID id) {
         if (Objects.nonNull(getById(id))) {
             productRepository.deleteById(id);
         }
     }
 
-    private void throwExceptionIfArticleExists(String article) {
-        Optional<Product> productOp = productRepository.findByArticle(article);
+    private void throwExceptionIfArticleExists(final String article) {
+        final Optional<Product> productOp = productRepository.findByArticle(article);
         if (productOp.isPresent()) {
             String message = String.format("Article has already existed: %s", article);
             log.warn(message);
@@ -108,21 +108,21 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private Product getById(UUID id) {
+    private Product getById(final UUID id) {
         return productRepository.findById(id).orElseThrow(() -> throwProductNotFoundException(id));
     }
 
-    private Product getByIdForUpdate(UUID id) {
+    private Product getByIdForUpdate(final UUID id) {
         return productRepository.findByIdLocked(id).orElseThrow(() -> throwProductNotFoundException(id));
     }
 
-    private ProductNotFoundException throwProductNotFoundException(UUID id) {
-        String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
+    private ProductNotFoundException throwProductNotFoundException(final UUID id) {
+        final String message = String.format(PRODUCT_WAS_NOT_FOUND_BY_ID, id);
         log.warn(message);
         return new ProductNotFoundException(message);
     }
 
-    private Product updateFields(Product oldProduct, Product newProduct) {
+    private Product updateFieldsOldProduct(Product oldProduct, final Product newProduct) {
         if (Objects.nonNull(newProduct.getName())) {
             oldProduct.setName(newProduct.getName());
         }

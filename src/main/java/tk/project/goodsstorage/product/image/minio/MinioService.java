@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.zip.ZipOutputStream;
 
 public interface MinioService {
-    void uploadImage(MultipartFile file, String fileName);
+    void uploadImage(final MultipartFile file, final String fileName);
 
-    void downloadImagesData(List<Image> images, ZipOutputStream zipOutputStream);
+    void downloadImagesData(final List<Image> images, final ZipOutputStream zipOutputStream);
 }

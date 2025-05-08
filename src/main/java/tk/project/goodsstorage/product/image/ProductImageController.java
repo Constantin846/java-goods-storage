@@ -33,24 +33,25 @@ public class ProductImageController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(PRODUCT_ID_IMAGES_PATH)
-    public Map<String, String> addProductImage(@PathVariable(PRODUCT_ID) UUID productId,
-                                               @RequestPart("image") MultipartFile file) {
+    public Map<String, String> addProductImage(@PathVariable(PRODUCT_ID) final UUID productId,
+                                               @RequestPart("image") final MultipartFile file) {
         log.info("Add image to product with id: {}", productId);
-        String fileName = productImageService.upload(productId, file);
+        final String fileName = productImageService.upload(productId, file);
         return Map.of(FILE_NAME, fileName);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = PRODUCT_ID_IMAGES_PATH, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<StreamingResponseBody> findImagesByProductId(
-            @PathVariable(PRODUCT_ID) UUID productId) throws IOException
+            @PathVariable(PRODUCT_ID) final UUID productId) throws IOException
     {
         log.info("Find images by product id: {}", productId);
+
         return ResponseEntity
                 .ok()
                 .header("Content-Disposition", "attachment; filename=\"files.zip\"")
                 .body(out -> {
-                    ZipOutputStream zipOutputStream = new ZipOutputStream(out);
+                    final ZipOutputStream zipOutputStream = new ZipOutputStream(out);
                     productImageService.downloadImages(productId, zipOutputStream);
                     zipOutputStream.close();
                 });

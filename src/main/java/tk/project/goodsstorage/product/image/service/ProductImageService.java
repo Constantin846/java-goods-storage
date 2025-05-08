@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.zip.ZipOutputStream;
 
 public interface ProductImageService {
-    String upload(UUID productId, MultipartFile file);
+    String upload(final UUID productId, final MultipartFile file);
 
-    void downloadImages(UUID productId, ZipOutputStream zipOutputStream);
+    void downloadImages(final UUID productId, final ZipOutputStream zipOutputStream);
 }

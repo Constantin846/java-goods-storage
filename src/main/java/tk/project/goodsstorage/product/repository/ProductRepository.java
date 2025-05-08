@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
-    Optional<Product> findByArticle(String article);
+    Optional<Product> findByArticle(final String article);
 
     @Query(value = "select * from product p where p.id = :id for update", nativeQuery = true)
-    Optional<Product> findByIdLocked(UUID id);
+    Optional<Product> findByIdLocked(final UUID id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Product> findAll();
 
     @Query(value = "select * from product p where p.id in :ids for update", nativeQuery = true)
-    Set<Product> findAllByIdsForUpdate(Collection<UUID> ids);
+    Set<Product> findAllByIdsForUpdate(final Collection<UUID> ids);
 
-    default Map<UUID, Product> findMapByIdsForUpdate(Collection<UUID> ids) {
+    default Map<UUID, Product> findMapByIdsForUpdate(final Collection<UUID> ids) {
         return this.findAllByIdsForUpdate(ids).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
     }

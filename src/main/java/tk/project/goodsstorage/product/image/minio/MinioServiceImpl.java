@@ -56,8 +56,8 @@ public class MinioServiceImpl implements MinioService {
     }
 
     @Override
-    public void uploadImage(MultipartFile file, String fileName) {
-        try (InputStream inputStream = file.getInputStream()) {
+    public void uploadImage(final MultipartFile file, final String fileName) {
+        try (final InputStream inputStream = file.getInputStream()) {
             minioClient.putObject(PutObjectArgs
                     .builder()
                     .bucket(bucketName)
@@ -66,17 +66,17 @@ public class MinioServiceImpl implements MinioService {
                     .build());
 
         } catch (Exception e) {
-            String msg = "Error sending request to add a file to minio";
+            final String msg = "Error sending request to add a file to minio";
             log.warn(msg);
             throw new MinioUploadImageException(msg, e);
         }
     }
 
-    public void downloadImagesData(List<Image> images, ZipOutputStream zipOutputStream) {
+    public void downloadImagesData(final List<Image> images, final ZipOutputStream zipOutputStream) {
         InputStream content = null;
 
         try {
-            for (Image image : images) {
+            for (final Image image : images) {
                 content = minioClient.getObject(GetObjectArgs
                         .builder()
                         .bucket(bucketName)
@@ -90,7 +90,7 @@ public class MinioServiceImpl implements MinioService {
                 zipOutputStream.closeEntry();
             }
         } catch (Exception e) {
-            String msg = "Error sending request to get files from minio";
+            final String msg = "Error sending request to get files from minio";
             log.warn(msg);
             throw new MinioDownloadImageException(msg, e);
 

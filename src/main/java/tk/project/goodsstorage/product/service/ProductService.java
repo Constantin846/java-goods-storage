@@ -12,15 +12,15 @@ import java.util.UUID;
 
 
 public interface ProductService {
-    UUID create(CreateProductDto createProductDto);
+    UUID create(final CreateProductDto createProductDto);
 
-    List<ProductDto> findByCriteria(Pageable pageable, List<SearchCriteria> criteria);
+    List<ProductDto> findByCriteria(final Pageable pageable, final List<SearchCriteria> criteria);
 
-    ProductDto findById(UUID id);
+    ProductDto findById(final UUID id);
 
-    List<ProductDto> findAll(PageFindRequest pageRequest);
+    List<ProductDto> findAll(final PageFindRequest pageRequest);
 
-    UpdateProductDto update(UpdateProductDto productDto, UUID productId);
+    UpdateProductDto update(final UpdateProductDto productDto, final UUID productId);
 
-    void deleteById(UUID id);
+    void deleteById(final UUID id);
 }

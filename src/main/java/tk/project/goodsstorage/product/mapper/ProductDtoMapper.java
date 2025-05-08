@@ -17,27 +17,27 @@ import java.util.List;
 public interface ProductDtoMapper {
     ProductDtoMapper MAPPER = Mappers.getMapper(ProductDtoMapper.class);
 
-    CreateProductDto toCreateProductDto(CreateProductRequest createProductRequest);
+    CreateProductDto toCreateProductDto(final CreateProductRequest createProductRequest);
 
-    ProductResponse toProductResponse(ProductDto productDto);
+    ProductResponse toProductResponse(final ProductDto productDto);
 
-    default List<ProductResponse> toProductResponse(List<ProductDto> productDtoList) {
+    default List<ProductResponse> toProductResponse(final List<ProductDto> productDtoList) {
         return productDtoList.stream().map(this::toProductResponse).toList();
     }
 
-    UpdateProductDto toUpdateProductDto(UpdateProductRequest updateProductRequest);
+    UpdateProductDto toUpdateProductDto(final UpdateProductRequest updateProductRequest);
 
-    UpdateProductResponse toUpdateProductResponse(UpdateProductDto updateProductDto);
+    UpdateProductResponse toUpdateProductResponse(final UpdateProductDto updateProductDto);
 
-    Product toProduct(CreateProductDto createProductDto);
+    Product toProduct(final CreateProductDto createProductDto);
 
-    ProductDto toProductDto(Product product);
+    ProductDto toProductDto(final Product product);
 
-    default List<ProductDto> toProductDto(List<Product> products) {
+    default List<ProductDto> toProductDto(final List<Product> products) {
         return products.stream().map(this::toProductDto).toList();
     }
 
-    Product toProduct(UpdateProductDto updateProductDto);
+    Product toProduct(final UpdateProductDto updateProductDto);
 
-    UpdateProductDto toUpdateProductDto(Product product);
+    UpdateProductDto toUpdateProductDto(final Product product);
 }

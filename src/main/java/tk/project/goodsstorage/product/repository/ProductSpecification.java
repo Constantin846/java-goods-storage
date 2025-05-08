@@ -22,8 +22,9 @@ public class ProductSpecification implements Specification<Product> {
     public Predicate toPredicate(
             @NotNull Root<Product> root,
             @NotNull CriteriaQuery<?> query,
-            @NotNull CriteriaBuilder criteriaBuilder) {
-        List<Predicate> predicates = criteriaList.stream().map(it -> {
+            @NotNull CriteriaBuilder criteriaBuilder
+    ) {
+        final List<Predicate> predicates = criteriaList.stream().map(it -> {
 
             switch (it.getOperation()) {
                 case EQUALS -> {

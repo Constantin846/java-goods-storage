@@ -27,8 +27,8 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     @Transactional
     @Override
-    public String upload(UUID productId, MultipartFile file) {
-        Product product = getProductById(productId);
+    public String upload(final UUID productId, final MultipartFile file) {
+        final Product product = getProductById(productId);
 
         Image image = new Image();
         image.setOriginalName(file.getOriginalFilename());
@@ -40,21 +40,21 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public void downloadImages(UUID productId, ZipOutputStream zipOutputStream) {
-        Product product = getProductById(productId);
-        List<Image> images = imageRepository.findAllByProductId(product.getId());
+    public void downloadImages(final UUID productId, final ZipOutputStream zipOutputStream) {
+        final Product product = getProductById(productId);
+        final List<Image> images = imageRepository.findAllByProductId(product.getId());
 
         if (images.isEmpty()) {
-            String message = String.format("Image was not found by product id: %s", productId);
+            final String message = String.format("Image was not found by product id: %s", productId);
             log.warn(message);
             throw new ImageNotFoundException(message);
         }
         minioService.downloadImagesData(images, zipOutputStream);
     }
 
-    private Product getProductById(UUID productId) {
+    private Product getProductById(final UUID productId) {
         return productRepository.findById(productId).orElseThrow(() -> {
-            String message = String.format("Product was not found by id: %s", productId);
+            final String message = String.format("Product was not found by id: %s", productId);
             log.warn(message);
             return new ProductNotFoundException(message);
         });

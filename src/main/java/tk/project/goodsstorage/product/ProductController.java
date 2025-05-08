@@ -42,7 +42,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, UUID> create(@Valid @RequestBody CreateProductRequest productRequest) {
+    public Map<String, UUID> create(@Valid @RequestBody final CreateProductRequest productRequest) {
         log.info("Create product: {}", productRequest);
         CreateProductDto productDto = mapper.toCreateProductDto(productRequest);
         return Map.of(ID, productService.create(productDto));
@@ -50,33 +50,33 @@ public class ProductController {
 
     @PostMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> findByCriteria(Pageable pageable,
-                                                @Valid @RequestBody List<SearchCriteria> criteria) {
+    public List<ProductResponse> findByCriteria(final Pageable pageable,
+                                                @Valid @RequestBody final List<SearchCriteria> criteria) {
         log.info("Find product by criteria: {}", criteria);
-        List<ProductDto> products = productService.findByCriteria(pageable, criteria);
+        final List<ProductDto> products = productService.findByCriteria(pageable, criteria);
         return mapper.toProductResponse(products);
     }
 
     @GetMapping(ID_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponse findById(@PathVariable(ID) UUID id) {
+    public ProductResponse findById(@PathVariable(ID) final UUID id) {
         log.info("Find product by id={}", id);
-        ProductDto productDto = productService.findById(id);
+        final ProductDto productDto = productService.findById(id);
         return mapper.toProductResponse(productDto);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> findAll(@Valid PageFindRequest pageRequest) {
+    public List<ProductResponse> findAll(@Valid final PageFindRequest pageRequest) {
         log.info("Find all products with page={}", pageRequest);
-        List<ProductDto> products = productService.findAll(pageRequest);
+        final List<ProductDto> products = productService.findAll(pageRequest);
         return mapper.toProductResponse(products);
     }
 
     @PatchMapping(ID_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public UpdateProductResponse updateById(@Valid @RequestBody UpdateProductRequest productRequest,
-                                            @PathVariable(ID) UUID id) {
+    public UpdateProductResponse updateById(@Valid @RequestBody final UpdateProductRequest productRequest,
+                                            @PathVariable(ID) final UUID id) {
         log.info("Update product: {}, by id={}", productRequest, id);
         final UpdateProductDto productDto = mapper.toUpdateProductDto(productRequest);
         final UpdateProductDto resultProductDto = productService.update(productDto, id);
@@ -85,7 +85,7 @@ public class ProductController {
 
     @DeleteMapping(ID_PATH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable(ID) UUID id) {
+    public void deleteById(@PathVariable(ID) final UUID id) {
         log.info("Delete product by id={}", id);
         productService.deleteById(id);
     }
