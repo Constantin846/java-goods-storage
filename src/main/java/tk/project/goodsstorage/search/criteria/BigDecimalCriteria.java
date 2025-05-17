@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 public class BigDecimalCriteria implements SearchCriteria<BigDecimal> {
 
-    private static final PredicateStrategy<BigDecimal> strategy = new BigDecimalPredicateStrategy();
+    private static final PredicateStrategy<BigDecimal> STRATEGY = new BigDecimalPredicateStrategy();
 
     @NotBlank(message = "Field of search criteria must be set")
     private final String field;
@@ -29,8 +29,7 @@ public class BigDecimalCriteria implements SearchCriteria<BigDecimal> {
     @NotNull(message = "Operation of search criteria must be set")
     private final Operation operation;
 
-    @Override
     public PredicateStrategy<BigDecimal> getStrategy() {
-        return strategy;
+        return STRATEGY;
     }
 }

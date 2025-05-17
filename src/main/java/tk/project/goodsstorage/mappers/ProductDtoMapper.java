@@ -1,6 +1,7 @@
 package tk.project.goodsstorage.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import tk.project.goodsstorage.dto.product.ProductDto;
 import tk.project.goodsstorage.dto.product.create.CreateProductDto;
@@ -25,12 +26,19 @@ public interface ProductDtoMapper {
         return productDtoList.stream().map(this::toProductResponse).toList();
     }
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "lastCountUpdateTime", ignore = true)
+    @Mapping(target = "createDate", ignore = true)
     UpdateProductDto toUpdateProductDto(final UpdateProductRequest updateProductRequest);
 
     UpdateProductResponse toUpdateProductResponse(final UpdateProductDto updateProductDto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "lastCountUpdateTime", ignore = true)
+    @Mapping(target = "createDate", ignore = true)
     Product toProduct(final CreateProductDto createProductDto);
 
+    @Mapping(target = "currency", ignore = true)
     ProductDto toProductDto(final Product product);
 
     default List<ProductDto> toProductDto(final List<Product> products) {

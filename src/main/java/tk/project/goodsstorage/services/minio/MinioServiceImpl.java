@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioDownloadImageException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioUploadImageException;
 import tk.project.goodsstorage.configuration.minio.MinioConfig;
+import tk.project.goodsstorage.exceptionhandler.exceptions.minio.MinioDownloadImageException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.minio.MinioUploadImageException;
 
 import java.io.IOException;
 import java.io.InputStream;

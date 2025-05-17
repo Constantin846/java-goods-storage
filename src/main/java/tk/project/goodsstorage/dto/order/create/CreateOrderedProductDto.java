@@ -1,12 +1,16 @@
 package tk.project.goodsstorage.dto.order.create;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import tk.project.goodsstorage.dto.order.SaveOrderedProductDto;
 
 import java.util.UUID;
 
 public class CreateOrderedProductDto extends SaveOrderedProductDto {
 
-    public CreateOrderedProductDto(final UUID id, final Long count) {
+    @JsonCreator
+    public CreateOrderedProductDto(@JsonProperty("id") final UUID id,
+                                   @JsonProperty("count") final Long count) {
         super(id, count);
     }
 }

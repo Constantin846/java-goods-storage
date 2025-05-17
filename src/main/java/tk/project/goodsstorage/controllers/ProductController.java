@@ -49,7 +49,6 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> findByCriteria(final Pageable pageable,
                                                 @Valid @RequestBody final List<SearchCriteria> criteria) {
         log.info("Find product by criteria: {}", criteria);
@@ -58,7 +57,6 @@ public class ProductController {
     }
 
     @GetMapping(ID_PATH)
-    @ResponseStatus(HttpStatus.OK)
     public ProductResponse findById(@PathVariable(ID) final UUID id) {
         log.info("Find product by id={}", id);
         final ProductDto productDto = productService.findById(id);
@@ -66,7 +64,6 @@ public class ProductController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> findAll(@Valid final PageFindRequest pageRequest) {
         log.info("Find all products with page={}", pageRequest);
         final List<ProductDto> products = productService.findAll(pageRequest);
@@ -74,7 +71,6 @@ public class ProductController {
     }
 
     @PatchMapping(ID_PATH)
-    @ResponseStatus(HttpStatus.OK)
     public UpdateProductResponse updateById(@Valid @RequestBody final UpdateProductRequest productRequest,
                                             @PathVariable(ID) final UUID id) {
         log.info("Update product: {}, by id={}", productRequest, id);

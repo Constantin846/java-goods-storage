@@ -18,6 +18,7 @@ import tk.project.goodsstorage.services.product.ProductImageService;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.zip.ZipOutputStream;
 
@@ -31,16 +32,21 @@ public class ProductImageController {
     private static final String FILE_NAME = "fileName";
     private final ProductImageService productImageService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(PRODUCT_ID_IMAGES_PATH)
+    @ResponseStatus(HttpStatus.CREATED)
     public Map<String, String> addProductImage(@PathVariable(PRODUCT_ID) final UUID productId,
                                                @RequestPart("image") final MultipartFile file) {
         log.info("Add image to product with id: {}", productId);
+
+        if (Objects.isNull(file) || file.isEmpty()) {
+            final String msg = "File is empty";
+            log.warn(msg);
+            throw new RuntimeException(msg);
+        }
         final String fileName = productImageService.upload(productId, file);
         return Map.of(FILE_NAME, fileName);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = PRODUCT_ID_IMAGES_PATH, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<StreamingResponseBody> findImagesByProductId(
             @PathVariable(PRODUCT_ID) final UUID productId) throws IOException

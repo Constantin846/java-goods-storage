@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import tk.project.goodsstorage.enums.CategoryType;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -56,7 +57,7 @@ public class CreateProductRequest {
         this.name = name;
         this.article = article;
         this.description = description;
-        this.category = category;
+        this.category = Objects.isNull(category) ? CategoryType.UNDEFINED.name() : category;
         this.price = price;
         this.count = count;
         this.isAvailable = Objects.isNull(isAvailable) ? IS_AVAILABLE_DEFAULT : isAvailable;

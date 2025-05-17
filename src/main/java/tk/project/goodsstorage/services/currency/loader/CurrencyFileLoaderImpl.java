@@ -4,22 +4,29 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import tk.project.exceptionhandler.goodsstorage.exceptions.currency.DeserializeCurrencyFileException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.currency.LoadCurrencyFileException;
 import tk.project.goodsstorage.dto.CurrenciesDto;
+import tk.project.goodsstorage.exceptionhandler.exceptions.currency.DeserializeCurrencyFileException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.currency.LoadCurrencyFileException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 @Slf4j
 @Component
 public class CurrencyFileLoaderImpl implements CurrencyFileLoader {
-    private static final String filePath = "src/main/resources/app-info/exchange-rate.json";
+    private static final String DEFAULT_FILE_PATH = "src/main/resources/app-info/exchange-rate.json";
+    private final String filePath;
     private final ObjectMapper objectMapper;
 
     public CurrencyFileLoaderImpl() {
+        this(null);
+    }
+
+    public CurrencyFileLoaderImpl(final String filePath) {
         this.objectMapper = new ObjectMapper();
+        this.filePath = Objects.nonNull(filePath) ? filePath : DEFAULT_FILE_PATH;
     }
 
     @Override
@@ -29,12 +36,12 @@ public class CurrencyFileLoaderImpl implements CurrencyFileLoader {
             return objectMapper.readValue(content, CurrenciesDto.class);
 
         } catch (JsonProcessingException e) {
-            String message = "Exception during deserializing content of currency file";
+            final String message = "Exception during deserializing content of currency file";
             log.warn(message);
             throw new DeserializeCurrencyFileException(message);
 
         } catch (IOException e) {
-            String message = "Exception during loading currency file";
+            final String message = "Exception during loading currency file";
             log.warn(message);
             throw new LoadCurrencyFileException(message);
         }

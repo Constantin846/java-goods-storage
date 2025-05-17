@@ -4,11 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tk.project.exceptionhandler.goodsstorage.exceptions.customer.CustomerNotFoundException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.customer.LoginExistsException;
 import tk.project.goodsstorage.dto.customer.create.CreateCustomerDto;
 import tk.project.goodsstorage.dto.customer.find.FindCustomerDto;
 import tk.project.goodsstorage.dto.customer.update.UpdateCustomerDto;
+import tk.project.goodsstorage.exceptionhandler.exceptions.customer.CustomerNotFoundException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.customer.LoginExistsException;
 import tk.project.goodsstorage.mappers.CustomerDtoMapper;
 import tk.project.goodsstorage.models.Customer;
 import tk.project.goodsstorage.repositories.CustomerRepository;
@@ -82,6 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private Customer updateFieldsOfOldCustomer(Customer oldCustomer, final Customer newCustomer) {
         if (Objects.nonNull(newCustomer.getLogin())) {
+            throwExceptionIfLoginExists(newCustomer.getLogin());
             oldCustomer.setLogin(newCustomer.getLogin());
         }
         if (Objects.nonNull(newCustomer.getEmail())) {

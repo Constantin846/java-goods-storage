@@ -16,7 +16,7 @@ import tk.project.goodsstorage.search.strategy.StringPredicateStrategy;
 @EqualsAndHashCode
 public class StringCriteria implements SearchCriteria<String> {
 
-    private static final PredicateStrategy<String> strategy = new StringPredicateStrategy();
+    private static final PredicateStrategy<String> STRATEGY = new StringPredicateStrategy();
 
     @NotBlank(message = "Field of search criteria must be set")
     private final String field;
@@ -29,6 +29,6 @@ public class StringCriteria implements SearchCriteria<String> {
 
     @Override
     public PredicateStrategy<String> getStrategy() {
-        return strategy;
+        return STRATEGY;
     }
 }

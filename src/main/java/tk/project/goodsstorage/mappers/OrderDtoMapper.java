@@ -19,11 +19,16 @@ public interface OrderDtoMapper {
 
     CreateOrderDto toCreateOrderDto(final CreateOrderRequest orderRequest);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     @Mapping(target = "products", ignore = true)
+    @Mapping(target = "businessKey", ignore = true)
+    @Mapping(target = "deliveryDate", ignore = true)
     Order toOrder(final CreateOrderDto orderDto);
 
     FindOrderResponse toFindOrderResponse(final FindOrderDto orderDto);
 
+    @Mapping(target = "id", ignore = true)
     UpdateOrderDto toUpdateOrderDto(final UpdateOrderRequest orderRequest);
 
     UpdateOrderDtoRes toUpdateOrderDtoRes(final Order order);

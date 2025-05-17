@@ -24,6 +24,6 @@ public class StringPredicateStrategy implements PredicateStrategy<String> {
     @Override
     public Predicate searchLike(Expression<String> expression, String value, CriteriaBuilder cb) {
         return cb.like(expression, "%" + value + "%");
-        //return cb.like(cb.lower(expression), "%" + value.toLowerCase() + "%"); todo
+        //return cb.like(cb.lower(expression), "%" + value.toLowerCase() + "%");
     }
 }

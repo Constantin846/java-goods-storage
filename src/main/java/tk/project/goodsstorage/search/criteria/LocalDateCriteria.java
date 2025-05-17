@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 public class LocalDateCriteria implements SearchCriteria<LocalDate> {
 
-    private static final PredicateStrategy<LocalDate> strategy = new LocalDatePredicateStrategy();
+    private static final PredicateStrategy<LocalDate> STRATEGY = new LocalDatePredicateStrategy();
 
     @NotBlank(message = "Field of search criteria must be set")
     private final String field;
@@ -31,6 +31,6 @@ public class LocalDateCriteria implements SearchCriteria<LocalDate> {
 
     @Override
     public PredicateStrategy<LocalDate> getStrategy() {
-        return strategy;
+        return STRATEGY;
     }
 }

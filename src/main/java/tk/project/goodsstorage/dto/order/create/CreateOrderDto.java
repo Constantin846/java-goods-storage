@@ -1,5 +1,7 @@
 package tk.project.goodsstorage.dto.order.create;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,6 +23,13 @@ public class CreateOrderDto {
 
     @ToString.Exclude
     private final Set<CreateOrderedProductDto> products;
+
+    @JsonCreator
+    public CreateOrderDto(@JsonProperty("deliveryAddress") final String deliveryAddress,
+                          @JsonProperty("products") final Set<CreateOrderedProductDto> products) {
+        this.deliveryAddress = deliveryAddress;
+        this.products = products;
+    }
 
     public Set<CreateOrderedProductDto> getProducts() {
         return new HashSet<>(products);

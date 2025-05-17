@@ -18,7 +18,7 @@ import java.time.Instant;
 @EqualsAndHashCode
 public class InstantCriteria implements SearchCriteria<Instant> {
 
-    private static final PredicateStrategy<Instant> strategy = new InstantPredicateStrategy();
+    private static final PredicateStrategy<Instant> STRATEGY = new InstantPredicateStrategy();
 
     @NotBlank(message = "Field of search criteria must be set")
     private final String field;
@@ -31,6 +31,6 @@ public class InstantCriteria implements SearchCriteria<Instant> {
 
     @Override
     public PredicateStrategy<Instant> getStrategy() {
-        return strategy;
+        return STRATEGY;
     }
 }

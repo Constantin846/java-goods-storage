@@ -22,6 +22,8 @@ import java.util.Map;
 public class KafkaProducerConfig {
     @Value("${app.kafka.bootstrapAddress}")
     private String server;
+    @Value("${app.kafka.order-command-topic}")
+    private String orderCommandTopic;
 
     private ProducerFactory<String, byte[]> producerFactoryByteArray() {
         Map<String, Object> configProps = new HashMap<>();
@@ -45,6 +47,6 @@ public class KafkaProducerConfig {
 
     @Bean
     public NewTopic orderCommandTopic() {
-        return new NewTopic("test-topic", 2, (short) 1);
+        return new NewTopic(orderCommandTopic, 2, (short) 1);
     }
 }

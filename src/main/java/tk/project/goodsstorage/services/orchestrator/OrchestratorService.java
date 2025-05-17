@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import tk.project.goodsstorage.dto.orchestrator.ConfirmOrderDto;
 import tk.project.goodsstorage.dto.orchestrator.OrchestratorConfirmOrderDto;
-import tk.project.goodsstorage.services.customer.CustomerInfoProvider;
+import tk.project.goodsstorage.interaction.account.AccountClient;
+import tk.project.goodsstorage.interaction.crm.CrmClient;
+import tk.project.goodsstorage.interaction.orchestrator.OrchestratorClient;
 
 import java.util.List;
 import java.util.Map;
@@ -14,19 +16,26 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @RequiredArgsConstructor
 public class OrchestratorService {
-    private final CustomerInfoProvider customerInfoProvider;
+    private final AccountClient accountClient;
+    private final CrmClient crmClient;
     private final OrchestratorClient orchestratorClient;
 
     public UUID confirmOrder(final ConfirmOrderDto orderDto) {
         final List<String> login = List.of(orderDto.getCustomerLogin());
-        final CompletableFuture<Map<String, String>> inn = customerInfoProvider.getLoginInn(login);
-        final CompletableFuture<Map<String, String>> accountNumber = customerInfoProvider.getLoginAccountNumberMap(login);
+
+        final CompletableFuture<Map<String, String>> innFuture =
+                crmClient.sendRequestInnByLogins(login);
+        final CompletableFuture<Map<String, String>> accountNumberFuture =
+                accountClient.sendRequestAccountNumbersByLogins(login);
+
+        final String inn = innFuture.join().get(orderDto.getCustomerLogin());
+        final String accountNumber = accountNumberFuture.join().get(orderDto.getCustomerLogin());
 
         final OrchestratorConfirmOrderDto orchestratorConfirmOrderDto = OrchestratorConfirmOrderDto.builder()
                 .id(orderDto.getId())
                 .deliveryAddress(orderDto.getDeliveryAddress())
-                .customerInn(inn.join().get(orderDto.getCustomerLogin()))
-                .customerAccountNumber(accountNumber.join().get(orderDto.getCustomerLogin()))
+                .customerInn(inn)
+                .customerAccountNumber(accountNumber)
                 .price(orderDto.getPrice())
                 .customerLogin(orderDto.getCustomerLogin())
                 .build();

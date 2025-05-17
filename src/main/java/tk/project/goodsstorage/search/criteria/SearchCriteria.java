@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import tk.project.goodsstorage.search.enums.Operation;
 import tk.project.goodsstorage.search.strategy.PredicateStrategy;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.SIMPLE_NAME, include = JsonTypeInfo.As.PROPERTY,
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY,
         property = "field", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(names = {"name", "article", "description", "category"}, value = StringCriteria.class),

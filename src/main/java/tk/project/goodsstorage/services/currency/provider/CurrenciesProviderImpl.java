@@ -6,9 +6,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tk.project.exceptionhandler.goodsstorage.exceptions.currency.RequestGetCurrenciesException;
 import tk.project.goodsstorage.dto.CurrenciesDto;
-import tk.project.goodsstorage.services.currency.client.CurrencyClient;
+import tk.project.goodsstorage.exceptionhandler.exceptions.currency.RequestGetCurrenciesException;
+import tk.project.goodsstorage.interaction.client.CurrencyClient;
 import tk.project.goodsstorage.services.currency.loader.CurrencyFileLoader;
 
 @Slf4j

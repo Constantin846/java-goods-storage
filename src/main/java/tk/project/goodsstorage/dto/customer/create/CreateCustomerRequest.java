@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.Nullable;
 
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class CreateCustomerRequest {
 
     private static final boolean IS_ACTIVE_DEFAULT = true;
 
-    public CreateCustomerRequest(String login, String email, Boolean isActive) {
+    public CreateCustomerRequest(final String login, final String email, @Nullable final Boolean isActive) {
         this.login = login;
         this.email = email;
         this.isActive = Objects.isNull(isActive) ? IS_ACTIVE_DEFAULT : isActive;

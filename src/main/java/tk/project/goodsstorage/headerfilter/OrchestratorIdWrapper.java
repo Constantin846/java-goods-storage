@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderNotAccessException;
 
 @Slf4j
 @Component

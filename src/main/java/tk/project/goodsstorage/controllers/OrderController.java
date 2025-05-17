@@ -54,7 +54,6 @@ public class OrderController {
     }
 
     @PostMapping(ORDER_ID_PATH + "/confirm")
-    @ResponseStatus(HttpStatus.CREATED)
     public Map<String, UUID> confirmById(@PathVariable(ORDER_ID) final UUID orderId) {
         log.info("Confirm order with id: {}", orderId);
         UUID businessKey = orderService.confirmById(orderId);

@@ -1,6 +1,7 @@
 package tk.project.goodsstorage.mappers;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import tk.project.goodsstorage.dto.customer.create.CreateCustomerDto;
 import tk.project.goodsstorage.dto.customer.create.CreateCustomerRequest;
@@ -17,12 +18,14 @@ public interface CustomerDtoMapper {
 
     CreateCustomerDto toCreateCustomerDto(final CreateCustomerRequest customerRequest);
 
+    @Mapping(target = "id", ignore = true)
     Customer toCustomer(final CreateCustomerDto customerDto);
 
     FindCustomerResponse toFindCustomerResponse(final FindCustomerDto customerDto);
 
     FindCustomerDto toFindCustomerDto(final Customer customer);
 
+    @Mapping(target = "id", ignore = true)
     UpdateCustomerDto toUpdateCustomerDto(final UpdateCustomerRequest customerRequest);
 
     UpdateCustomerResponse toUpdateCustomerResponse(final UpdateCustomerDto customerDto);

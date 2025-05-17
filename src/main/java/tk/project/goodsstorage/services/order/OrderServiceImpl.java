@@ -4,13 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import tk.project.exceptionhandler.goodsstorage.exceptions.customer.CustomerNotFoundException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotFoundException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreateException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotProcessingException;
 import tk.project.goodsstorage.dto.orchestrator.ConfirmOrderDto;
 import tk.project.goodsstorage.dto.order.create.CreateOrderDto;
 import tk.project.goodsstorage.dto.order.find.FindOrderDto;
@@ -21,6 +14,13 @@ import tk.project.goodsstorage.dto.order.update.UpdateOrderDtoRes;
 import tk.project.goodsstorage.dto.order.update.UpdateOrderStatusDto;
 import tk.project.goodsstorage.dto.order.update.UpdateOrderedProductDto;
 import tk.project.goodsstorage.enums.OrderStatus;
+import tk.project.goodsstorage.exceptionhandler.exceptions.customer.CustomerNotFoundException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderNotAccessException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderNotFoundException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderStatusAlreadyCancelledException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderStatusAlreadyRejectedException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderStatusNotCreatedException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.order.OrderStatusNotProcessingException;
 import tk.project.goodsstorage.headerfilter.CustomerIdWrapper;
 import tk.project.goodsstorage.mappers.OrderDtoMapper;
 import tk.project.goodsstorage.models.Customer;
@@ -68,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     public UUID confirmById(final UUID orderId) {
         final Order order = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(order);
-        checkOrderStatusIsCreate(order);
+        checkOrderStatusIsCreated(order);
 
         final ConfirmOrderDto confirmOrderDto = ConfirmOrderDto.builder()
                 .id(order.getId())
@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
     public UpdateOrderDtoRes update(final UpdateOrderDto updateOrderDto, final UUID orderId) {
         Order oldOrder = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(oldOrder);
-        checkOrderStatusIsCreate(oldOrder);
+        checkOrderStatusIsCreated(oldOrder);
 
         if (Objects.nonNull(updateOrderDto.getDeliveryAddress())) {
             oldOrder.setDeliveryAddress(updateOrderDto.getDeliveryAddress());
@@ -153,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
     public void deleteById(final UUID orderId) {
         Order order = getOrderByIdFetch(orderId);
         checkCustomerAccessToOrder(order);
-        checkOrderStatusIsCreate(order);
+        checkOrderStatusIsCreated(order);
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
 
@@ -178,11 +178,11 @@ public class OrderServiceImpl implements OrderService {
         });
     }
 
-    private void checkOrderStatusIsCreate(final Order order) {
+    private void checkOrderStatusIsCreated(final Order order) {
         if (order.getStatus() != OrderStatus.CREATED) {
-            final String message = String.format("Order status must be CREATE but now status: %s", order.getStatus());
+            final String message = String.format("Order status must be CREATED but now status: %s", order.getStatus());
             log.warn(message);
-            throw new OrderStatusNotCreateException(message);
+            throw new OrderStatusNotCreatedException(message);
         }
     }
 
@@ -212,7 +212,7 @@ public class OrderServiceImpl implements OrderService {
 
     private void checkCustomerAccessToOrder(final Order order) {
         if (!order.getCustomer().getId().equals(customerIdWrapper.getCustomerId())) {
-            String message = "No access to order";
+            final String message = "No access to order";
             log.warn(message);
             throw new OrderNotAccessException(message);
         }
