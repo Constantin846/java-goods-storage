@@ -1,0 +1,69 @@
+server:
+  servlet.context-path: /gs
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:gs;LOCK_TIMEOUT=60000
+    username: gs
+    password: password
+  jpa:
+    hibernate.ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  liquibase:
+    change-log: classpath:db/changelog/local-changelog-main.xml
+    enabled: true
+
+
+app:
+  scheduling:
+    enable: ${SCHEDULING_ENABLE:false}
+    period: 60000 #ms
+    priceIncreasePercentage: 10.1
+    optimization:
+      type: ${SCHEDULING_OPTIMIZATION_TYPE:optimized-my}  # optimized # optimized-my (for h2) # any other means simple
+      exclusive-lock: true
+      docker-file-path: ${DOCKER_FILE_PATH:false} # for optimized-my scheduler running in docker
+  prepare-db.db-products-generator: false
+  currency-client.type: ${CURRENCY_CLIENT_TYPE:real} # real # mock
+  account-client.type: no-mock # real implementation in any case without mock
+  crm-client.type: no-mock # real implementation in any case without mock
+  orchestrator-client.type: no-mock # real implementation in any case without mock
+
+  minio-service:
+    bucket-name: ${MINIO_BUCKET_NAME:bucket}
+    access-key-id: ${MINIO_ACCESS_KEY_ID:minio}
+    secret-access-key: ${MINIO_SECRET_KEY:minio123}
+    endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
+
+  kafka:
+    enabled: false
+    bootstrapAddress: ${KAFKA_BOOTSTRAP_ADDRESS:http://localhost:9091}
+    groupId: product-service
+    order-command-topic: order-command-topic
+
+currency-service:
+  host: http://localhost:8088
+  method:
+    get-currencies: /app-currency/v1/currencies
+  timeout: 500 #ms
+
+account-service:
+  host: http://localhost:8088
+  method:
+    get-account-numbers: /account-service/numbers
+  timeout: 500 #ms
+
+crm-service:
+  host: http://localhost:8088
+  method:
+    get-inns: /crm-service/inns
+  timeout: 500 #ms
+
+orchestrator-goods-storage:
+  host: http://localhost:8089
+  method:
+    confirm-order: /orc-gs/confirm-order
+  timeout: 500 #ms
+  orchestrator-id: 123

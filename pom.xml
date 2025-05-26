@@ -21,6 +21,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/constantin846/goods-storage-exception-handler</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -94,14 +104,14 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
-            <!-- http://localhost:9090/gs/swagger-ui/index.html -->
+            <!-- http://localhost:<port:8080>/gs/swagger-ui/index.html -->
         </dependency>
 
         <dependency>
-            <groupId>tk.project.exceptionhandler.goodsstorage</groupId>
+            <groupId>tk.project.goodsstorage.exceptionhandler</groupId>
             <artifactId>exception-handler-goods-storage-spring-boot-starter</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <!--https://github.com/Constantin846/java-goods-storage-exception-handler/tree/develop-->
+            <version>1.0</version>
+<!--            https://github.com/Constantin846/goods-storage-exception-handler -->
         </dependency>
 
         <dependency>
@@ -113,6 +123,47 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.14.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8-standalone</artifactId>
+            <version>2.35.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.20.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>minio</artifactId>
+            <version>1.21.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.20.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.20.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

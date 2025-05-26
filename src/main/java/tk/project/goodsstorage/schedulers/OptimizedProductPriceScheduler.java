@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import tk.project.exceptionhandler.goodsstorage.exceptions.schedulers.OptimizedProductPriceSchedulingResultWriteFileException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.schedulers.OptimizedProductPriceSchedulingSQLException;
-import tk.project.goodsstorage.timer.TaskExecutionTime;
-import tk.project.goodsstorage.timer.TaskExecutionTransactionTime;
+import tk.project.goodsstorage.annotations.TaskExecutionTime;
+import tk.project.goodsstorage.annotations.TaskExecutionTransactionTime;
+import tk.project.goodsstorage.exceptionhandler.exceptions.schedulers.OptimizedProductPriceSchedulingResultWriteFileException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.schedulers.OptimizedProductPriceSchedulingSQLException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -47,10 +47,10 @@ public class OptimizedProductPriceScheduler {
 
     public OptimizedProductPriceScheduler(
             @Value("${app.scheduling.priceIncreasePercentage}")
-            BigDecimal priceIncreasePercentage,
+            final BigDecimal priceIncreasePercentage,
             @Value("${app.scheduling.optimization.exclusive-lock:true}")
-            Boolean isExclusiveLocked,
-            EntityManagerFactory entityManagerFactory
+            final Boolean isExclusiveLocked,
+            final EntityManagerFactory entityManagerFactory
     ) {
         this.priceIncreasePercentage = priceIncreasePercentage;
         this.isExclusiveLocked = !Objects.isNull(isExclusiveLocked) && isExclusiveLocked;
@@ -76,7 +76,7 @@ public class OptimizedProductPriceScheduler {
                 @Override
                 public void execute(Connection connection) throws SQLException {
                     try (
-                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(FILE_PATH, IS_APPENDING_FILE));
+                            final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(FILE_PATH, IS_APPENDING_FILE));
                             connection
                     ) {
                         connection.setAutoCommit(false);
