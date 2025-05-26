@@ -7,12 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.EventHandlerNotFoundException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
-import tk.project.goodsstorage.kafka.event.Event;
-import tk.project.goodsstorage.kafka.event.EventSource;
-import tk.project.goodsstorage.kafka.handler.EventHandler;
-import tk.project.goodsstorage.order.consuming.events.OrderEventData;
+import tk.project.goodsstorage.dto.kafka.event.EventSource;
+import tk.project.goodsstorage.dto.kafka.event.order.OrderEventData;
+import tk.project.goodsstorage.enums.Event;
+import tk.project.goodsstorage.exceptionhandler.exceptions.kafka.EventHandlerNotFoundException;
+import tk.project.goodsstorage.exceptionhandler.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
+import tk.project.goodsstorage.services.handlers.EventHandler;
 
 import java.util.Map;
 
@@ -24,8 +24,8 @@ public class KafkaConsumer {
 
     private final Map<Event, EventHandler<EventSource>> eventHandlers;
 
-    @KafkaListener(topics = "brokerage-order-command", containerFactory = "kafkaListenerContainerFactoryString")
-    public void listen(String message) throws JsonProcessingException {
+    @KafkaListener(topics = "${app.kafka.order-command-topic}", containerFactory = "kafkaListenerContainerFactoryString")
+    public void listen(final String message) throws JsonProcessingException {
         log.info("Receive message: {}", message);
 
         final ObjectMapper objectMapper = new ObjectMapper();
